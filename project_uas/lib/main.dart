@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_uas/src/fitur/authentication/screens/splash_screen/splash_screen.dart';
-import 'package:project_uas/src/utils/theme/theme.dart';
+import 'package:project_uas/features/authentication/screens/splash_screen/splash_screen.dart';
+import 'package:project_uas/utils/theme/theme.dart';
 
 void main() {
   runApp(const App());

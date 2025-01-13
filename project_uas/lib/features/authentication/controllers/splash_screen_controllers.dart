@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:project_uas/src/fitur/authentication/screens/login/login.dart';
+import 'package:project_uas/features/authentication/screens/login/login.dart';
 
 
 class SplashScreenControllers extends GetxController {

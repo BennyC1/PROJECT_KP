@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_uas/src/utils/constants/color.dart';
-import 'package:project_uas/src/utils/constants/image_string.dart';
-import 'package:project_uas/src/utils/constants/sized.dart';
-import 'package:project_uas/src/utils/constants/text_string.dart';
-import 'package:project_uas/src/fitur/authentication/controllers/splash_screen_controllers.dart';
+import 'package:project_uas/utils/constants/color.dart';
+import 'package:project_uas/utils/constants/image_string.dart';
+import 'package:project_uas/utils/constants/sized.dart';
+import 'package:project_uas/utils/constants/text_string.dart';
+import 'package:project_uas/features/authentication/controllers/splash_screen_controllers.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({Key? key}) : super(key: key);

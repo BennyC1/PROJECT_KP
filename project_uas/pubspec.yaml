@@ -46,15 +46,22 @@ flutter:
   - assets/images/
 
   fonts:
-    - family: TimesNewRoman
+    - family: Poppins
       fonts:
-        - asset: assets/fonts/times_new_roman.ttf
-        - asset: assets/fonts/times_new_roman_bold.ttf
-          weight: 700
-        - asset: assets/fonts/times_new_roman_italic.ttf
+        - asset: assets/fonts/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-Italic.ttf
           style: italic
-        - asset: assets/fonts/times_new_roman_bold_italic.ttf
-          weight: 700
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-MediumItalic.ttf
+          weight: 500
           style: italic
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 800
 
 
