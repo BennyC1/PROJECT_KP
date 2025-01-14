@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project_uas/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:project_uas/features/authentication/screens/signup.widgets/signup.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
@@ -42,7 +43,7 @@ class BLoginForm extends StatelessWidget {
                   ],
                 ),
                 //forget
-                TextButton(onPressed: () {}, child: const Text(BText.forgetPassword)),
+                TextButton(onPressed: () => Get.to(() => const ForgetPassword()), child: const Text(BText.forgetPassword)),
               ],
             ),
             const SizedBox(height: BSize.spaceBtwInputFields),
