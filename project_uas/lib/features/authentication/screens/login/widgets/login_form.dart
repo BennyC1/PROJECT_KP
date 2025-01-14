@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:project_uas/features/authentication/screens/signup.widgets/signup.dart';
+import 'package:project_uas/navigation_menu.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
 
@@ -49,7 +50,7 @@ class BLoginForm extends StatelessWidget {
             const SizedBox(height: BSize.spaceBtwInputFields),
         
             // Signin
-            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () {}, child: const Text(BText.signIn))),
+            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => Get.to(() => const NavigationMenu()), child: const Text(BText.signIn))),
             const SizedBox(height: BSize.spaceBtwItems),
     
             // Create Account

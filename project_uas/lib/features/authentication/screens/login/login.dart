@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/common/styles/spacing_styles.dart';
-import 'package:project_uas/common/widgets.login_signup/login_signup/form_divider.dart';
-import 'package:project_uas/common/widgets.login_signup/login_signup/sosial_buttons.dart';
+import 'package:project_uas/common/widgets/login_signup/form_divider.dart';
+import 'package:project_uas/common/widgets/login_signup/sosial_buttons.dart';
 import 'package:project_uas/features/authentication/screens/login/widgets/login_form.dart';
 import 'package:project_uas/features/authentication/screens/login/widgets/login_header.dart';
 import 'package:project_uas/utils/constants/sized.dart';

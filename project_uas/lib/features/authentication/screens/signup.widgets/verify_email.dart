@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_uas/common/widgets.login_signup/success_screen/success_screen.dart';
+import 'package:project_uas/common/widgets/success_screen/success_screen.dart';
 import 'package:project_uas/features/authentication/screens/login/login.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
