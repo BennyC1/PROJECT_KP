@@ -8,7 +8,7 @@ class BText {
   static const String homeAppbarSubtitle= "Benny Candra";
 
   // Authentication Fore Test
-  static const String firstName = "First NanMe";
+  static const String firstName = "First Name";
   static const String LastName = "Last Name";
   static const String email = "E-Mail";
   static const String password = "Password";
@@ -21,7 +21,7 @@ class BText {
   static const String createAccount = "Create Account";
   static const String orSignInWith ="or sign in with";
   static const String orSignUpWith ="or sign up with";
-  static const String iAgreeTo = "I agree to";
+  static const String iAgreeTo = "I agree to ";
   static const String privacyPolicy = "Privacy Policy";
   static const String termsOfUse = "Terms of use";
   static const String verificationCode = "verification Code";
@@ -29,6 +29,7 @@ class BText {
   static const String resendEmailIn = "Resend email in";
 
   // Authentication Headings Text
+  static const String and = " and ";
   static const String LoginTitle = "Welcome back";
   static const String LoginSubTitle = "Discover Limitless Choices and Unmatched Convenience.";
   static const String signupTitle = "Let's create your account";

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_uas/features/authentication/screens/splash_screen/splash_screen.dart';
+import 'package:get/get.dart';
+import 'package:project_uas/features/authentication/screens/login/login.dart';
 import 'package:project_uas/utils/theme/theme.dart';
 
 void main() {
@@ -11,11 +12,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: AppTheme.LightTheme,
       darkTheme: AppTheme.DarkTheme,
       themeMode: ThemeMode.system,
-      home: SplashScreen(),
+      home: LoginScreen(),
     );
   }
 }
