@@ -18,13 +18,13 @@ class BTermConditionCheckbox extends StatelessWidget {
         const SizedBox(width: BSize.spaceBtwItems),
         Text.rich(
           TextSpan(children: [
-            TextSpan(text: '${BText.iAgreeTo}', style: Theme.of(context).textTheme.bodySmall),
-            TextSpan(text: '${BText.privacyPolicy}', style: Theme.of(context).textTheme.bodyMedium!.apply(
+            TextSpan(text: '${BText.iAgreeTo} ', style: Theme.of(context).textTheme.bodySmall),
+            TextSpan(text: '${BText.privacyPolicy} ', style: Theme.of(context).textTheme.bodyMedium!.apply(
               color: dark ? BColors.white : BColors.primary,
               decoration: TextDecoration.underline,
               decorationColor: dark ? BColors.white : BColors.primary,
             )),
-            TextSpan(text: '${BText.and}', style: Theme.of(context).textTheme.bodySmall),
+            TextSpan(text: '${BText.and} ', style: Theme.of(context).textTheme.bodySmall),
             TextSpan(text: BText.termsOfUse, style: Theme.of(context).textTheme.bodyMedium!.apply(
               color: dark ? BColors.white : BColors.primary,
               decoration: TextDecoration.underline,

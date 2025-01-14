@@ -26,7 +26,7 @@ class ForgetPassword extends StatelessWidget {
             TextFormField(
             decoration: const InputDecoration(labelText: BText.email, prefixIcon: Icon(Iconsax.direct_right)),
             ), // TextFormField
-
+            const SizedBox(height: BSize.spaceBtwSections),
             /// Submit Button
             SizedBox(
               width: double.infinity,
