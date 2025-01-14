@@ -4,6 +4,7 @@ import 'package:project_uas/common/widgets/custom_shape/containers/search_contai
 import 'package:project_uas/common/widgets/images_text_widgets/vertical_image_text.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/features/authentication/screens/home/widgets/home_appbar.dart';
+import 'package:project_uas/features/authentication/screens/home/widgets/promo_slider.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 
@@ -19,19 +20,19 @@ class HomeScreen extends StatelessWidget {
             BPrimaryHeaderContainer(
               child: Column (
                 children: [
-                  BHomeAppBar(),
-                  SizedBox(height: BSize.spaceBtwSections),
+                  const BHomeAppBar(),
+                  const SizedBox(height: BSize.spaceBtwSections),
 
-                  BSearchContainer(text: 'Search in Store'),
-                  SizedBox(height: BSize.spaceBtwSections),
+                  const BSearchContainer(text: 'Search in Store'),
+                  const SizedBox(height: BSize.spaceBtwSections),
 
                   Padding(
                     padding: const EdgeInsets.only(left: BSize.defaultSpace),
                     child: Column(
                       children: [
                         //Heading
-                        BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white,),
-                        SizedBox(height: BSize.spaceBtwItems),
+                        const BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white,),
+                        const SizedBox(height: BSize.spaceBtwItems),
 
                         //Categories
                         SizedBox(
@@ -53,10 +54,16 @@ class HomeScreen extends StatelessWidget {
                 ]
               )
             ),
+            const Padding(
+              padding: const EdgeInsets.all(BSize.defaultSpace),
+              child: BPromoSlider(banners: [BImages.promoBanner1, BImages.promoBanner2, BImages.promoBanner3],),
+            ),
           ]
         ),
       ),
     );
   }
 }
+
+
 
