@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_uas/features/authentication/screens/login/login.dart';
+import 'package:project_uas/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:project_uas/utils/theme/theme.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       theme: AppTheme.LightTheme,
       darkTheme: AppTheme.DarkTheme,
       themeMode: ThemeMode.system,
-      home: LoginScreen(),
+      home: const OnBoardingScreen(),
     );
   }
 }
