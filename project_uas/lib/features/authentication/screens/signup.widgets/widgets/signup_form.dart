@@ -29,7 +29,7 @@ class BFormSignup extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   expands: false,
-                  decoration: const InputDecoration(labelText: BText.LastName, prefixIcon: Icon(Iconsax.user)
+                  decoration: const InputDecoration(labelText: BText.lastName, prefixIcon: Icon(Iconsax.user)
                   ),
                 ),
               ),

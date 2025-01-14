@@ -18,11 +18,11 @@ class BLoginHeader extends StatelessWidget {
       children: [
         Image(
           height: 150,
-          image: AssetImage(dark ? BImages.LightAppLogo : BImages.darkAppLogo),
+          image: AssetImage(dark ? BImages.lightAppLogo : BImages.darkAppLogo),
         ),
-        Text(BText.LoginTitle, style: Theme.of(context).textTheme.headlineMedium),
+        Text(BText.loginTitle, style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: BSize.sm),
-        Text(BText.LoginSubTitle, style: Theme.of(context).textTheme.bodyMedium),
+        Text(BText.loginSubTitle, style: Theme.of(context).textTheme.bodyMedium),
       ],
     );
   }

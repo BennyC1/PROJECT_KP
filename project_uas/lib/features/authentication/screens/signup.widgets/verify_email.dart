@@ -21,7 +21,7 @@ class VerifyEmailScreen extends StatelessWidget {
           child: Column(
             children: [
               /// image
-              Image 
+
               
               /// title dan sub title
             
