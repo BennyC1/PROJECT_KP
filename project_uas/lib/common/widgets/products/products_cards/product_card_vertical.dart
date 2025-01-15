@@ -4,6 +4,7 @@ import 'package:project_uas/common/styles/shadows.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
 import 'package:project_uas/common/widgets/icons/circular_icon.dart';
 import 'package:project_uas/common/widgets/images/rounded_image.dart';
+import 'package:project_uas/common/widgets/texts/brand_title_text_with_verification.dart';
 import 'package:project_uas/common/widgets/texts/product_price_text.dart';
 import 'package:project_uas/common/widgets/texts/product_title_text.dart';
 import 'package:project_uas/utils/constants/colors.dart';
@@ -39,7 +40,7 @@ class BProductCardVertical extends StatelessWidget {
               child: Stack(
                 children: [
                   // Thumbnail - Image
-                  BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true),
+                  const BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true),
       
                   /// -- Sale Tag
                   Positioned (
@@ -63,44 +64,40 @@ class BProductCardVertical extends StatelessWidget {
             ),
       
             // Detail
-            Padding(
-              padding: const EdgeInsets.only(left: BSize.sm),
+            const Padding(
+              padding: EdgeInsets.only(left: BSize.sm),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const BProductTitleText(title: 'Green Nike Air Shoes', smallsize: true),
-                  const SizedBox(height: BSize.spaceBtwItems / 2),
-                  Row (
-                    children: [
-                      Text('Nike', overflow: TextOverflow.ellipsis, maxLines: 1, style: Theme.of(context) . textTheme. labelMedium),
-                      const SizedBox(width: BSize.xs),
-                      const Icon(Iconsax.verify5, color: BColors.primary, size: BSize.iconXs),
-                    ]
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        /// Price
-                        const BProductPriceText(price: '35.0'),
-
-                        Container (
-                          decoration: const BoxDecoration(
-                            color: BColors. dark,
-                            borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(BSize.cardRadiusMd),
-                            bottomRight: Radius.circular(BSize.productImageRadius),
-                            ),
-                          ),
-                          child: const SizedBox(
-                            width: BSize.iconLg * 1.2,
-                            height: BSize.iconLg * 1.2,
-                            child: Center(child: Icon(Iconsax.add, color: BColors.white)),
-                          ),
-                        ),
-                      ]
-                  )
+                  BProductTitleText(title: 'Green Nike Air Shoes', smallsize: true),
+                  SizedBox(height: BSize.spaceBtwItems / 2),
+                  BBrandTitleWithVerifiedIcon(title: 'Nike'),
                 ]
               ),
+            ),
+            const Spacer(),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  /// Price
+                  const BProductPriceText(price: '35.0'),
+
+                  Container (
+                    decoration: const BoxDecoration(
+                      color: BColors. dark,
+                      borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(BSize.cardRadiusMd),
+                      bottomRight: Radius.circular(BSize.productImageRadius),
+                      ),
+                    ),
+                    child: const SizedBox(
+                      width: BSize.iconLg * 1.2,
+                      height: BSize.iconLg * 1.2,
+                      child: Center(child: Icon(Iconsax.add, color: BColors.white)),
+                    ),
+                  ),
+                ]
             )
           ]
         ),

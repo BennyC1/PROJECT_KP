@@ -4,10 +4,10 @@ import 'package:project_uas/utils/constants/colors.dart';
 
 class BCartCounterIcon extends StatelessWidget {
   const BCartCounterIcon({
-    super.key, required this.iconColor, required this.onPressed,
+    super.key, this.iconColor, required this.onPressed,
   });
 
-  final Color iconColor;
+  final Color? iconColor;
   final VoidCallback onPressed;
 
   @override
