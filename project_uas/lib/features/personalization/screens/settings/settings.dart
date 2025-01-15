@@ -1,8 +1,11 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get_core/get_core.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
+import 'package:project_uas/features/personalization/screens/profile/profile.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/custom_shape/containers/primary_header_container.dart';
@@ -22,10 +25,11 @@ class SettingsScreen extends StatelessWidget {
             BPrimaryHeaderContainer(
               child: Column(
                 children: [
-
+                  // Appbar Atas
                   BAppBar(title: Text( "Account", style: Theme.of(context).textTheme.headlineMedium!.apply(color: BColors.white))),
+
                   /// User Profile Cord
-                  const BUserProfileTile(),
+                  BUserProfileTile(onPressed: () => Get.to(() => const ProfileScreen())),
                   const SizedBox(height: BSize.spaceBtwSections),
                 ],
               ),

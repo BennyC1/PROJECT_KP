@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/styles/shadows.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
@@ -7,6 +8,7 @@ import 'package:project_uas/common/widgets/images/rounded_image.dart';
 import 'package:project_uas/common/widgets/texts/brand_title_text_with_verification.dart';
 import 'package:project_uas/common/widgets/texts/product_price_text.dart';
 import 'package:project_uas/common/widgets/texts/product_title_text.dart';
+import 'package:project_uas/features/shop/screens/product_details/product_detail.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
@@ -40,7 +42,7 @@ class BProductCardVertical extends StatelessWidget {
               child: Stack(
                 children: [
                   // Thumbnail - Image
-                  const BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true),
+                  BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true, onPressed: () => Get.to(() => const ProductDetailScreen())),
       
                   /// Sale Tag
                   Positioned (

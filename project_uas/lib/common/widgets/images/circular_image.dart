@@ -23,6 +23,7 @@ class BCircularImage extends StatelessWidget {
   final Color? backgroundColor;
   final double width, height, padding;
 
+
   @override
   Widget build(BuildContext context) {
     return Container(

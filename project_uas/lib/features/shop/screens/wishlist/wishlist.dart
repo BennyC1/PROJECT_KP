@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project_uas/common/screens/home/home.dart';
+import 'package:project_uas/features/shop/screens/home/home.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/icons/circular_icon.dart';
