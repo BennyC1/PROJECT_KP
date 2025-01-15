@@ -26,7 +26,7 @@ class BBrandCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: BRoundedContainer (
-        padding: EdgeInsets.all (BSize.sm),
+        padding: const EdgeInsets.all (BSize.sm),
         showBorder: true,
         backgroundcolor: Colors. transparent,
         child: Row(

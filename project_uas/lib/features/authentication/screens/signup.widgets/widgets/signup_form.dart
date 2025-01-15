@@ -71,7 +71,7 @@ class BFormSignup extends StatelessWidget {
           const SizedBox(height: BSize.spaceBtwInputFields),
     
           // terms&conditions
-          BTermConditionCheckbox(),
+          const BTermConditionCheckbox(),
           const SizedBox(height: BSize.spaceBtwSections),
     
           //signup buton

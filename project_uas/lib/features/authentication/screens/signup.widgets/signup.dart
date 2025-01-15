@@ -20,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(BSize.defaultSpace),
+          padding: const EdgeInsets.all(BSize.defaultSpace),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -29,7 +29,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: BSize.spaceBtwSections),
 
               // form
-              BFormSignup(),
+              const BFormSignup(),
               const SizedBox(height: BSize.spaceBtwSections),
 
               /// divider
