@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/login_signup/form_divider.dart';
 import 'package:project_uas/common/widgets/login_signup/sosial_buttons.dart';
-import 'package:project_uas/features/authentication/screens/signup.widgets/widgets/signup_form.dart';
+import 'package:project_uas/common/screens/signup.widgets/widgets/signup_form.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
 

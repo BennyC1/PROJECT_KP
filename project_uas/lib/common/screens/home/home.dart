@@ -5,8 +5,8 @@ import 'package:project_uas/common/widgets/images_text_widgets/vertical_image_te
 import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/products/products_cards/product_card_vertical.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
-import 'package:project_uas/features/authentication/screens/home/widgets/home_appbar.dart';
-import 'package:project_uas/features/authentication/screens/home/widgets/promo_slider.dart';
+import 'package:project_uas/common/screens/home/widgets/home_appbar.dart';
+import 'package:project_uas/common/screens/home/widgets/promo_slider.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 
@@ -53,7 +53,8 @@ class HomeScreen extends StatelessWidget {
  
                       ],
                     ) 
-                  )
+                  ),
+                  const SizedBox(height: BSize.spaceBtwSections),
                 ]
               )
             ),

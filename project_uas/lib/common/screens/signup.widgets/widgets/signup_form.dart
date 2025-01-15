@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project_uas/features/authentication/screens/signup.widgets/verify_email.dart';
-import 'package:project_uas/features/authentication/screens/signup.widgets/widgets/terms_condition_checkbox.dart';
+import 'package:project_uas/common/screens/signup.widgets/verify_email.dart';
+import 'package:project_uas/common/screens/signup.widgets/widgets/terms_condition_checkbox.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
 

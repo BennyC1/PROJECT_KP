@@ -27,7 +27,7 @@ class BBrandCard extends StatelessWidget {
       onTap: () {},
       child: BRoundedContainer (
         padding: const EdgeInsets.all (BSize.sm),
-        showBorder: true,
+        showBorder: showBorder,
         backgroundcolor: Colors. transparent,
         child: Row(
           children:  [

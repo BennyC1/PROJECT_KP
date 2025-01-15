@@ -6,7 +6,7 @@ import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/brands/brand_card.dart';
 import 'package:project_uas/common/widgets/products_cart/cart_menu_icon.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
-import 'package:project_uas/features/authentication/shop/screens/store/widgets/category_tab.dart';
+import 'package:project_uas/features/shop/screens/store/widgets/category_tab.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';

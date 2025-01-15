@@ -10,7 +10,7 @@ class BVerticalImageText extends StatelessWidget {
     required this.image, 
     required this.title, 
     this.textColor = BColors.white, 
-    this.backgroundColor = BColors.white, 
+    this.backgroundColor, 
     this.onTap,
   });  
 
@@ -38,7 +38,7 @@ class BVerticalImageText extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
-                child: Image(image: const AssetImage(BImages.shoeIcon), fit: BoxFit.cover, color: dark ? BColors.dark : BColors.dark),
+                child: Image(image: const AssetImage(BImages.shoeIcon), fit: BoxFit.cover, color: dark ? BColors.white : BColors.dark),
               ),
             ),
             const SizedBox(height: BSize.spaceBtwItems / 2),

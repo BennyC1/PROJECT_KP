@@ -7,8 +7,8 @@ import 'package:project_uas/utils/constants/sized.dart';
 
 class BBrandTitleWithVerifiedIcon extends StatelessWidget {
   const BBrandTitleWithVerifiedIcon({
-    super. key,
-    this. textColor,
+    super.key,
+    this.textColor,
     this.maxLines = 1,
     required this. title,
     this.iconColor = BColors.primary,

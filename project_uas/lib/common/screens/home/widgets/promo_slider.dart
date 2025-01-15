@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/circular_container.dart';
 import 'package:project_uas/common/widgets/images/rounded_image.dart';
-import 'package:project_uas/features/authentication/shop/controllers/home_controllers.dart';
+import 'package:project_uas/features/shop/controllers/home_controllers.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 

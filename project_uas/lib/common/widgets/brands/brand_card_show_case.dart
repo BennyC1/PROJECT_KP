@@ -19,7 +19,8 @@ class BBrandShowcase extends StatelessWidget {
       showBorder: true,
       borderColor: BColors.darkGrey,
       backgroundcolor: Colors.transparent,
-      margin: const EdgeInsets. only(bottom: BSize.spaceBtwItems),
+      padding: const EdgeInsets.all(BSize.md),
+      margin: const EdgeInsets.only(bottom: BSize.spaceBtwItems),
       child: Column(
         children: [
           /// Brand with Products Count

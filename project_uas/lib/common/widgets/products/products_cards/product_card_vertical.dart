@@ -42,7 +42,7 @@ class BProductCardVertical extends StatelessWidget {
                   // Thumbnail - Image
                   const BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true),
       
-                  /// -- Sale Tag
+                  /// Sale Tag
                   Positioned (
                     top: 12,
                     child: BRoundedContainer (
@@ -53,7 +53,7 @@ class BProductCardVertical extends StatelessWidget {
                     ),
                   ), 
       
-                  /// -- Favourite Icon Button
+                  /// Favourite Icon Button
                   const Positioned(
                     top: 0,
                     right: 0.1,
@@ -62,14 +62,15 @@ class BProductCardVertical extends StatelessWidget {
                 ]
               ),
             ),
+            const SizedBox(height: BSize.spaceBtwItems / 2),
       
             // Detail
             const Padding(
               padding: EdgeInsets.only(left: BSize.sm),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  BProductTitleText(title: 'Green Nike Air Shoes', smallsize: true),
+                  BProductTitleText(title:'Green Nike Air Shoes', smallsize: true),
                   SizedBox(height: BSize.spaceBtwItems / 2),
                   BBrandTitleWithVerifiedIcon(title: 'Nike'),
                 ]

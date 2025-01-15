@@ -4,8 +4,8 @@ import 'package:project_uas/common/widgets/products/products_cards/product_card_
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 
-import '../../../../../../common/widgets/brands/brand_card_show_case.dart';
-import '../../../../../../utils/constants/sized.dart';
+import '../../../../../common/widgets/brands/brand_card_show_case.dart';
+import '../../../../../utils/constants/sized.dart';
 
 
 class BCategoryTab extends StatelessWidget {
