@@ -66,6 +66,10 @@ class HomeScreen extends StatelessWidget {
                   const BPromoSlider(banners: [BImages.promoBanner1, BImages.promoBanner2, BImages.promoBanner3]),
                   const SizedBox(height: BSize.spaceBtwSections),
 
+                  const BSectionHeading(title: 'Popular Produtcs'),
+                  const SizedBox(height: BSize.spaceBtwItems),
+
+
                   // isi produk
                   BGridLayout(itemCount: 6, itemBuilder: (_, index) => const BProductCardVertical())
                 ]
