@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/primary_header_container.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/search_container.dart';
 import 'package:project_uas/common/widgets/images_text_widgets/vertical_image_text.dart';
+import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
+import 'package:project_uas/common/widgets/products/products_cards/product_card_vertical.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/features/authentication/screens/home/widgets/home_appbar.dart';
 import 'package:project_uas/features/authentication/screens/home/widgets/promo_slider.dart';
@@ -20,9 +22,11 @@ class HomeScreen extends StatelessWidget {
             BPrimaryHeaderContainer(
               child: Column (
                 children: [
+                  // home
                   const BHomeAppBar(),
                   const SizedBox(height: BSize.spaceBtwSections),
 
+                  //search
                   const BSearchContainer(text: 'Search in Store'),
                   const SizedBox(height: BSize.spaceBtwSections),
 
@@ -54,9 +58,18 @@ class HomeScreen extends StatelessWidget {
                 ]
               )
             ),
-            const Padding(
+            Padding(
               padding: const EdgeInsets.all(BSize.defaultSpace),
-              child: BPromoSlider(banners: [BImages.promoBanner1, BImages.promoBanner2, BImages.promoBanner3],),
+              child: Column(
+                children: [
+                  // slide promo 3
+                  const BPromoSlider(banners: [BImages.promoBanner1, BImages.promoBanner2, BImages.promoBanner3]),
+                  const SizedBox(height: BSize.spaceBtwSections),
+
+                  // isi produk
+                  BGridLayout(itemCount: 6, itemBuilder: (_, index) => const BProductCardVertical())
+                ]
+              )
             ),
           ]
         ),
