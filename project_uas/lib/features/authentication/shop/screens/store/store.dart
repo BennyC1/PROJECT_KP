@@ -1,17 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/common/widgets/appbar/tabbar.dart';
-import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/search_container.dart';
-import 'package:project_uas/common/widgets/images/circular_image.dart';
 import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
+import 'package:project_uas/common/widgets/brands/brand_card.dart';
 import 'package:project_uas/common/widgets/products_cart/cart_menu_icon.dart';
-import 'package:project_uas/common/widgets/texts/brand_title_text_with_verification.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
+import 'package:project_uas/features/authentication/shop/screens/store/widgets/category_tab.dart';
 import 'package:project_uas/utils/constants/colors.dart';
-import 'package:project_uas/utils/constants/enums.dart';
-import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
 
@@ -52,49 +48,12 @@ class StoreScreen extends StatelessWidget {
                     const SizedBox(height: BSize.spaceBtwItems / 1.5),
       
                     BGridLayout(itemCount: 4, mainAxisExtent: 80, itemBuilder: (_, index) {
-                      return GestureDetector(
-                        onTap: () {},
-                        child: BRoundedContainer (
-                          padding: EdgeInsets.all (BSize.sm),
-                          showBorder: true,
-                          backgroundcolor: Colors. transparent,
-                          child: Row(
-                            children:  [
-                              /// Icon
-                              Flexible(
-                                child: BCircularImage (
-                                  isNetworkImage: false,
-                                  image: BImages. clothIcon,
-                                  backgroundColor: Colors.transparent,
-                                  overlayColor: BHelperFunctions.isDarkMode(context) ? BColors.white : BColors.black,
-                                  ),
-                              ),
-                              const SizedBox(width: BSize.spaceBtwItems / 2),
-                          
-                              // TEXT
-                              Expanded(
-                                child: Column (
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    BBrandTitleWithVerifiedIcon(title: 'Nike', brandTextSize: TextSizes.large),
-                                    Text(
-                                      '256 products',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context).textTheme.labelMedium,
-                                    )
-                                  ]
-                                ),
-                              )
-                            ]
-                          ),
-                        ),
-                      );
+                      return const BBrandCard(showBorder: true);
                     })
                   ]
                 ),
               ),
-              bottom: BTabBar(
+              bottom: const BTabBar(
                 tabs: [
                   Tab(child: Text('Aki Motor')),
                   Tab(child: Text('Aki Mobil')),
@@ -107,9 +66,22 @@ class StoreScreen extends StatelessWidget {
           ];
         },
 
-        body: Container()),
+        body: const TabBarView(
+          children: [
+            BCategoryTab(),
+            BCategoryTab(),
+            BCategoryTab(),
+            BCategoryTab(),
+            BCategoryTab(),
+          ],
+        ),
       ),
+    ),
     );
   }
 }
+
+
+
+
 
