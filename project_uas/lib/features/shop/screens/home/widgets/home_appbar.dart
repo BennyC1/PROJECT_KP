@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
-import 'package:project_uas/common/widgets/products_cart/cart_menu_icon.dart';
+import 'package:project_uas/common/widgets/products/cart/cart_menu_icon.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
 
@@ -20,7 +20,7 @@ class BHomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        BCartCounterIcon(iconColor: BColors.white, onPressed: () {  },),
+        BCartCounterIcon(iconColor: BColors.white, onPressed: () {},),
       ]
     );
   }

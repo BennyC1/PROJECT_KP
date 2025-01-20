@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/circular_container.dart';
-import 'package:project_uas/common/widgets/custom_shape/curved_edges/curved_edges.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 
 import '../curved_edges/curved_edges_widget.dart';
