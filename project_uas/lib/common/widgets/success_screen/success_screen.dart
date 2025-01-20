@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/common/styles/spacing_styles.dart';
 import 'package:project_uas/common/screens/login/login.dart';
+import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
@@ -34,7 +35,7 @@ class SuccessScreen extends StatelessWidget {
 
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(onPressed: () => Get.to(() => const LoginScreen()), child: const Text(BText.tContinue))),
+                child: ElevatedButton(onPressed: onPressed, child: const Text(BText.tContinue))),
             ],
           ),
         ),
