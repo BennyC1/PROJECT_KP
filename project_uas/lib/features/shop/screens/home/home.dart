@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/primary_header_container.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/search_container.dart';
 import 'package:project_uas/common/widgets/images_text_widgets/vertical_image_text.dart';
 import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/products/products_cards/product_card_vertical.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
+import 'package:project_uas/features/shop/screens/all_products/all_products.dart';
 import 'package:project_uas/features/shop/screens/home/widgets/home_appbar.dart';
 import 'package:project_uas/features/shop/screens/home/widgets/promo_slider.dart';
+import 'package:project_uas/features/shop/screens/sub_category/sub_categories.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 
@@ -35,7 +38,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         //Heading
-                        const BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white,),
+                        BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white, onPressed: () => Get.to(() => const AllProducts())),
                         const SizedBox(height: BSize.spaceBtwItems),
 
                         //Categories
@@ -46,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                             itemCount: 6,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (_, index) {
-                              return BVerticalImageText(image: BImages.shoeIcon, title: 'Shoe', onTap: (){},);
+                              return BVerticalImageText(image: BImages.shoeIcon, title: 'Shoe', onTap: ()=> Get.to(() => const SubCategoriesScreen()),);
                             },
                           ),
                         )

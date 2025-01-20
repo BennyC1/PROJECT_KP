@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/common/widgets/appbar/tabbar.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/search_container.dart';
@@ -6,6 +7,7 @@ import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/brands/brand_card.dart';
 import 'package:project_uas/common/widgets/products/cart/cart_menu_icon.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
+import 'package:project_uas/features/shop/screens/brand/all_brands.dart';
 import 'package:project_uas/features/shop/screens/store/widgets/category_tab.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/utils/constants/sized.dart';
@@ -44,7 +46,7 @@ class StoreScreen extends StatelessWidget {
                     const BSearchContainer(text: 'Search in Store', showBorder: true, showBackground: false, padding: EdgeInsets.zero ,),
                     const SizedBox(height: BSize.spaceBtwSections),
       
-                    BSectionHeading(title: 'Featured Brands', onPressed: () {}),
+                    BSectionHeading(title: 'Featured Brands', onPressed: () => Get.to(() => const AllBrandsScreen())),
                     const SizedBox(height: BSize.spaceBtwItems / 1.5),
       
                     BGridLayout(itemCount: 4, mainAxisExtent: 80, itemBuilder: (_, index) {

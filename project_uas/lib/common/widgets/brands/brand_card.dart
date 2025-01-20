@@ -24,7 +24,7 @@ class BBrandCard extends StatelessWidget {
     final isDark = BHelperFunctions.isDarkMode(context);
 
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: BRoundedContainer (
         padding: const EdgeInsets.all (BSize.sm),
         showBorder: showBorder,
