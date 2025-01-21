@@ -33,9 +33,6 @@ class AuthenticationRepository extends GetxController {
       : Get.offAll(const OnBoardingScreen());
   }
 
-
-
-
   // register
   Future<UserCredential> registerWithEmailAndPassword(String email, String password) async {
     try {

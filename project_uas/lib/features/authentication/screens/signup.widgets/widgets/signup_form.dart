@@ -5,7 +5,6 @@ import 'package:project_uas/features/authentication/controllers/signup/signup_co
 import 'package:project_uas/features/authentication/screens/signup.widgets/widgets/terms_condition_checkbox.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
-import 'package:project_uas/utils/helpers/helper_function.dart';
 import 'package:project_uas/utils/validators/validators.dart';
 
 class BFormSignup extends StatelessWidget {

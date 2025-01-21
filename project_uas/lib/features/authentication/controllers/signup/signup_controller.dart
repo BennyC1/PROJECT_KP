@@ -31,10 +31,18 @@ class SignupController extends GetxController {
 
       // check internet
       final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) return;
+      if (!isConnected) {
+        // Remove Loader
+        BFullScreenLoader.stopLoading();
+        return;
+      }
 
       // Form Validation
-      if(!signupFormKey.currentState!.validate()) return;
+      if(!signupFormKey.currentState!.validate()) {
+        // Remove Loader
+        BFullScreenLoader.stopLoading();
+        return;
+      }
 
       // Privacy Policy Check
       if (!privacyPolicy.value) {
@@ -66,16 +74,16 @@ class SignupController extends GetxController {
       BFullScreenLoader.stopLoading();
 
       // Show Success Message
-      BLoaders. successSnackBar (title: 'Congratulations', message: 'Your account has been created! Verif email to continue.');
+      BLoaders.successSnackBar (title: 'Congratulations', message: 'Your account has been created! Verif email to continue.');
 
       // Move to Verify Email, Screen
       Get.to(() => const VerifyEmailScreen());
     } catch (e) {
-      // Show some Generic Error to the user
-      BLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
-    } finally {
       // Remove Loader
       BFullScreenLoader.stopLoading();
+
+      // Show some Generic Error to the user
+      BLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());  
     }
   }
 }
