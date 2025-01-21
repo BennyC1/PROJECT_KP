@@ -1,4 +1,12 @@
 class BValidator {
+  // empty text validator
+  static String? validateEmptyText(String? fieldName, String? value) {
+    if(value == null || value.isEmpty) {
+      return '$fieldName is required.';
+    }
+    return null;
+  }
+
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required.';
@@ -24,12 +32,12 @@ class BValidator {
       }
     
     // Check for uppercase letters
-    if (!value.contains(RegExp(r' [A-Z]'))) {
+    if (!value.contains(RegExp(r'[A-Z]'))) {
       return 'Password must contain at least one uppercase letter.';
     }
 
     // Check for numbers
-    if (!value.contains (RegExp(r' [0-9]'))) {
+    if (!value.contains (RegExp(r'[0-9]'))) {
       return 'Password must contain at least one number.';
     }
 
@@ -46,10 +54,10 @@ class BValidator {
       return 'Phone number is required.';
     }
     // Regular expression for phone number validation (assuming a 10-digit US phone number format)
-    final phoneRegExp = RegExp(r'^\d{10}$');
+    final phoneRegExp = RegExp(r'^(0|\+62)\d{9,12}$');
 
     if (!phoneRegExp.hasMatch(value)) {
-      return 'Invalid phone number format (10 digits required).';
+      return 'Invalid phone number format (11-13 digits required) or (0 / +62 required).';
     }
 
     return null;
