@@ -58,6 +58,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '50313495351',
     projectId: 'pusat-aki-palembang',
     storageBucket: 'pusat-aki-palembang.firebasestorage.app',
+    androidClientId: '50313495351-de9nbsjadj45pqoq96sse81jksrhpmbf.apps.googleusercontent.com',
+    iosClientId: '50313495351-554c7bd42hohramt3c46foajokif3j9m.apps.googleusercontent.com',
     iosBundleId: 'com.example.projectUas',
   );
 
