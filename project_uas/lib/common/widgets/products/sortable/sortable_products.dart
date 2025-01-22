@@ -24,7 +24,7 @@ class BSortableProducts extends StatelessWidget {
         const SizedBox(height: BSize.spaceBtwSections),
 
         /// Products
-        BGridLayout (itemCount: 8, itemBuilder: ( _, index) => const BProductCardVertical()),
+        BGridLayout (itemCount: 4, itemBuilder: ( _, index) => const BProductCardVertical()),
       ]
     );
   }

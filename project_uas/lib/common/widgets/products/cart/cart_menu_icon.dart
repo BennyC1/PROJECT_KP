@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/features/shop/screens/cart/cart.dart';
 import 'package:project_uas/utils/constants/colors.dart';
+import 'package:project_uas/utils/helpers/helper_function.dart';
 
 class BCartCounterIcon extends StatelessWidget {
   const BCartCounterIcon({
@@ -14,9 +15,12 @@ class BCartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = BHelperFunctions.isDarkMode(context);
+
     return Stack (
       children: [
-        IconButton (onPressed:  () => Get.to(() => const CartScreen()), icon: const Icon(Iconsax.shopping_bag, color: BColors.white)),
+        IconButton (onPressed:  () => Get.to(() => const CartScreen()), 
+        icon: Icon(Iconsax.shopping_bag, color: dark ? BColors.white : BColors.dark)),
         Positioned (
           right: 0,
           child: Container(

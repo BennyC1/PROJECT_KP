@@ -258,6 +258,7 @@ class BImages {
   static const String banner6 = "assets/images/banners/banner_6.jpg";
   static const String banner7 = "assets/images/banners/banner_7.jpg";
   static const String banner8 = "assets/images/banners/banner_8.jpg";
+  static const String banner = "assets/images/banners/banner.png";
 
   //Profile
   static const String user = "assets/images/content/user.png";

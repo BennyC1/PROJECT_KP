@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:project_uas/data/repositories/authentication/repositories_authentication.dart';
+import 'package:project_uas/features/personalization/controllers/user_controller.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/helpers/network_manager.dart';
 import 'package:project_uas/utils/popups/full_screen_loader.dart';
@@ -16,7 +17,8 @@ class LoginController extends GetxController {
   final localStorage = GetStorage(); 
   final email = TextEditingController(); 
   final password = TextEditingController(); 
-  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>(); 
+  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  final userController =  Get.put(UserController()); 
 
   /// Email and Password SignIn 
   Future<void> emailAndPasswordSignIn() async { 
@@ -44,7 +46,6 @@ class LoginController extends GetxController {
       } 
 
       // Login user using EMail & Password Authentication 
-      // ignore: unused_local_variable
       final userCredentials = await AuthenticationRepository.instance.loginWithEmailAndPassword(email.text.trim(), password.text.trim()); 
 
       // Remove Loader 
@@ -55,6 +56,37 @@ class LoginController extends GetxController {
     } catch (e) { 
       BFullScreenLoader.stopLoading(); 
       BLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
+    }
+  }
+  
+  /// Google SignIn Authentication 
+  Future<void> googleSignIn() async { 
+    try { 
+      // Start Loading 
+      BFullScreenLoader.openLoadingDialog('Logging you in...', BImages.docerAnimation);
+
+      // Check Internet Connectivity 
+      final isConnected = await NetworkManager.instance.isConnected(); 
+      if (!isConnected) { 
+        BFullScreenLoader.stopLoading(); 
+        return; 
+      } 
+
+      // Google Authentication 
+      final userCredentials = await AuthenticationRepository.instance.signInWithGoogle(); 
+
+      // Save User Record 
+      await userController.saveUserRecord(userCredentials); 
+
+      // Remove Loader 
+      BFullScreenLoader.stopLoading();
+
+      // Redirect
+      AuthenticationRepository.instance.screenRedirect();
+    } catch (e) {
+      //Remove Loader
+      BFullScreenLoader.stopLoading();
+      BLoaders.errorSnackBar(title: 'Oh Snap',message : e.toString());
     }
   }
 }

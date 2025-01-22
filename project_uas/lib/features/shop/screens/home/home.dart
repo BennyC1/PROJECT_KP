@@ -6,7 +6,8 @@ import 'package:project_uas/common/widgets/images_text_widgets/vertical_image_te
 import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/products/products_cards/product_card_vertical.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
-import 'package:project_uas/features/shop/screens/all_products/all_products.dart';
+import 'package:project_uas/features/shop/screens/brand/all_brands.dart';
+import 'package:project_uas/features/shop/screens/brand/brand_products.dart';
 import 'package:project_uas/features/shop/screens/home/widgets/home_appbar.dart';
 import 'package:project_uas/features/shop/screens/home/widgets/promo_slider.dart';
 import 'package:project_uas/features/shop/screens/sub_category/sub_categories.dart';
@@ -38,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         //Heading
-                        BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white, onPressed: () => Get.to(() => const AllProducts())),
+                        BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white, onPressed: () => Get.to(() => const BrandProducts())),
                         const SizedBox(height: BSize.spaceBtwItems),
 
                         //Categories
@@ -46,10 +47,10 @@ class HomeScreen extends StatelessWidget {
                           height: 80,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 6,
+                            itemCount: 3,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (_, index) {
-                              return BVerticalImageText(image: BImages.shoeIcon, title: 'Shoe', onTap: ()=> Get.to(() => const SubCategoriesScreen()),);
+                              return BVerticalImageText(image: BImages.shoeIcon, title: 'Aki', onTap: ()=> Get.to(() => const SubCategoriesScreen()),);
                             },
                           ),
                         )
@@ -66,12 +67,11 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // slide promo 3
-                  const BPromoSlider(banners: [BImages.promoBanner1, BImages.promoBanner2, BImages.promoBanner3]),
+                  const BPromoSlider(banners: [BImages.promoBanner1, BImages.banner, BImages.promoBanner3]),
                   const SizedBox(height: BSize.spaceBtwSections),
 
-                  const BSectionHeading(title: 'Popular Produtcs'),
+                  BSectionHeading(title: 'Popular Produtcs', onPressed: () => Get.to(() => const AllBrandsScreen())),
                   const SizedBox(height: BSize.spaceBtwItems),
-
 
                   // isi produk
                   BGridLayout(itemCount: 6, itemBuilder: (_, index) => const BProductCardVertical())

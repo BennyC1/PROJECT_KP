@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart'; 
 import 'package:project_uas/features/personalization/models/user_model.dart';
 import 'package:project_uas/utils/exceptions/firebase_exceptions.dart';
 import 'package:project_uas/utils/exceptions/format_exceptions.dart';

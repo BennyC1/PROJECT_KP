@@ -25,7 +25,7 @@ class AllBrandsScreen extends StatelessWidget {
 
               /// - Brands
               BGridLayout(
-                itemCount: 10,
+                itemCount: 3,
                 mainAxisExtent: 80,
                 itemBuilder: (context, index) => BBrandCard(
                   showBorder: true,

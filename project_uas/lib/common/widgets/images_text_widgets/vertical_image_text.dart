@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project_uas/utils/constants/colors.dart';
-import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
 
@@ -38,14 +37,14 @@ class BVerticalImageText extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
-                child: Image(image: const AssetImage(BImages.shoeIcon), fit: BoxFit.cover, color: dark ? BColors.white : BColors.dark),
+                child: Image(image: AssetImage(image), fit: BoxFit.cover, color: dark ? BColors.white : BColors.dark),
               ),
             ),
             const SizedBox(height: BSize.spaceBtwItems / 2),
             SizedBox(
               width: 55,
               child: Text(
-                'Shoe Category',
+                'Aki-aki',
                 style: Theme.of(context).textTheme.labelMedium!.apply(color: BColors.white),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

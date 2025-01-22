@@ -43,13 +43,13 @@ class StoreScreen extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     const SizedBox(height: BSize.spaceBtwItems),
-                    const BSearchContainer(text: 'Search in Store', showBorder: true, showBackground: false, padding: EdgeInsets.zero ,),
+                    const BSearchContainer(text: 'Search in Store', showBorder: true, showBackground: false, padding: EdgeInsets.zero,),
                     const SizedBox(height: BSize.spaceBtwSections),
       
                     BSectionHeading(title: 'Featured Brands', onPressed: () => Get.to(() => const AllBrandsScreen())),
                     const SizedBox(height: BSize.spaceBtwItems / 1.5),
       
-                    BGridLayout(itemCount: 4, mainAxisExtent: 80, itemBuilder: (_, index) {
+                    BGridLayout(itemCount: 3, mainAxisExtent: 80, itemBuilder: (_, index) {
                       return const BBrandCard(showBorder: true);
                     })
                   ]
@@ -60,8 +60,6 @@ class StoreScreen extends StatelessWidget {
                   Tab(child: Text('Aki Motor')),
                   Tab(child: Text('Aki Mobil')),
                   Tab(child: Text('Aki VRla')),
-                  Tab(child: Text('Aki-aki')),
-                  Tab(child: Text('Batu Aki')),
                 ]
               )
             ),
@@ -70,8 +68,6 @@ class StoreScreen extends StatelessWidget {
 
         body: const TabBarView(
           children: [
-            BCategoryTab(),
-            BCategoryTab(),
             BCategoryTab(),
             BCategoryTab(),
             BCategoryTab(),
