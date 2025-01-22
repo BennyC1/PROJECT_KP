@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:project_uas/common/styles/spacing_styles.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
-import 'package:project_uas/utils/helpers/helper_function.dart';
 
 class SuccessScreen extends StatelessWidget {
   const SuccessScreen({super.key, required this.image, required this.title, required this.subTitle, required this.onPressed});
@@ -18,11 +18,8 @@ class SuccessScreen extends StatelessWidget {
           padding: BSpacingStyles.paddingWithAppBarHeight * 2,
           child: Column(
             children: [
-              Image (
-                  image: AssetImage(image),
-                  width: BHelperFunctions.screenWidth() * 0.6,
-                ),
-                const SizedBox(height: BSize.spaceBtwSections),
+              Lottie.asset(image, width: MediaQuery.of(context).size.width * 0.6), 
+              const SizedBox(height: BSize.spaceBtwSections),
 
               /// Title & SubTitle
               Text(title, style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),

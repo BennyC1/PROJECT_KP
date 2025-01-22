@@ -45,7 +45,6 @@ dependencies:
   firebase_storage: ^11.7.4
 
 
-
   #--------------- ./ PACKAGES END ------------------#
 
 dev_dependencies:

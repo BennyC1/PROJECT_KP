@@ -27,7 +27,7 @@ class SignupController extends GetxController {
   Future<void> signup() async {
     try {
       // Start Loading
-      BFullScreenLoader.openLoadingDialog('We are processing your information ... ', BImages.verifyIllustration);
+      BFullScreenLoader.openLoadingDialog('We are processing your information ... ', BImages.docerAnimation);
 
       // check internet
       final isConnected = await NetworkManager.instance.isConnected();
@@ -54,7 +54,7 @@ class SignupController extends GetxController {
       }
 
       // Register user in the Firebase Authentication & Save user data in the Firebase
-      final userCredential = await AuthenticationRepository.instance. registerWithEmailAndPassword(email. text. trim(), password. text. trim());
+      final userCredential = await AuthenticationRepository.instance.registerWithEmailAndPassword(email.text.trim(), password.text.trim());
 
       // Save Authenticated user data in the Firebase Firestore
       final newUser = UserModel(
@@ -77,7 +77,7 @@ class SignupController extends GetxController {
       BLoaders.successSnackBar (title: 'Congratulations', message: 'Your account has been created! Verif email to continue.');
 
       // Move to Verify Email, Screen
-      Get.to(() => const VerifyEmailScreen());
+      Get.to(() => VerifyEmailScreen(email: email.text.trim(),));
     } catch (e) {
       // Remove Loader
       BFullScreenLoader.stopLoading();

@@ -28,7 +28,7 @@ class BBrandCard extends StatelessWidget {
       child: BRoundedContainer (
         padding: const EdgeInsets.all (BSize.sm),
         showBorder: showBorder,
-        backgroundcolor: Colors. transparent,
+        backgroundcolor: Colors.transparent,
         child: Row(
           children:  [
             /// Icon
