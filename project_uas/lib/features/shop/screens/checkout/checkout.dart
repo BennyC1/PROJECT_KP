@@ -71,7 +71,7 @@ class CheckoutScreen extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(BSize.defaultSpace),
         child: ElevatedButton(onPressed: () => Get.to(() => SuccessScreen(
-          image: BImages.successfulPaymentIcon,
+          image: BImages.successfullyRegisterAnimation,
           title: 'Payment Success!',
           subTitle: 'Your Item Will be Shipped Soon!~',
           onPressed: () => Get.offAll(() => const NavigationMenu()),

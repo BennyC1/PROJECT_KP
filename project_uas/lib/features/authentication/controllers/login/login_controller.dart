@@ -46,6 +46,7 @@ class LoginController extends GetxController {
       } 
 
       // Login user using EMail & Password Authentication 
+      // ignore: unused_local_variable
       final userCredentials = await AuthenticationRepository.instance.loginWithEmailAndPassword(email.text.trim(), password.text.trim()); 
 
       // Remove Loader 

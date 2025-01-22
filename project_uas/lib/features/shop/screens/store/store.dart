@@ -60,6 +60,8 @@ class StoreScreen extends StatelessWidget {
                   Tab(child: Text('Aki Motor')),
                   Tab(child: Text('Aki Mobil')),
                   Tab(child: Text('Aki VRla')),
+                  Tab(child: Text('Jumper Aki')),
+                  Tab(child: Text('Jumper Cas Aki')),
                 ]
               )
             ),
@@ -68,6 +70,8 @@ class StoreScreen extends StatelessWidget {
 
         body: const TabBarView(
           children: [
+            BCategoryTab(),
+            BCategoryTab(),
             BCategoryTab(),
             BCategoryTab(),
             BCategoryTab(),
