@@ -15,7 +15,7 @@ class BOrderListItems extends StatelessWidget {
 
     return ListView.separated(
       shrinkWrap: true,
-      itemCount: 5,
+      itemCount: 1,
       separatorBuilder: (_, __) => const SizedBox(height: BSize.spaceBtwItems),
       itemBuilder: (_, index) => BRoundedContainer(
         showBorder: true,
@@ -38,10 +38,10 @@ class BOrderListItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Processing',
+                        'Complete',
                         style: Theme.of(context).textTheme.bodyLarge!.apply(color: BColors.primary, fontWeightDelta: 1),
                       ),
-                      Text('187 Nov 2824', style: Theme.of(context).textTheme.headlineSmall),
+                      Text('17 Sept 2024', style: Theme.of(context).textTheme.headlineSmall),
                     ]
                   ),
                 ),
@@ -89,7 +89,7 @@ class BOrderListItems extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Shipping Data!', style: Theme.of(context).textTheme.labelMedium),
-                            Text('29-01-2005', style: Theme.of(context).textTheme.titleMedium),
+                            Text('17-09-2024', style: Theme.of(context).textTheme.titleMedium),
                           ]
                         ),
                       ),

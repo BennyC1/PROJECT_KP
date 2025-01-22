@@ -21,9 +21,17 @@ class UserReviewCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const CircleAvatar(backgroundImage: AssetImage(BImages.userProfileImage1)),
+                CircleAvatar(
+                  radius: 30, 
+                  backgroundColor: Colors.grey[200], 
+                  child: Icon(
+                    Icons.person, 
+                    size: 30,     
+                    color: Colors.grey, 
+                  ),
+                ),
                 const SizedBox(width: BSize.spaceBtwItems),
-                Text('John Doe', style: Theme.of(context). textTheme.titleLarge),
+                Text('', style: Theme.of(context). textTheme.titleLarge),
               ]
             ),
             IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),

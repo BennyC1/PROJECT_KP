@@ -34,13 +34,14 @@ class CheckoutScreen extends StatelessWidget {
               const SizedBox (height: BSize.spaceBtwSections),
 
               // coupon
-              BCouponCode(),
+              const BCouponCode(),
               const SizedBox (height: BSize. spaceBtwSections),
 
               // billing
               BRoundedContainer (
                 showBorder: true,
                 backgroundcolor: dark ? BColors.black : BColors.white,
+                padding: const EdgeInsets. only(top: BSize.sm, bottom: BSize.sm, right: BSize.sm, left: BSize.md),
                 child: const Column(
                   children: [
                     /// Pricing
@@ -75,7 +76,7 @@ class CheckoutScreen extends StatelessWidget {
           title: 'Payment Success!',
           subTitle: 'Your Item Will be Shipped Soon!~',
           onPressed: () => Get.offAll(() => const NavigationMenu()),
-        )), child: const Text('Checkout \$256.0')),
+        )), child: const Text('Checkout \Rp 1.250.000')),
       ),
     );
   }

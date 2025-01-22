@@ -21,20 +21,20 @@ class SubCategoriesScreen extends StatelessWidget {
           child: Column(
             children: [
               /// Banner
-              const BRoundedImage(width: double.infinity, imageUrl: BImages.promoBanner1, applyImageRadius: true),
+              const BRoundedImage(width: double.infinity, imageUrl: BImages.banner1, applyImageRadius: true),
               const SizedBox(height: BSize.spaceBtwSections),
               
               /// Sub-Categories
               Column(
                 children: [
                   /// Heading
-                  BSectionHeading(title: 'Sports shirts', onPressed: () => Get.to(() => const BrandProducts())),
+                  BSectionHeading(title: 'Aki Mobil', onPressed: () => Get.to(() => const BrandProducts())),
                   const SizedBox(height: BSize. spaceBtwItems / 2),
 
                   SizedBox(
                     height: 120,
                     child: ListView. separated(
-                    itemCount: 2,
+                    itemCount: 1,
                     scrollDirection: Axis. horizontal,
                     separatorBuilder: (context, index) => const SizedBox(width: BSize.spaceBtwItems),
                     itemBuilder: (context, index) => const BProductCardHorizontal(),

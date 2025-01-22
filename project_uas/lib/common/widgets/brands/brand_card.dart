@@ -35,7 +35,7 @@ class BBrandCard extends StatelessWidget {
             Flexible(
               child: BCircularImage (
                 isNetworkImage: false,
-                image: BImages. clothIcon,
+                image: BImages.toyIcon,
                 backgroundColor: Colors.transparent,
                 overlayColor: isDark ? BColors.white : BColors.black,
                 ),
@@ -48,9 +48,9 @@ class BBrandCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const BBrandTitleWithVerifiedIcon(title: 'Nike', brandTextSize: TextSizes.large),
+                  const BBrandTitleWithVerifiedIcon(title: 'Aki Mobil', brandTextSize: TextSizes.large),
                   Text(
-                    '256 products',
+                    '1 products',
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium,
                   )

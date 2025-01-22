@@ -6,7 +6,7 @@ import 'package:project_uas/common/widgets/images_text_widgets/vertical_image_te
 import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/products/products_cards/product_card_vertical.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
-import 'package:project_uas/features/shop/screens/brand/all_brands.dart';
+import 'package:project_uas/features/shop/screens/all_products/all_products.dart';
 import 'package:project_uas/features/shop/screens/brand/brand_products.dart';
 import 'package:project_uas/features/shop/screens/home/widgets/home_appbar.dart';
 import 'package:project_uas/features/shop/screens/home/widgets/promo_slider.dart';
@@ -47,10 +47,10 @@ class HomeScreen extends StatelessWidget {
                           height: 80,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: 3,
+                            itemCount: 1,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (_, index) {
-                              return BVerticalImageText(image: BImages.shoeIcon, title: 'Aki', onTap: ()=> Get.to(() => const SubCategoriesScreen()),);
+                              return BVerticalImageText(image: BImages.toyIcon, title: 'Aki Mobil', onTap: ()=> Get.to(() => const SubCategoriesScreen()),);
                             },
                           ),
                         )
@@ -67,14 +67,14 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // slide promo 3
-                  const BPromoSlider(banners: [BImages.promoBanner1, BImages.banner, BImages.promoBanner3]),
+                  const BPromoSlider(banners: [BImages.banner1, BImages.banner2, BImages.banner3]),
                   const SizedBox(height: BSize.spaceBtwSections),
 
-                  BSectionHeading(title: 'Popular Produtcs', onPressed: () => Get.to(() => const AllBrandsScreen())),
+                  BSectionHeading(title: 'Popular Produtcs', onPressed: () => Get.to(() => const AllProducts())),
                   const SizedBox(height: BSize.spaceBtwItems),
 
                   // isi produk
-                  BGridLayout(itemCount: 6, itemBuilder: (_, index) => const BProductCardVertical())
+                  BGridLayout(itemCount: 1, itemBuilder: (_, index) => const BProductCardVertical())
                 ]
               )
             ),

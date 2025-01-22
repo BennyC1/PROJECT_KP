@@ -42,7 +42,7 @@ class BProductCardVertical extends StatelessWidget {
               child: Stack(
                 children: [
                   // Thumbnail - Image
-                  BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true, onPressed: () => Get.to(() => const ProductDetailScreen())),
+                  BRoundedImage(imageUrl: BImages.amaronns40zl, applyImageRadius: true, onPressed: () => Get.to(() => const ProductDetailScreen())),
       
                   /// Sale Tag
                   Positioned (
@@ -72,9 +72,9 @@ class BProductCardVertical extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  BProductTitleText(title:'Green Nike Air Shoes', smallsize: true),
+                  BProductTitleText(title:'Amaron NS40ZL', smallsize: true),
                   SizedBox(height: BSize.spaceBtwItems / 2),
-                  BBrandTitleWithVerifiedIcon(title: 'Nike'),
+                  BBrandTitleWithVerifiedIcon(title: 'Aki Mobil'),
                 ]
               ),
             ),
@@ -84,7 +84,7 @@ class BProductCardVertical extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   /// Price
-                  const BProductPriceText(price: '35.0'),
+                  const BProductPriceText(price: '1.250.000'),
 
                   Container (
                     decoration: const BoxDecoration(

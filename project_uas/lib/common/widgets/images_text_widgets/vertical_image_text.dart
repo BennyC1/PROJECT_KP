@@ -44,7 +44,7 @@ class BVerticalImageText extends StatelessWidget {
             SizedBox(
               width: 55,
               child: Text(
-                'Aki-aki',
+                'Aki Mobil',
                 style: Theme.of(context).textTheme.labelMedium!.apply(color: BColors.white),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

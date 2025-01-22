@@ -24,7 +24,7 @@ class BProductQuantityWithAddRemoveButton extends StatelessWidget {
           backgroundcolor: BHelperFunctions . isDarkMode(context) ? BColors.darkerGrey : BColors.light,
         ),
         const SizedBox(width: BSize. spaceBtwItems),
-        Text('2', style: Theme.of(context).textTheme.titleSmall),
+        Text('1', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(width: BSize.spaceBtwItems),
 
         const BCircularIcon(

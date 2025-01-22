@@ -18,7 +18,7 @@ class BCartItem extends StatelessWidget {
       children: [
         // Image
         BRoundedImage (
-          imageUrl: BImages.productImage1,
+          imageUrl: BImages.amaronns40zl,
           width: 60,
           height: 60,
           padding: const EdgeInsets.all(BSize.sm),
@@ -32,16 +32,16 @@ class BCartItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BBrandTitleWithVerifiedIcon(title: 'Nike'),
-              const Flexible(child: BProductTitleText(title: 'Black Sports shoes', maxLines: 1)),
+              const BBrandTitleWithVerifiedIcon(title: 'Aki Mobil'),
+              const Flexible(child: BProductTitleText(title: 'Amaron NS40ZL', maxLines: 1)),
               /// Attributes
               Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'Color ', style: Theme. of(context).textTheme.bodySmall),
-                    TextSpan(text: 'Green ', style: Theme. of(context).textTheme.bodyLarge),
-                    TextSpan(text: 'Size ', style: Theme. of (context).textTheme.bodySmall),
-                    TextSpan(text: 'UK 08 ', style: Theme. of (context).textTheme.bodyLarge),
+                    TextSpan(text: 'Color ', style: Theme.of(context).textTheme.bodySmall),
+                    TextSpan(text: 'Green ', style: Theme.of(context).textTheme.bodyLarge),
+                    TextSpan(text: 'Jenis ', style: Theme.of(context).textTheme.bodySmall),
+                    TextSpan(text: 'Aki Mobil ', style: Theme.of(context).textTheme.bodyLarge),
                   ]
                 )
               )

@@ -29,7 +29,7 @@ class BProductImageSlider extends StatelessWidget {
               height: 408,
               child: Padding(
                 padding: EdgeInsets.all (BSize. productImageRadius * 2),
-                child: Center(child: Image(image: AssetImage(BImages.productImage5))),
+                child: Center(child: Image(image: AssetImage(BImages.amaronns40zl))),
                   ),
                 ),
     
@@ -41,7 +41,7 @@ class BProductImageSlider extends StatelessWidget {
                   child: SizedBox(
                     height: 80,
                     child: ListView. separated(
-                      itemCount: 6,
+                      itemCount: 1,
                       shrinkWrap: true,
                       scrollDirection: Axis. horizontal,
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -51,7 +51,7 @@ class BProductImageSlider extends StatelessWidget {
                       backgroundColor: dark ? BColors. dark : BColors. white,
                       border: Border.all(color: BColors.primary),
                       padding: const EdgeInsets. all(BSize.sm),
-                      imageUrl: BImages.productImage3,
+                      imageUrl: BImages.amaronns40zl,
                     ),
                   ), 
                 ),

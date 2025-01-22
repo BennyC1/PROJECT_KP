@@ -15,7 +15,7 @@ class BBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment. spaceBetween,
           children: [
             Text('Subtotal', style: Theme.of(context) . textTheme.bodyMedium),
-            Text('\$256.0', style: Theme.of(context). textTheme.bodyMedium),
+            Text('\Rp 1.250.000', style: Theme.of(context). textTheme.bodyMedium),
           ]      
         ),
         const SizedBox(height: BSize.spaceBtwItems / 2),
@@ -24,8 +24,8 @@ class BBillingAmountSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Shipping Fee', style: Theme.of(context).textTheme.bodyMedium),
-            Text("\$6.0", style: Theme.of(context).textTheme.labelLarge),
+            Text('Discount', style: Theme.of(context).textTheme.bodyMedium),
+            Text("\Rp 312.500", style: Theme.of(context).textTheme.labelLarge),
           ]
         ),
         const SizedBox (height: BSize.spaceBtwItems / 2),
@@ -35,7 +35,7 @@ class BBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Tax Fee', style: Theme.of(context).textTheme.bodyMedium),
-            Text('\$6.0', style: Theme.of(context).textTheme.labelLarge),
+            Text('\Rp 24.000', style: Theme.of(context).textTheme.labelLarge),
           ]
         ),
         const SizedBox(height: BSize.spaceBtwItems / 2),
@@ -45,7 +45,7 @@ class BBillingAmountSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Order Total', style: Theme.of(context).textTheme.bodyMedium),
-            Text('\$6.0', style: Theme.of(context).textTheme.titleMedium),
+            Text('\Rp 977.500', style: Theme.of(context).textTheme.titleMedium),
           ]
         ),
       ]

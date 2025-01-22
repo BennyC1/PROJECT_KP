@@ -16,7 +16,7 @@ class BCartItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView. separated(
       shrinkWrap: true,
-      itemCount: 10,
+      itemCount: 1,
       separatorBuilder: (_, __) => const SizedBox(height: BSize.spaceBtwSections),
       itemBuilder: (_, index) => Column(
         children: [
@@ -39,7 +39,7 @@ class BCartItems extends StatelessWidget {
                 ), 
              
               // Product total Price          
-              BProductPriceText(price: '256'),
+              BProductPriceText(price: '1.250.000'),
             ]
           )                      
         ]

@@ -24,15 +24,14 @@ class BCategoryTab extends StatelessWidget {
           child: Column(
             children: [
               //  Brands
-              const BBrandShowcase(images: [BImages.productImage3, BImages.productImage3, BImages.productImage3]),
-              const BBrandShowcase(images: [BImages.productImage3, BImages.productImage3, BImages.productImage3]),
+              const BBrandShowcase(images: [BImages.amaronns40zl, BImages.amaronns40zl, BImages.amaronns40zl]),
               const SizedBox(height: BSize.spaceBtwItems),
         
-              // Produc
+              // Product
               BSectionHeading(title: 'You might like', onPressed: () => Get.to(() => const AllProducts())),
               const SizedBox(height: BSize.spaceBtwItems),
         
-              BGridLayout(itemCount: 4, itemBuilder: (_, index) => const BProductCardVertical()),
+              BGridLayout(itemCount: 1, itemBuilder: (_, index) => const BProductCardVertical()),
               const SizedBox(height: BSize.spaceBtwSections),
             ],
           ),

@@ -31,7 +31,7 @@ class BCartCounterIcon extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
-                child: Text('2', style: Theme.of(context).textTheme.labelLarge!.apply(color: BColors.white, fontSizeFactor: 0.8))),
+                child: Text('1', style: Theme.of(context).textTheme.labelLarge!.apply(color: BColors.white, fontSizeFactor: 0.8))),
               ),
         ),
       ]  

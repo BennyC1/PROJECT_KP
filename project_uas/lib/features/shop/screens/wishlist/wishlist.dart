@@ -26,7 +26,7 @@ class FavoriteScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets. all(BSize. defaultSpace),
           child: Column(
-            children: [BGridLayout(itemCount: 3, itemBuilder: (_, index) => const BProductCardVertical())],
+            children: [BGridLayout(itemCount: 1, itemBuilder: (_, index) => const BProductCardVertical())],
           ),
         ),
       ), 

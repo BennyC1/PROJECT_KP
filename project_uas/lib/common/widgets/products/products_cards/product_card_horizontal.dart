@@ -38,7 +38,7 @@ class BProductCardHorizontal extends StatelessWidget {
                 SizedBox(
                   height: 120,
                   width: 120,
-                  child: BRoundedImage(imageUrl: BImages.productImage1, applyImageRadius: true)
+                  child: BRoundedImage(imageUrl: BImages.amaronns40zl, applyImageRadius: true)
                 ),
 
                 /// Favourite Icon Button
@@ -63,7 +63,7 @@ class BProductCardHorizontal extends StatelessWidget {
                     children: [
                       BProductTitleText(title: 'Green Nike Half Sleeves Shirt', smallsize: true),
                       SizedBox(height: BSize. spaceBtwItems / 2),
-                      BBrandTitleWithVerifiedIcon(title: 'Nike'),
+                      BBrandTitleWithVerifiedIcon(title: 'Amaron NS40ZL'),
                     ],
                   ),
 
@@ -73,7 +73,7 @@ class BProductCardHorizontal extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment. spaceBetween,
                     children: [
                       /// Pricing
-                      const Flexible(child: BProductPriceText(price: '256.0')),
+                      const Flexible(child: BProductPriceText(price: '1.250.000')),
 
                       /// Add to cart
                       Container (

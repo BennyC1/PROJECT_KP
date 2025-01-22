@@ -28,24 +28,22 @@ class BProductAttributes extends StatelessWidget {
               /// Title, Price and Stock Staus
               Row (
               children: [
-                const BSectionHeading(title: 'Harga', showActionButton: false),
+                const BSectionHeading(title: 'Detail', showActionButton: false),
                 const SizedBox(width: BSize.spaceBtwItems),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        const BProductTitleText(title: "Price : ", smallsize: true),
+                        const BProductTitleText(title: "Harga : ", smallsize: true),
 
                         /// Actual Price
                         Text(
-                          '\$25',
-                          style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough),
+                          '\Rp 937.500',
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                         const SizedBox(width: BSize.spaceBtwItems),
 
-                        /// Sale Price
-                        const BProductPriceText(price: '20'),
                       ],
                     ),
                     /// Stock
@@ -63,7 +61,7 @@ class BProductAttributes extends StatelessWidget {
 
             // Variation Description
             const BProductTitleText(
-              title: 'cuma bisa sampe 4 baris ni desk pendek',
+              title: 'Introducing the Amaron AGS Battery – your ultimate power source for an uncompromised driving experience, now fortified with the innovative Dura Frame technology.',
               smallsize: true,
               maxLines: 4,
             ),
@@ -82,15 +80,7 @@ class BProductAttributes extends StatelessWidget {
             Wrap(
               spacing: 8,
               children: [
-                BChoiceChip(text: 'aki-aki', selected: true, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: false, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: false, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: true, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: false, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: true, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: false, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: false, onSelected: (value){}),
-                BChoiceChip(text: 'aki-aki', selected: true, onSelected: (value){}),
+                BChoiceChip(text: 'Aki Mobil', selected: true, onSelected: (value){}),
               ],
             )
           ]

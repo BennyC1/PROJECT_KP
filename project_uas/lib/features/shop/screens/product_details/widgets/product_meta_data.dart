@@ -36,13 +36,13 @@ class BProductMetaData extends StatelessWidget {
         const SizedBox(width: BSize.spaceBtwItems),
 
         /// Price
-        Text("\$258", style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough)),
+        Text("\Rp 1.250.000", style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough)),
         const SizedBox(width: BSize. spaceBtwItems),
-        const BProductPriceText(price: '175', isLarge: true),
+        const BProductPriceText(price: '937.500', isLarge: true),
         const SizedBox(height: BSize.spaceBtwItems / 1.5),
 
         /// Title
-        const BProductTitleText(title: 'Green Nike Sports Shirt'),
+        const BProductTitleText(title: 'Amaron NS40ZL'),
         const SizedBox(height: BSize. spaceBtwItems / 1.5),
 
         /// Stock Status
@@ -60,12 +60,12 @@ class BProductMetaData extends StatelessWidget {
         Row(
           children: [
             BCircularImage (
-              image: BImages.shoeIcon,
+              image: BImages.toyIcon,
               width: 32,
               height: 32,
               overlayColor: darkMode ? BColors. white : BColors.black,
             ),
-            const BBrandTitleWithVerifiedIcon(title: 'Nike', brandTextSize: TextSizes.medium),
+            const BBrandTitleWithVerifiedIcon(title: 'Aki Mobil', brandTextSize: TextSizes.medium),
           ],
         ),
       ]

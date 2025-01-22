@@ -47,7 +47,20 @@ class ProductDetailScreen extends StatelessWidget {
                   const BSectionHeading(title: 'Description', showActionButton: false),
                   const SizedBox(height:  BSize.spaceBtwItems),
                   const ReadMoreText(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vesti Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vestiLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla auctor, vesti',
+                    '''● Brand: AMARON GO
+● Type: Maintenance Free / MF
+● Battery Size/Code: NS40ZL / 38B20L
+● Spec: 12V 35Ah CCA 265A
+● Condition: NEW
+
+Introducing the Amaron AGS Battery – your ultimate power source for an uncompromised driving experience, now fortified with the innovative Dura Frame technology. With a legacy of excellence and innovation, Amaron AGS is engineered to deliver unrivalled performance and unwavering reliability.
+
+Suitable for;
+● PERODUA: Myvi, Axia, Alza, Bezza, Viva, Kancil, Kenari, Rusa, Kembara
+● PROTON: Ertiga
+● HONDA: City, Jazz, CRZ, Freed, BRV
+● KIA: Picanto
+● TOYOTA: Rush''',
                     trimLines: 2,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: ' Show More',
@@ -62,7 +75,7 @@ class ProductDetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const BSectionHeading(title: 'Review (199)',),
+                      const BSectionHeading(title: 'Review (0)',),
                       IconButton(icon: const Icon(Iconsax.arrow_right_3, size: 18), onPressed: () => Get.to(() => const ProductReviewsScreen())),
                     ],
                   ),

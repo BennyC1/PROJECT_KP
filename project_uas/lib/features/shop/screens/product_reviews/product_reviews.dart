@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/common/widgets/products/ratings/rating_indicator.dart';
 import 'package:project_uas/features/shop/screens/product_reviews/widgets/rating_progress_indicator.dart';
-import 'package:project_uas/features/shop/screens/product_reviews/widgets/user_review_card.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 
 class ProductReviewsScreen extends StatelessWidget {
@@ -27,15 +26,9 @@ class ProductReviewsScreen extends StatelessWidget {
 
               // overall product rating
               const BOverallProductRating (),
-              const BRatingBarIndicator(rating: 3.5),
-              Text("12,611", style: Theme.of(context).textTheme.bodySmall),
+              const BRatingBarIndicator(rating: 0),
+              Text("0", style: Theme.of(context).textTheme.bodySmall),
               const SizedBox(height: BSize.spaceBtwSections),
-
-              // User Reviews List
-              const UserReviewCard(),
-              const UserReviewCard(),
-              const UserReviewCard(),
-              const UserReviewCard(),
             ]
           )
         )

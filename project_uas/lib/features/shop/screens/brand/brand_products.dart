@@ -11,7 +11,7 @@ class BrandProducts extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return const Scaffold(
-      appBar: BAppBar(title: Text('Nike')),
+      appBar: BAppBar(title: Text('Aki Mobil')),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(BSize. defaultSpace),

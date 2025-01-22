@@ -11,7 +11,7 @@ class BBillingAddressSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         BSectionHeading(title: 'Shipping Address', buttonTitle: 'Change', onPressed: () {}),
-        Text('STRESSSSS', style: Theme. of (context).textTheme.bodyLarge),
+        Text('', style: Theme. of (context).textTheme.bodyLarge),
         const SizedBox(height: BSize.spaceBtwItems / 2),
         Row (
           children: [
