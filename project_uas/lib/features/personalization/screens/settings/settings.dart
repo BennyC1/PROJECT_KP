@@ -5,8 +5,10 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
+import 'package:project_uas/data/repositories/authentication/repositories_authentication.dart';
 import 'package:project_uas/features/personalization/screens/profile/profile.dart';
 import 'package:project_uas/features/shop/screens/cart/cart.dart';
+import 'package:project_uas/features/shop/screens/chat/chat.dart';
 import 'package:project_uas/features/shop/screens/order/order.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
@@ -46,10 +48,11 @@ class SettingsScreen extends StatelessWidget {
                   const BSectionHeading(title: 'Account Settings', showActionButton: false),
                   const SizedBox(height: BSize.spaceBtwSections),
 
-                  const BSettingsMenuTile(
-                    icon: Iconsax.safe_home, 
-                    title: 'My Adrresses' , 
-                    subTitle: 'Set Shopping delivery address'),
+                  BSettingsMenuTile(
+                    icon: Iconsax.message, 
+                    title: 'Chat' , 
+                    subTitle: 'Chat with our teams for  information',
+                    onTap: () => Get.to(() => const ChatScreen())),
                   BSettingsMenuTile(
                     icon: Iconsax.shopping_cart, 
                     title: 'My cart', 
@@ -99,7 +102,9 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(height: BSize.spaceBtwSections),
                   SizedBox(
                     width: double. infinity,
-                    child: OutlinedButton(onPressed: (){}, child: const Text( 'Logout' )),
+                    child: OutlinedButton(onPressed: () async {
+                    await AuthenticationRepository.instance.logout();}, 
+                    child: const Text( 'Logout' )),
                   ),
                   const SizedBox(height: BSize.spaceBtwSections * 2.5),
                 ]

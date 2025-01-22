@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:project_uas/features/authentication/controllers/login/login_controller.dart';
 import 'package:project_uas/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:project_uas/features/authentication/screens/signup.widgets/signup.dart';
-import 'package:project_uas/navigation_menu.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
+import 'package:project_uas/utils/validators/validators.dart';
 
 class BLoginForm extends StatelessWidget {
   const BLoginForm({
@@ -14,23 +15,38 @@ class BLoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(LoginController());
+
     return Form(
+      key: controller.loginFormKey,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: BSize.spaceBtwSections),
         child: Column(
           children: [
             // Email
             TextFormField(
+              controller: controller.email,
+              validator: (value) => BValidator.validateEmail(value),
               decoration: const InputDecoration(prefixIcon: Icon(Iconsax.direct_right), labelText: BText.email),
             ),
             const SizedBox(height: BSize.spaceBtwInputFields),
         
-            // Password
-            TextFormField(
-              decoration: const InputDecoration(prefixIcon: Icon(Iconsax.password_check), labelText: BText.password, suffixIcon: Icon(Iconsax.eye_slash)
+            Obx(
+            () => TextFormField(
+              controller: controller.password,
+              validator: (value) => BValidator.validateEmptyText('Password', value),
+              obscureText: controller.hidePassword.value,
+              decoration: InputDecoration(
+                labelText: BText.password, 
+                prefixIcon: const Icon(Iconsax.password_check),
+                suffixIcon: IconButton(
+                  onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 
+                  icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye)
+                )
               ),
             ),
-            const SizedBox(height: BSize.spaceBtwInputFields / 2),
+          ),
+            const SizedBox(height: BSize.spaceBtwInputFields),
         
             // Remember & Forget Password
             Row(
@@ -39,7 +55,7 @@ class BLoginForm extends StatelessWidget {
                 //remember
                 Row(
                   children: [
-                    Checkbox(value: true, onChanged: (value) {}),
+                    Obx(() => Checkbox(value: controller.rememberMe.value, onChanged: (value) => controller.rememberMe.value = !controller.rememberMe.value)),
                     const Text(BText.rememberMe),
                   ],
                 ),
@@ -50,7 +66,7 @@ class BLoginForm extends StatelessWidget {
             const SizedBox(height: BSize.spaceBtwInputFields),
         
             // Signin
-            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => Get.to(() => const NavigationMenu()), child: const Text(BText.signIn))),
+            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => controller.emailAndPasswordSignIn(), child: const Text(BText.signIn))),
             const SizedBox(height: BSize.spaceBtwItems),
     
             // Create Account
