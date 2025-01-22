@@ -67,5 +67,5 @@ class BText {
 
   // -- Home
   static const String homeAppbarTitle = "Good day for shopping";
-  static const String homeAppbarSubTitle = "Cyndi Fio Cika";
+  static const String homeAppbarSubTitle = "Kelompok LCI";
 }

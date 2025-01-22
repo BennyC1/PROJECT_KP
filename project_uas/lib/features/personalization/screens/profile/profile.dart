@@ -43,8 +43,8 @@ class ProfileScreen extends StatelessWidget {
               const BSectionHeading(title: 'Profile Information', showActionButton: false),
               const SizedBox(height: BSize.spaceBtwItems),
 
-              BProfileMenu(title: 'Name', value: 'BennyCuandraaa', onPressed: () {}),
-              BProfileMenu(title: 'Username', value: 'BennyCuandraaa', onPressed: () {}),
+              BProfileMenu(title: 'Name', value: 'Kelompok LCI', onPressed: () {}),
+              BProfileMenu(title: 'Username', value: 'Kelompok LCI', onPressed: () {}),
 
               const SizedBox(height: BSize.spaceBtwItems),
               const Divider (),
@@ -54,11 +54,11 @@ class ProfileScreen extends StatelessWidget {
               const BSectionHeading(title: 'Personal Information', showActionButton: false),
               const SizedBox (height: BSize. spaceBtwItems),
 
-              BProfileMenu(title: 'User ID', value: '45689', icon: Iconsax.copy, onPressed: () {}),
-              BProfileMenu(title: 'E-mail', value: 'nyakuuuu@yuhuu', onPressed: () {}),
-              BProfileMenu(title: 'Phone Number', value: '123', onPressed: () {}),
-              BProfileMenu(title: 'Gender :', value: 'GTW', onPressed: () {}),
-              BProfileMenu(title: 'Date of Birth', value: 'KEPO', onPressed: () {}),
+              BProfileMenu(title: 'User ID', value: '#0001', icon: Iconsax.copy, onPressed: () {}),
+              BProfileMenu(title: 'E-mail', value: 'KelompokLCI@gmail.com', onPressed: () {}),
+              BProfileMenu(title: 'Phone Number', value: '0844-4444-4444', onPressed: () {}),
+              BProfileMenu(title: 'Gender :', value: 'Gabungan', onPressed: () {}),
+              BProfileMenu(title: 'Date of Birth', value: '29-01-2005', onPressed: () {}),
               const Divider(),
               const SizedBox(height: BSize. spaceBtwItems),
 
