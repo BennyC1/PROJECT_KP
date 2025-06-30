@@ -57,6 +57,21 @@ class ProductRepository extends GetxController {
     }
   }
 
+  // GetFavorite Product
+  Future<List<ProductModel>> getFavouriteProducts(List<String> productIds) async {
+    try {
+      if (productIds.isEmpty) return [];
+      final snapshot = await _db.collection('Products').where(FieldPath.documentId, whereIn: productIds).get();
+      return snapshot.docs.map((querySnapshot) => ProductModel.fromSnapshot(querySnapshot)).toList();
+    } on FirebaseException catch (e) {
+      throw BFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      throw BPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
   // Get product for brand
   Future<List<ProductModel>> getProductsForBrand({required String brandId, int limit = -1}) async {
     try {

@@ -4,8 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:project_uas/common/styles/shadows.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
-import 'package:project_uas/common/widgets/icons/circular_icon.dart';
 import 'package:project_uas/common/widgets/images/rounded_image.dart';
+import 'package:project_uas/common/widgets/products/favourite_icon/favourite_icon.dart';
 import 'package:project_uas/common/widgets/texts/brand_title_text_with_verification.dart';
 import 'package:project_uas/common/widgets/texts/product_price_text.dart';
 import 'package:project_uas/common/widgets/texts/product_title_text.dart';
@@ -66,10 +66,10 @@ class BProductCardVertical extends StatelessWidget {
                   ), 
     
                 /// Favourite Icon Button
-                const Positioned(
+                Positioned(
                   top: 0,
                   right: 0.1,
-                  child: BCircularIcon(icon: Iconsax. heart5, color: Colors.red),        
+                  child: BFavouriteIcon(productId: product.id),        
                 ),
               ]
             ),

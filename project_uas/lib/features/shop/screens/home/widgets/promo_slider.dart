@@ -33,7 +33,8 @@ class BPromoSlider extends StatelessWidget {
                   viewportFraction: 1,
                   onPageChanged: (index, _) => controller.updatePageIndicator(index)
                 ),
-                items: controller.banners.map((banners) => BRoundedImage(imageUrl: banners.imageUrl, isNetworkImage: true, onPressed: () => Get.toNamed(banners.targetScreen))).toList(),
+                items: controller.banners.map((banners) => BRoundedImage(imageUrl: banners.imageUrl, isNetworkImage: true, 
+                onPressed: () => Get.toNamed(banners.targetScreen))).toList(),
               ), 
               const SizedBox(height: BSize.spaceBtwItems),
               Center(

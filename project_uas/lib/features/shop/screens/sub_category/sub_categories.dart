@@ -5,6 +5,7 @@ import 'package:project_uas/common/widgets/images/rounded_image.dart';
 import 'package:project_uas/common/widgets/products/products_cards/product_card_horizontal.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/features/shop/models/brand_model.dart';
+import 'package:project_uas/features/shop/models/product_model.dart';
 import 'package:project_uas/features/shop/screens/brand/brand_products.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
@@ -38,7 +39,7 @@ class SubCategoriesScreen extends StatelessWidget {
                     itemCount: 1,
                     scrollDirection: Axis. horizontal,
                     separatorBuilder: (context, index) => const SizedBox(width: BSize.spaceBtwItems),
-                    itemBuilder: (context, index) => const BProductCardHorizontal(),
+                    itemBuilder: (context, index) => BProductCardHorizontal(product: ProductModel.empty()),
                     ),
                   ),
                 ]

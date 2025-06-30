@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/common/widgets/custom_shape/curved_edges/curved_edges_widget.dart';
-import 'package:project_uas/common/widgets/icons/circular_icon.dart';
 import 'package:project_uas/common/widgets/images/rounded_image.dart';
+import 'package:project_uas/common/widgets/products/favourite_icon/favourite_icon.dart';
 import 'package:project_uas/features/shop/controllers/product/images_controller.dart';
 import 'package:project_uas/features/shop/models/product_model.dart';
 import 'package:project_uas/utils/constants/colors.dart';
@@ -82,9 +81,9 @@ class BProductImageSlider extends StatelessWidget {
             ),
 
             // Appbar Icons
-            const BAppBar (
+            BAppBar (
               showBackArrow: true,
-              actions: [BCircularIcon(icon: Iconsax .heart5, color: Colors.red)],
+              actions: [BFavouriteIcon(productId: product.id)],
             ),
           ],
         ),

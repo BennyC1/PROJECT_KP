@@ -13,6 +13,7 @@ import 'package:project_uas/utils/exceptions/firebase_auth_exceptions.dart';
 import 'package:project_uas/utils/exceptions/firebase_exceptions.dart';
 import 'package:project_uas/utils/exceptions/format_exceptions.dart';
 import 'package:project_uas/utils/exceptions/platform_exceptions.dart';
+import 'package:project_uas/utils/local_storage/storage_utility.dart';
 
 import '../../navigation_menu.dart';
 
@@ -38,6 +39,10 @@ class AuthenticationRepository extends GetxController {
     final user = _auth.currentUser;
     
     if(user != null) {
+      // initialize User spesific storage
+      await BLocalStorage.init(user.uid);
+
+      // IF USER EMAIL IS VERIFIED
       if(user.emailVerified){
         Get.offAll(() => const NavigationMenu());
       } else{

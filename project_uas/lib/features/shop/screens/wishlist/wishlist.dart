@@ -1,9 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:project_uas/features/shop/controllers/product/product_controller.dart';
+import 'package:project_uas/common/widgets/shimmer/vertical_product_shimmer.dart';
+import 'package:project_uas/features/shop/controllers/product/favourites_controller.dart';
 import 'package:project_uas/features/shop/screens/home/home.dart';
+import 'package:project_uas/navigation_menu.dart';
+import 'package:project_uas/utils/constants/image_string.dart';
+import 'package:project_uas/utils/helpers/cloud_helper_functions.dart';
+import 'package:project_uas/utils/loaders/animation_loader.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/icons/circular_icon.dart';
@@ -16,23 +20,48 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProductController());
+    final controller = FavouritesController.instance;
     
     return Scaffold(
       appBar: BAppBar (
-        title: Text('Wishlist', style: Theme. of(context). textTheme. headlineMedium),
+        title: Text('Wishlist', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           BCircularIcon(icon: Iconsax.add, onPressed: () => Get.to(const HomeScreen())),
         ]
       ),
+
+      // BODY
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets. all(BSize. defaultSpace),
-          child: Column(
-            children: [BGridLayout(itemCount: 1, itemBuilder: (_, index) => BProductCardVertical(product: controller.featuredProducts[index]))],
-          ),
-        ),
-      ), 
-   );  
+
+          /// Products Grid
+          child: Obx(
+            () => FutureBuilder(
+              future: controller.favoriteProducts(),
+              builder: (context, snapshot) {
+                /// Nothing Found Widget
+                final emptyWidget = BAnimationLoaderWidget(
+                  text: 'Whoops! Wishlist is Empty....',
+                  animation: BImages.pencilAnimation,
+                  showAction: true,
+                  actionText: 'Let\'s add some',
+                  onActionPressed: () => Get.off(() => const NavigationMenu()),
+                ); 
+            
+                const loader = BVerticalProductShimmer(itemCount: 6);
+                final widget = BCloudHelperFunctions.checkMultiRecordState(snapshot: snapshot, loader: loader, nothingFound: emptyWidget);
+                if (widget != null) return widget;
+            
+                final products= snapshot.data!;
+                return BGridLayout(
+                  itemCount: products.length,
+                  itemBuilder: (_, index) => BProductCardVertical(product: products[index]));
+              }
+            ),
+          ), 
+        ), 
+      ),
+    );  
   }
 }

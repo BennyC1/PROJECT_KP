@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(BSize.defaultSpace),
               child: Column(
                 children: [
-                  // slide promo 3
+                  // slide promo 
                   const BPromoSlider(),
                   const SizedBox(height: BSize.spaceBtwSections),
 
