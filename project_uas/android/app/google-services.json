@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "50313495351",
+    "project_id": "pusat-aki-palembang",
+    "storage_bucket": "pusat-aki-palembang.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50313495351:android:24c43bebb48d57e4c990b2",
+        "android_client_info": {
+          "package_name": "com.example.project_uas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50313495351-de9nbsjadj45pqoq96sse81jksrhpmbf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.project_uas",
+            "certificate_hash": "c0cf7652a033495f2b728204bb439095c1b2ad1f"
+          }
+        },
+        {
+          "client_id": "50313495351-r8q30ugeblp1fc2sr38aa764nsggji4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBi8BRhGScqoSD2IInYAAe-L_sXshYL-Z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50313495351-r8q30ugeblp1fc2sr38aa764nsggji4r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "50313495351-554c7bd42hohramt3c46foajokif3j9m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.projectUas"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
