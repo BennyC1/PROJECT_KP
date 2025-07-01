@@ -6,9 +6,9 @@ import 'package:project_uas/utils/constants/sized.dart';
 class BProfileMenu extends StatelessWidget {
     const BProfileMenu({
     super.key,
-    required this. onPressed,
-    required this. title,
-    required this. value,
+    required this.onPressed,
+    required this.title,
+    required this.value,
     this.icon = Iconsax.arrow_right_34,
     });
 

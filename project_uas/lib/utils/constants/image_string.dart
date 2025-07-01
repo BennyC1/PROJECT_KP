@@ -37,11 +37,11 @@ class BImages {
       "assets/images/animations/sammy-line-travel-backpack-with-passport-and-air-ticket.gif";
 
   // -- Lottie Animations
-  static String cortAnimation = "assets/images/animations/lady-adding-product-in-cart-animation.json";
+  static String cartAnimation = "assets/images/animations/lady-adding-product-in-cart-animation.json";
   static String orderCompletedAnimation = "assets/images/animations/order-complete-car-delivery-animation.json";
   static String packageAnimation = "assets/images/animations/98783-packaging-in-progress.json";
   static String paperPlaneAnimation = "assets/images/animations/110052-paper-plane.json";
-  static String corAnimation = "assets/images/animations/136491-animation-lottie-car-rides.json";
+  static String carAnimation = "assets/images/animations/136491-animation-lottie-car-rides.json";
   static String pencilAnimation = "assets/images/animations/140429-pencil-drawing.json";
   static String docerAnimation = "assets/images/animations/141594-animation-of-docer.json";
   static String searchAnimation = "assets/images/animations/72785-searching.json";

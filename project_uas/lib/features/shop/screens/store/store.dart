@@ -31,7 +31,7 @@ class StoreScreen extends StatelessWidget {
         appBar: BAppBar(
           title: Text('Store',style:Theme.of(context).textTheme.headlineMedium),
           actions: [
-            BCartCounterIcon(onPressed: (){}),
+            BCartCounterIcon(),
           ],
         ),
         body: NestedScrollView(headerSliverBuilder: (_, innerBoxIsScrolled) {

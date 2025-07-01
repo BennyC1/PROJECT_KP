@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:project_uas/common/styles/shadows.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
 import 'package:project_uas/common/widgets/images/rounded_image.dart';
 import 'package:project_uas/common/widgets/products/favourite_icon/favourite_icon.dart';
+import 'package:project_uas/common/widgets/products/products_cards/add_to_cart_button.dart';
 import 'package:project_uas/common/widgets/texts/brand_title_text_with_verification.dart';
 import 'package:project_uas/common/widgets/texts/product_price_text.dart';
 import 'package:project_uas/common/widgets/texts/product_title_text.dart';
@@ -60,7 +60,7 @@ class BProductCardVertical extends StatelessWidget {
                     child: BRoundedContainer (
                       radius: BSize.sm,
                       backgroundcolor: BColors.secondary.withOpacity(0.8),
-                      padding: const EdgeInsets. symmetric(horizontal: BSize.sm, vertical: BSize.xs),
+                      padding: const EdgeInsets.symmetric(horizontal: BSize.sm, vertical: BSize.xs),
                       child: Text('$salePercentage%', style: Theme.of(context).textTheme.labelLarge!.apply(color:BColors.black)),
                     ),
                   ), 
@@ -115,21 +115,7 @@ class BProductCardVertical extends StatelessWidget {
                   ),
                 ),
                 
-                // add to cart button
-                Container (
-                  decoration: const BoxDecoration(
-                    color: BColors. dark,
-                    borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(BSize.cardRadiusMd),
-                    bottomRight: Radius.circular(BSize.productImageRadius),
-                    ),
-                  ),
-                  child: const SizedBox(
-                    width: BSize.iconLg * 1.2,
-                    height: BSize.iconLg * 1.2,
-                    child: Center(child: Icon(Iconsax.add, color: BColors.white)),
-                  ),
-                ),
+                ProductCardAddToCartButton(product: product),
               ]
             )
           ]

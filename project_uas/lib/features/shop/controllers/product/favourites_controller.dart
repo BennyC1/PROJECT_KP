@@ -47,7 +47,7 @@ class FavouritesController extends GetxController {
 
   void saveFavoritesToStorage() {
     final encodedFavorites = json.encode(favorites);
-    BLocalStorage.instance().saveData('favorites', encodedFavorites);
+    BLocalStorage.instance().writeData('favorites', encodedFavorites);
   }
   
   Future<List<ProductModel>> favoriteProducts() async {

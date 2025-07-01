@@ -30,7 +30,7 @@ class BHomeAppBar extends StatelessWidget {
         ],
       ),
       actions: [
-        BCartCounterIcon(iconColor: BColors.white, onPressed: () {},),
+        BCartCounterIcon(iconColor: BColors.white),
       ]
     );
   }

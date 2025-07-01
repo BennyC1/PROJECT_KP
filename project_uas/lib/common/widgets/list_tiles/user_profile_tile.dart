@@ -29,7 +29,7 @@ class BUserProfileTile extends StatelessWidget {
           : BCircularImage(image: image, width: 55, height: 55, isNetworkImage: networkImage.isNotEmpty);
       }),
       title: Text(controller.user.value.fullName, style: Theme.of(context).textTheme.headlineSmall!.apply(color: BColors.white)),
-      subtitle: Text(controller.user.value.email, style: Theme.of(context). textTheme.bodyMedium !. apply(color: BColors.white)),
+      subtitle: Text(controller.user.value.email, style: Theme.of(context).textTheme.bodyMedium !. apply(color: BColors.white)),
       trailing: IconButton (onPressed: onPressed, icon: const Icon(Iconsax.edit, color: BColors.white)),
     );
   }
