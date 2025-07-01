@@ -21,10 +21,11 @@ class BProductCardHorizontal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ProductController.instance;
     final dark = BHelperFunctions.isDarkMode(context);
     final currencyFormatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
-    final controller = ProductController.instance;
-
+    final salePercentage = controller.calculateSalePercentage(product.price, product.salePrice);
+    
     return Container(
       width: 310,
       padding: const EdgeInsets.all(1),
@@ -48,6 +49,18 @@ class BProductCardHorizontal extends StatelessWidget {
                   child: BRoundedImage(imageUrl: product.thumbnail, applyImageRadius: true, isNetworkImage: true,)
                 ),
 
+                /// Sale Tag
+                if (salePercentage != null)
+                  Positioned (
+                    top: 12,
+                    child: BRoundedContainer (
+                      radius: BSize.sm,
+                      backgroundcolor: BColors.secondary.withOpacity(0.8),
+                      padding: const EdgeInsets. symmetric(horizontal: BSize.sm, vertical: BSize.xs),
+                      child: Text('$salePercentage%', style: Theme.of(context).textTheme.labelLarge!.apply(color:BColors.black)),
+                    ),
+                  ),
+
                 /// Favourite Icon Button
                 Positioned(
                   top: 0,
@@ -70,7 +83,7 @@ class BProductCardHorizontal extends StatelessWidget {
                     children: [
                       BProductTitleText(title: product.title, smallsize: true),
                       const SizedBox(height: BSize. spaceBtwItems / 2),
-                      BBrandTitleWithVerifiedIcon(title: product.brand?.name ?? 'No Brand'),
+                      BBrandTitleWithVerifiedIcon(title: product.brand!.name),
                     ],
                   ),
 
