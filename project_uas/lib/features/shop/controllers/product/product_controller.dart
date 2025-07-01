@@ -11,7 +11,7 @@ class ProductController extends GetxController {
 
   final isLoading = false.obs;
   final productRepository = Get.put(ProductRepository());
-  RxList<ProductModel> featuredProducts = < ProductModel>[].obs;
+  RxList<ProductModel> featuredProducts = <ProductModel>[].obs;
 
   @override
   void onInit() {

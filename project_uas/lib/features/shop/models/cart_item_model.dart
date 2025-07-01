@@ -5,6 +5,7 @@ class CartItemModel {
   String? image;
   int quantity;
   String? brandName;
+  int stock;
 
   /// Constructor
   CartItemModel({
@@ -14,10 +15,11 @@ class CartItemModel {
     this.price = 0.0,
     this.title = '',
     this.brandName,
+    required this.stock,
   });
 
   /// Empty Cart
-  static CartItemModel empty() => CartItemModel(productId: '', quantity: 0);
+  static CartItemModel empty() => CartItemModel(productId: '', quantity: 0, stock: 0);
 
   /// Convert a CartItem to a JSON Map
   Map<String, dynamic> toJson() {
@@ -28,6 +30,7 @@ class CartItemModel {
       'image': image,
       'quantity': quantity,
       'brandName': brandName,
+      'stock': stock,
     };
   }
  
@@ -40,6 +43,7 @@ class CartItemModel {
       image : json['image'],
       quantity : json['quantity'],
       brandName : json['brandName'],
+      stock: json['stock'] ?? 0,
     );
   }
 }

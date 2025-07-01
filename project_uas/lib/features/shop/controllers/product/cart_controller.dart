@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:project_uas/features/shop/controllers/product/product_controller.dart';
 import 'package:project_uas/features/shop/models/cart_item_model.dart';
 import 'package:project_uas/features/shop/models/product_model.dart';
 import 'package:project_uas/utils/constants/enums.dart';
@@ -20,43 +21,62 @@ class CartController extends GetxController {
 
   // Add items in the cart
   void addToCart(ProductModel product) {
-    // Quantity Check
-    if (productQuantityInCart.value < 1) {
-      BLoaders.customToast(message: 'Select Quantity');
-      return;
-    }
+    final requestedQty = productQuantityInCart.value;
 
-  // Out of Stock Status
-  if (product.productType == ProductType.variable.toString()) {
-    if (product.stock < 1) {
-      BLoaders.warningSnackBar(message: 'Selected Product is out of stock.', title: 'Oh Snap!');
-      return;
-    }
+  if (requestedQty < 1) {
+    BLoaders.customToast(message: 'Select Quantity');
+    return;
   }
 
-  // Convert the ProductModel to a CartItemModel with the given quantity
-  final selectedCartItem = convertToCartItem(product, productQuantityInCart.value);
+  if (product.stock < 1) {
+    BLoaders.warningSnackBar(
+      title: 'Out of Stock',
+      message: 'This product is currently unavailable.',
+    );
+    return;
+  }
 
-  // Check if already added in the Cart
-  int index = cartItems
-      .indexWhere((cartItem) => cartItem.productId == selectedCartItem.productId);
+  // ✅ Cegah penyimpanan jika jumlah lebih dari stok
+  if (requestedQty > product.stock) {
+    BLoaders.warningSnackBar(
+      title: 'Stock Limit',
+      message: 'You can only purchase up to ${product.stock} items.)',
+    );
+    return;
+  }
+
+  final selectedCartItem = convertToCartItem(product, requestedQty);
+  final index = cartItems.indexWhere((item) => item.productId == selectedCartItem.productId);
 
   if (index >= 0) {
-    // This quantity is already added or Updated/Removed from the design (Cart)
+    // Overwrite quantity
     cartItems[index].quantity = selectedCartItem.quantity;
   } else {
     cartItems.add(selectedCartItem);
   }
 
-  updateCart();
-  BLoaders.customToast(message: 'Your Product has been added to the Cart.');
-}
+    updateCart();
+    BLoaders.customToast(message: 'Your Product has been added to the Cart.');
+  }
 
 void addOneToCart(CartItemModel item) {
   int index = cartItems.indexWhere((cartItem) =>
       cartItem.productId == item.productId);
 
   if (index >= 0) {
+    final currentQty = cartItems[index].quantity;
+
+    // Perlu ambil stock dari ProductModel
+    final maxStock = getProductStock(item.productId); // kamu bisa ambil dari database, atau simpan di model
+
+    if (currentQty + 1 > maxStock) {
+      BLoaders.warningSnackBar(
+        title: 'Stock Limit',
+        message: 'Cannot add more than available stock ($maxStock)',
+      );
+      return;
+    }
+
     cartItems[index].quantity += 1;
   } else {
     cartItems.add(item);
@@ -64,6 +84,15 @@ void addOneToCart(CartItemModel item) {
 
   updateCart();
 }
+
+  int getProductStock(String productId) {
+    // Ambil langsung dari sumber produk, atau jika kamu punya list produk tersimpan
+    final product = ProductController.instance.featuredProducts.firstWhere(
+      (p) => p.id == productId,
+      orElse: () => ProductModel.empty(), // pastikan ProductModel.empty() ada
+    );
+    return product.stock;
+  }
 
 void removeOneFromCart(CartItemModel item) {
   int index = cartItems.indexWhere((cartItem) =>
@@ -122,6 +151,7 @@ CartItemModel convertToCartItem(ProductModel product, int quantity) {
     quantity: quantity,
     image: product.thumbnail,
     brandName: product.brand != null ? product.brand!.name : '',
+    stock: product.stock,
   );
 }
 
