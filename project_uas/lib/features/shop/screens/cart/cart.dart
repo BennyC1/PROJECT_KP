@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/features/shop/controllers/product/cart_controller.dart';
 import 'package:project_uas/features/shop/screens/cart/widgets/cart_items.dart';
@@ -53,11 +54,19 @@ class CartScreen extends StatelessWidget {
               padding: const EdgeInsets.all(BSize.defaultSpace),
               child: ElevatedButton(
                 onPressed: () => Get.to(() => const CheckoutScreen()),
-                child: Obx(() => Text('Checkout \Rp ${controller.totalCartPrice.value}')),
+                child: Obx(() {
+                  final currencyFormatter = NumberFormat.currency(
+                    locale: 'id_ID',
+                    symbol: 'Rp ',
+                    decimalDigits: 0,
+                  );
+
+                  return Text('Checkout ${currencyFormatter.format(controller.totalCartPrice.value)}');
+                }
               ),
-            )
-          ), 
+            ),
+          )
+        ), 
     );
   }
 }
-    

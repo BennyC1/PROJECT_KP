@@ -10,14 +10,13 @@ class BBillingAddressSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BSectionHeading(title: 'Shipping Address', buttonTitle: 'Change', onPressed: () {}),
-        Text('', style: Theme. of (context).textTheme.bodyLarge),
+        const BSectionHeading(title: 'Address', showActionButton: false),
         const SizedBox(height: BSize.spaceBtwItems / 2),
         Row (
           children: [
             const Icon(Icons.phone, color: Colors.grey, size: 16),
             const SizedBox(width: BSize.spaceBtwItems),
-            Text( '+62 77-7888-8888' , style: Theme.of(context) . textTheme. bodyMedium),
+            Text( '0822-8149-0401' , style: Theme.of(context).textTheme.bodyMedium),
           ]
         ),
         const SizedBox(height: BSize.spaceBtwItems/2),
@@ -25,7 +24,7 @@ class BBillingAddressSection extends StatelessWidget {
           children: [
             const Icon(Icons.location_history, color: Colors.grey, size: 16),
             const SizedBox(width: BSize.spaceBtwItems),
-            Expanded(child: Text( "Palembang, Ujung dunia No 124", style: Theme.of(context).textTheme.bodyMedium, softWrap: true)),
+            Expanded(child: Text("D'Barbershop JL. Maskarebet Komplek Taman Indah CD/01 No.64", style: Theme.of(context).textTheme.bodyMedium, softWrap: true)),
           ],
         )
       ]

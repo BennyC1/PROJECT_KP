@@ -2,25 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
-import 'package:project_uas/common/widgets/products/cart/coupon_widget.dart';
-import 'package:project_uas/common/widgets/success_screen/success_screen.dart';
+import 'package:project_uas/features/shop/controllers/product/cart_controller.dart';
+import 'package:project_uas/features/shop/controllers/product/order_controller.dart';
 import 'package:project_uas/features/shop/screens/cart/widgets/cart_items.dart';
 import 'package:project_uas/features/shop/screens/checkout/widgets/billing_address_section.dart';
 import 'package:project_uas/features/shop/screens/checkout/widgets/billing_amount_section.dart';
 import 'package:project_uas/features/shop/screens/checkout/widgets/billing_payment_section.dart';
-import 'package:project_uas/navigation_menu.dart';
 import 'package:project_uas/utils/constants/colors.dart';
-import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
+import 'package:project_uas/utils/helpers/pricing_calculator.dart';
+import 'package:intl/intl.dart';
+import 'package:project_uas/utils/popups/loaders.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen( {Key? key}) : super(key: key);
+  const CheckoutScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final dark = BHelperFunctions.isDarkMode(context);
+    final currencyFormatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final cartController = CartController.instance;
+    final discount = cartController.getTotalDiscount();
+    final subTotal = cartController.getOriginalTotalPrice();
+    final tax = BPricingCalculator.calculateTax(subTotal, "Indonesia");
+    final total = subTotal + tax - discount;
+    final orderController = Get.put(OrderController());
 
+    final dark = BHelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: BAppBar(showBackArrow: true, title: Text('Order Review', style: Theme.of(context).textTheme.headlineSmall)),
       body: SingleChildScrollView(
@@ -32,31 +40,28 @@ class CheckoutScreen extends StatelessWidget {
               const BCartItems(showAddRemoveButtons: false),
               const SizedBox (height: BSize.spaceBtwSections),
 
-              // coupon
-              const BCouponCode(),
-              const SizedBox (height: BSize.spaceBtwSections),
-
               // billing
               BRoundedContainer (
                 showBorder: true,
                 backgroundcolor: dark ? BColors.black : BColors.white,
-                padding: const EdgeInsets. only(top: BSize.sm, bottom: BSize.sm, right: BSize.sm, left: BSize.md),
+                padding: const EdgeInsets.only(top: BSize.sm, bottom: BSize.sm, right: BSize.sm, left: BSize.md),
                 child: const Column(
                   children: [
                     /// Pricing
+                    SizedBox(height: BSize.spaceBtwItems),
                     BBillingAmountSection(),
                     SizedBox(height: BSize.spaceBtwItems),
 
                     /// Divider
                     Divider(),
-                    SizedBox (height: BSize.spaceBtwItems),
 
                     // Payment Methods
                     BBillingPaymentSection(),
                     SizedBox (height: BSize.spaceBtwItems),
 
-                    // Address
+                    Divider(),
 
+                    // Address
                     BBillingAddressSection(),
                     
                   ]
@@ -70,12 +75,12 @@ class CheckoutScreen extends StatelessWidget {
       // check out button
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(BSize.defaultSpace),
-        child: ElevatedButton(onPressed: () => Get.to(() => SuccessScreen(
-          image: BImages.successfullyRegisterAnimation,
-          title: 'Payment Success!',
-          subTitle: 'Your Item Will be Shipped Soon!~',
-          onPressed: () => Get.offAll(() => const NavigationMenu()),
-        )), child: const Text('Checkout Rp 1.250.000')),
+        child: ElevatedButton( 
+          onPressed: subTotal > 0 
+            ? () => orderController.processOrder(total)
+            : () => BLoaders.warningSnackBar(title: 'Empty Cart', message: 'Add item in the cart in order to proceed'),
+          child: Text('Checkout ${currencyFormatter.format(total)}'),
+        ),
       ),
     );
   }

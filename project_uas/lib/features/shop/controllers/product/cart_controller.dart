@@ -149,6 +149,10 @@ double getTotalDiscount() {
   return discount;
 }
 
+double getOriginalTotalPrice() {
+  return cartItems.fold(0, (sum, item) => sum + (item.originalPrice * item.quantity));
+}
+
 /// This function converts a ProductModel to a CartItemModel
 CartItemModel convertToCartItem(ProductModel product, int quantity) {
   final price = (product.salePrice > 0.0) ? product.salePrice : product.price;
