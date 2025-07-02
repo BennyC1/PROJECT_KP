@@ -17,7 +17,6 @@ import 'package:project_uas/utils/helpers/helper_function.dart';
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen( {Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     final dark = BHelperFunctions.isDarkMode(context);
@@ -26,16 +25,16 @@ class CheckoutScreen extends StatelessWidget {
       appBar: BAppBar(showBackArrow: true, title: Text('Order Review', style: Theme.of(context).textTheme.headlineSmall)),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets. all (BSize.defaultSpace),
+          padding: const EdgeInsets.all(BSize.defaultSpace),
           child: Column(
             children: [
-              /// -- Items in Cort
+              /// -- Items in Cart
               const BCartItems(showAddRemoveButtons: false),
               const SizedBox (height: BSize.spaceBtwSections),
 
               // coupon
               const BCouponCode(),
-              const SizedBox (height: BSize. spaceBtwSections),
+              const SizedBox (height: BSize.spaceBtwSections),
 
               // billing
               BRoundedContainer (
@@ -76,7 +75,7 @@ class CheckoutScreen extends StatelessWidget {
           title: 'Payment Success!',
           subTitle: 'Your Item Will be Shipped Soon!~',
           onPressed: () => Get.offAll(() => const NavigationMenu()),
-        )), child: const Text('Checkout \Rp 1.250.000')),
+        )), child: const Text('Checkout Rp 1.250.000')),
       ),
     );
   }

@@ -36,7 +36,7 @@ class CartController extends GetxController {
     return;
   }
 
-  // ✅ Cegah penyimpanan jika jumlah lebih dari stok
+  //  Cegah penyimpanan jika jumlah lebih dari stok
   if (requestedQty > product.stock) {
     BLoaders.warningSnackBar(
       title: 'Stock Limit',
@@ -136,18 +136,28 @@ void updateAlreadyAddedProductCount(ProductModel product) {
     }
   }
 
+// Get Total Diskon
+double getTotalDiscount() {
+  double discount = 0.0;
+
+  for (var item in cartItems) {
+    if (item.originalPrice > item.price) {
+      discount += (item.originalPrice - item.price) * item.quantity;
+    }
+  }
+
+  return discount;
+}
 
 /// This function converts a ProductModel to a CartItemModel
 CartItemModel convertToCartItem(ProductModel product, int quantity) {
-  final price = 
-       product.salePrice > 0.0
-          ? product.salePrice
-          : product.price;
+  final price = (product.salePrice > 0.0) ? product.salePrice : product.price;
 
   return CartItemModel(
     productId: product.id,
     title: product.title,
     price: price,
+    originalPrice: product.price,
     quantity: quantity,
     image: product.thumbnail,
     brandName: product.brand != null ? product.brand!.name : '',
