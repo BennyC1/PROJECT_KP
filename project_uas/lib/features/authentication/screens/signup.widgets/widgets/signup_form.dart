@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/features/authentication/controllers/signup/signup_controller.dart';
-import 'package:project_uas/features/authentication/screens/signup.widgets/widgets/terms_condition_checkbox.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
 import 'package:project_uas/utils/validators/validators.dart';
@@ -91,10 +90,6 @@ class BFormSignup extends StatelessWidget {
             ),
           ),
           const SizedBox(height: BSize.spaceBtwInputFields),
-    
-          // terms&conditions
-          const BTermConditionCheckbox(),
-          const SizedBox(height: BSize.spaceBtwSections),
     
           //signup buton
           SizedBox(width: double.infinity, child: ElevatedButton(

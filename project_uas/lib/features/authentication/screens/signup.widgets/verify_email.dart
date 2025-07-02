@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/features/authentication/controllers/signup/verify_email_controller.dart';
+import 'package:project_uas/features/authentication/screens/signup.widgets/signup.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/constants/text_string.dart';
@@ -34,7 +35,7 @@ class VerifyEmailScreen extends StatelessWidget {
               Image (
                   image: const AssetImage(BImages.deliveredEmailIllustration),
                   width: BHelperFunctions.screenWidth() * 0.6,
-              ), // Image
+              ), 
               const SizedBox(height: BSize.spaceBtwSections),
 
               /// Title & SubTitle
@@ -49,8 +50,8 @@ class VerifyEmailScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity, 
                 child: ElevatedButton(
-                  onPressed:  () => controller.checkEmailVerificationStatus(), 
-                  child: const Text(BText.tContinue))),
+                  onPressed:  () => Get.offAll(const SignupScreen()), 
+                  child: const Text('Cancel'))),
               const SizedBox(height: BSize.spaceBtwItems),
               SizedBox(width: double.infinity, child: TextButton(onPressed: () => controller.sendEmailVerification(), child: const Text(BText.resendEmail))),        
             ],

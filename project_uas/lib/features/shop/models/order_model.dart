@@ -20,7 +20,7 @@ class OrderModel {
     required this.items,
     required this.totalAmount,
     required this.orderDate,
-    this.paymentMethod = 'Qris',
+    this.paymentMethod = 'Pay In Place',
     // this.address,
   });
 
@@ -41,7 +41,11 @@ class OrderModel {
       'orderDate': orderDate,
       'paymentMethod' : paymentMethod,
       // 'address': address ?. toJson(), // Convert AddressModel to map
-      'items': items.map((item) => item.toJson()).toList(), // Convert CartItemModel to map
+      'items': items.map((item) {
+        final data = item.toJson();
+        data.remove('Stock'); // 🔥 Hapus stock hanya saat menyimpan
+        return data;
+    }).toList(),
     };
   }
 

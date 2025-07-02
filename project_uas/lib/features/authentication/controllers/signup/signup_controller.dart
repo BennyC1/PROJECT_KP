@@ -50,7 +50,7 @@ class SignupController extends GetxController {
           title: 'Accept Privacy Policy',
           message: 'In order to create account, you must have to read and accept the Privacy Policy & Terms of Use:',
           );
-      return;
+        return;
       }
 
       // Register user in the Firebase Authentication & Save user data in the Firebase

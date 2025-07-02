@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/success_screen/success_screen.dart';
@@ -32,6 +33,32 @@ class OrderController extends GetxController {
     }
   }
 
+  Future<void> updateProductStockAfterOrder() async {
+    try {
+      final items = cartController.cartItems;
+
+      for (var item in items) {
+        final productDoc = await FirebaseFirestore.instance
+            .collection('Products')
+            .doc(item.productId)
+            .get();
+
+        if (productDoc.exists) {
+          final currentStock = productDoc['Stock'] ?? 0;
+          final updatedStock = currentStock - item.quantity;
+
+          await FirebaseFirestore.instance
+              .collection('Products')
+              .doc(item.productId)
+              .update({'Stock': updatedStock});
+        }
+      }
+    } catch (e) {
+      BLoaders.warningSnackBar(title: 'Stock Update Error', message: e.toString());
+    }
+  }
+
+
   /// Add methods for order processing
   void processOrder(double totalAmount) async {
     try {
@@ -57,6 +84,9 @@ class OrderController extends GetxController {
 
       // Save the order to Firestore
       await orderRepository.saveOrder(order, userId);
+
+      // Update stock
+      await updateProductStockAfterOrder();
 
       // Update the cart status
       cartController.clearCart();
