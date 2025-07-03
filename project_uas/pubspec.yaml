@@ -67,12 +67,9 @@ flutter:
     - assets/logos/
     - assets/images/content/
     - assets/images/banners/
-    - assets/icons/categories/
     - assets/images/animations/
     - assets/icons/payment_methods/
     - assets/images/on_boarding_images/
-    - assets/images/products_aki/mobil/
-
     - assets/icons/brand/
 
   #--------------- LOCAL FONTS ------------------#

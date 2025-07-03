@@ -17,7 +17,7 @@ class ChangeName extends StatelessWidget {
       /// Custom Appbar
       appBar: BAppBar(
         showBackArrow: true,
-        title: Text( 'Change Name' , style: Theme.of(context).textTheme.headlineSmall),
+        title: Text( 'Change Name', style: Theme.of(context).textTheme.headlineSmall),
       ), 
       body: Padding(
         padding: const EdgeInsets.all(BSize.defaultSpace),
@@ -33,7 +33,7 @@ class ChangeName extends StatelessWidget {
 
             /// Text field and Button
             Form(
-              key: controller. updateUserNameFormKey,
+              key: controller.updateUserNameFormKey,
               child: Column(
                 children: [
                   TextFormField(

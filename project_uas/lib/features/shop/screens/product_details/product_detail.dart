@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/features/shop/models/product_model.dart';
+import 'package:project_uas/features/shop/screens/cart/cart.dart';
 import 'package:project_uas/features/shop/screens/product_details/widgets/bottom_add_to_cart_widget.dart';
 import 'package:project_uas/features/shop/screens/product_details/widgets/product_atributtes.dart';
 import 'package:project_uas/features/shop/screens/product_details/widgets/product_detail_image_slider.dart';
 import 'package:project_uas/features/shop/screens/product_details/widgets/product_meta_data.dart';
-import 'package:project_uas/features/shop/screens/product_details/widgets/rating_share_widget.dart';
-import 'package:project_uas/features/shop/screens/product_reviews/product_reviews.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:readmore/readmore.dart';
 
@@ -32,9 +30,6 @@ class ProductDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: BSize. defaultSpace, left: BSize. defaultSpace, bottom: BSize.defaultSpace),
               child: Column(
                 children: [
-                  /// Rating & Share Button
-                  const BRatingAndShare(),
-
                   // Produk Detail
                   BProductMetaData(product: product),
 
@@ -43,7 +38,7 @@ class ProductDetailScreen extends StatelessWidget {
                   const SizedBox(height: BSize.spaceBtwSections),
 
                   // check out buton
-                  SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () {}, child: const Text('Checkout'))),
+                  SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => Get.to(const CartScreen()), child: const Text('Checkout'))),
                   const SizedBox(height: BSize.spaceBtwSections),
 
                   // descripton
@@ -61,15 +56,6 @@ class ProductDetailScreen extends StatelessWidget {
 
                   // review 
                   const Divider(),
-                  const SizedBox(height: BSize.spaceBtwItems),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const BSectionHeading(title: 'Review (0)',),
-                      IconButton(icon: const Icon(Iconsax.arrow_right_3, size: 18), onPressed: () => Get.to(() => const ProductReviewsScreen())),
-                    ],
-                  ),
-                  const SizedBox(height: BSize.spaceBtwSections),
                 ]
               ),
             ),

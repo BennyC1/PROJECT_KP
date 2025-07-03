@@ -62,6 +62,16 @@ class CartController extends GetxController {
 void addOneToCart(CartItemModel item) {
   int index = cartItems.indexWhere((cartItem) =>
       cartItem.productId == item.productId);
+  final maxStock = getProductStock(item.productId);
+
+  // Cek stok sebelum menambah
+  if (maxStock < 1) {
+    BLoaders.warningSnackBar(
+      title: 'Out of Stock',
+      message: 'This product is currently unavailable.',
+    );
+    return;
+  }
 
   if (index >= 0) {
     final currentQty = cartItems[index].quantity;

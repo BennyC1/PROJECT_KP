@@ -62,38 +62,19 @@ class SettingsScreen extends StatelessWidget {
                     title: "My Orders", 
                     subTitle: 'In progress and Completed Orders',
                     onTap: () => Get.to(() => const OrderScreen())),
-                  const BSettingsMenuTile(
-                    icon: Iconsax.bank, 
-                    title: 'Bank Account', 
-                    subTitle: 'Withdraw balance to registered bank account'),
-                  const BSettingsMenuTile(
-                    icon: Iconsax.discount_shape, 
-                    title: "My Coupons", 
-                    subTitle: 'List of all the discounted coupons'),
-                  const BSettingsMenuTile(
-                    icon: Iconsax.notification, 
-                    title: "Notifications", 
-                    subTitle: 'Set any kind of notification message'),
-                  const BSettingsMenuTile(
-                    icon: Iconsax.security_card, 
-                    title: "Account Privacy", 
-                    subTitle: 'Manage data usage and connected accounts'),
 
                   /// App Settings
                   const SizedBox(height: BSize.spaceBtwSections),
                   const BSectionHeading(title: 'App Settings', showActionButton: false),
                   const SizedBox(height: BSize.spaceBtwItems),
-                  const BSettingsMenuTile(icon: Iconsax.document_upload, title: 'Load Data', subTitle: 'Upload Data to your Cloud Firebase'),
+                  const BSettingsMenuTile(
+                    icon: Iconsax.document_upload, 
+                    title: 'Load Data', 
+                    subTitle: 'Upload Data to your Cloud Firebase'),
                   BSettingsMenuTile(
-                    icon: Iconsax.location,
-                    title: 'Geolocation',
-                    subTitle: 'Set recommendation based on location!',
-                    trailing: Switch(value: true, onChanged: (value) {}),
-                  ),
-                  BSettingsMenuTile(
-                    icon: Iconsax.image,
-                    title: "HD Image Quality",
-                    subTitle: 'Set image quality to be seen',
+                    icon: Iconsax.notification, 
+                    title: "Notifications", 
+                    subTitle: 'Set any kind of notification message',
                     trailing: Switch(value: false, onChanged: (value) {}),
                   ),
 

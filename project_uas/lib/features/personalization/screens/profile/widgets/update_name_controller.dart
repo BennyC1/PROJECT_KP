@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/data/user/user_repository.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
-import 'package:project_uas/features/personalization/screens/profile/profile.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/helpers/network_manager.dart';
 import 'package:project_uas/utils/popups/full_screen_loader.dart';
@@ -27,7 +27,7 @@ class UpdateNameController extends GetxController {
 
   /// Fetch User record
   Future<void> initializeNames() async {
-    firstName. text = userController.user.value.firstName;
+    firstName.text = userController.user.value.firstName;
     lastName.text = userController.user.value.lastName;
   }
 
@@ -44,21 +44,25 @@ class UpdateNameController extends GetxController {
       }
 
       // Update user's first & last name in the Firebase Firestore
-      Map<String, dynamic> name = {'FirstName ': firstName.text.trim(), 'LastName': lastName.text.trim()};
+      Map<String, dynamic> name = {'FirstName': firstName.text.trim(), 'LastName': lastName.text.trim()};
       await userRepository.updateSingleField(name);
+
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(
+        '${firstName.text.trim()} ${lastName.text.trim()}',
+      );
 
       // Update the Rx User value
       userController.user.value.firstName = firstName.text.trim();
       userController.user.value.lastName = lastName.text.trim();
+      userController.user.refresh();
 
-      // Remove Loader
       BFullScreenLoader.stopLoading();
 
       // Show Success Message
       BLoaders.successSnackBar(title: 'Congratulations', message: 'Your Name has been updated.');
 
       // Move to previous screen.
-      Get.off(() => const ProfileScreen());
+      Get.back();
     } catch (e) {
       BFullScreenLoader.stopLoading();
       BLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());

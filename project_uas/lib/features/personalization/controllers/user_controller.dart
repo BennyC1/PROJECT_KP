@@ -1,16 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/user/user_repository.dart';
 import 'package:project_uas/features/authentication/screens/login/login.dart';
+import 'package:project_uas/features/personalization/controllers/widget/gender_option.dart';
 import 'package:project_uas/features/personalization/models/user_model.dart';
 import 'package:project_uas/features/personalization/screens/profile/widgets/re_authenticate_user_login_form.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/network_manager.dart';
+import 'package:project_uas/utils/local_storage/storage_utility.dart';
 import 'package:project_uas/utils/popups/full_screen_loader.dart';
 import 'package:project_uas/utils/popups/loaders.dart';
 
@@ -25,12 +26,17 @@ class UserController extends GetxController {
   final verifyEmail = TextEditingController();
   final verifyPassword = TextEditingController();
   final userRepository = Get.put(UserRepository());
+  final gender = ''.obs;
+  final dateOfBirth = ''.obs;
   GlobalKey<FormState> reAuthFormKey = GlobalKey<FormState>(); 
   
   @override
   void onInit() {
     super.onInit();
     fetchUserRecord();
+
+    gender.value = BLocalStorage.instance().readData<String>('Gender') ?? '';
+    dateOfBirth.value = BLocalStorage.instance().readData<String>('DateOfBirth') ?? '';
   }
 
   // Fetch USER Record 
@@ -163,7 +169,7 @@ class UserController extends GetxController {
 
         // Update User Image Record
         Map<String, dynamic> json = {'ProfilePicture': imageUrl};
-        await userRepository. updateSingleField(json);
+        await userRepository.updateSingleField(json);
 
         user. value.profilePicture = imageUrl;
         user.refresh();
@@ -176,4 +182,214 @@ class UserController extends GetxController {
       imageUploading.value = false;
     }
   }
+
+  void updateGender(String value) {
+    gender.value = value;
+    BLocalStorage.instance().writeData('Gender', value);
+  }
+
+  void updateDateOfBirth(DateTime date) {
+    final formatted = '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
+    dateOfBirth.value = formatted;
+    BLocalStorage.instance().writeData('DateOfBirth', formatted);
+  }
+
+  void selectGenderDialog() {
+    final controller = UserController.instance;
+
+    Get.bottomSheet(
+      Obx(() {
+        final selectedGender = controller.gender.value;
+        final isDark = Get.isDarkMode;
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          decoration: BoxDecoration(
+            color: isDark ? Colors.grey[900] : Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Select Gender', style: Get.textTheme.titleLarge),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GenderOptionCard(
+                    icon: Icons.male,
+                    label: 'Male',
+                    selected: selectedGender == 'Male',
+                    onTap: () {
+                      controller.updateGender('Male');
+                      Get.back();
+                    },
+                  ),
+                  GenderOptionCard(
+                    icon: Icons.female,
+                    label: 'Female',
+                    selected: selectedGender == 'Female',
+                    onTap: () {
+                      controller.updateGender('Female');
+                      Get.back();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () => Get.back(),
+                  child: const Text('Cancel'),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
+  void selectDateOfBirthDialog(BuildContext context) async {
+    DateTime? initial = DateTime(2000, 1, 1);
+    final currentValue = dateOfBirth.value;
+
+    if (currentValue.isNotEmpty) {
+      try {
+        final parts = currentValue.split('-');
+        final day = int.parse(parts[0]);
+        final month = int.parse(parts[1]);
+        final year = int.parse(parts[2]);
+        initial = DateTime(year, month, day);
+      } catch (_) {}
+    }
+
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Get.isDarkMode
+            ? ThemeData.dark().copyWith(
+                colorScheme: ColorScheme.dark(
+                  primary: Colors.blue,
+                  surface: Colors.grey[850]!,
+                  onSurface: Colors.white,
+                ),
+              )
+            : ThemeData.light().copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: Colors.blue,
+                  surface: Colors.white,
+                  onSurface: Colors.black,
+                ),
+              ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null) {
+      updateDateOfBirth(pickedDate);
+    }
+  }
+
+  void updatePhoneNumberDialog(BuildContext context) {
+    final phoneController = TextEditingController(text: user.value.phoneNumber);
+    final isDark = Get.isDarkMode;
+    final textTheme = Theme.of(context).textTheme;
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: isDark ? Colors.grey[900] : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Wrap(
+          runSpacing: 16,
+          children: [
+            // Header
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[500],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            Text(
+              'Update Phone Number',
+              style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+
+            const Divider(),
+
+            // Input field
+            TextField(
+              controller: phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                hintText: 'e.g. 08123456789',
+                prefixIcon: const Icon(Icons.phone),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+
+            // Save button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.save),
+                label: const Text('Save'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                onPressed: () async {
+                  final phone = phoneController.text.trim();
+                  if (phone.isEmpty) return;
+
+                  user.value.phoneNumber = phone;
+                  user.refresh();
+
+                  await userRepository.updateSingleField({'PhoneNumber': phone});
+                  await BLocalStorage.instance().writeData('PhoneNumber', phone);
+
+                  Get.back();
+                  BLoaders.successSnackBar(title: 'Success', message: 'Phone number updated!');
+                },
+              ),
+            ),
+
+            // Cancel button
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () => Get.back(),
+                child: const Text('Cancel'),
+              ),
+            ),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
 }
