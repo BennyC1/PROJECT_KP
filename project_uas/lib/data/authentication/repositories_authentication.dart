@@ -37,6 +37,8 @@ class AuthenticationRepository extends GetxController {
   /// Function to Show Relevant Screen
   void screenRedirect() async {
     final user = _auth.currentUser;
+    final userModel = await UserRepository.instance.fetchUserDetails();
+    Get.put(userModel);
     
     if(user != null) {
       // initialize User spesific storage

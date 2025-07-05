@@ -6,6 +6,9 @@ import 'package:project_uas/common/widgets/layouts/grid.layout.dart';
 import 'package:project_uas/common/widgets/products/products_cards/product_card_vertical.dart';
 import 'package:project_uas/common/widgets/shimmer/vertical_product_shimmer.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
+import 'package:project_uas/data/banner/banner_repository.dart';
+import 'package:project_uas/features/shop/controllers/banner_controller.dart';
+import 'package:project_uas/features/shop/controllers/category_controller.dart';
 import 'package:project_uas/features/shop/controllers/product/product_controller.dart';
 import 'package:project_uas/features/shop/models/brand_model.dart';
 import 'package:project_uas/features/shop/screens/all_products/all_products.dart';
@@ -23,74 +26,83 @@ class HomeScreen extends StatelessWidget {
     final controller = Get.put(ProductController());
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            BPrimaryHeaderContainer(
-              child: Column (
-                children: [
-                  // home
-                  const BHomeAppBar(),
-                  const SizedBox(height: BSize.spaceBtwSections),
-
-                  //search
-                  const BSearchContainer(text: 'Search in Store'),
-                  const SizedBox(height: BSize.spaceBtwSections),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: BSize.defaultSpace),
-                    child: Column(
-                      children: [
-                        //Heading
-                        BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white, onPressed: () => Get.to(() => BrandProducts(brand: BrandModel.empty()))),
-                        const SizedBox(height: BSize.spaceBtwItems),
-
-                        //Categories
-                        const BHomeCategories(),
-                      ],
-                    ) 
-                  ),
-                  const SizedBox(height: BSize.spaceBtwSections),
-                ]
-              )
-            ),
-            Padding(
-              padding: const EdgeInsets.all(BSize.defaultSpace),
-              child: Column(
-                children: [
-                  // slide promo 
-                  const BPromoSlider(),
-                  const SizedBox(height: BSize.spaceBtwSections),
-
-                  BSectionHeading(
-                    title: 'Popular Products',
-                      onPressed: () => Get.to(
-                        () => AllProducts(
-                        title: 'Popular Products',
-                        futureMethod: controller.fetchAllFeaturedProducts(),
-                      ), 
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await controller.fetchAllFeaturedProducts();  // Produk
+          // Tambahkan refresh lainnya jika perlu, misalnya:
+          await BannerRepository.instance.fetchBanners();
+          await Get.find<BannerController>().fetchBanner();
+          await CategoryController.instance.fetchCategories();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BPrimaryHeaderContainer(
+                child: Column (
+                  children: [
+                    // home
+                    const BHomeAppBar(),
+                    const SizedBox(height: BSize.spaceBtwSections),
+        
+                    //search
+                    const BSearchContainer(text: 'Search in Store'),
+                    const SizedBox(height: BSize.spaceBtwSections),
+        
+                    Padding(
+                      padding: const EdgeInsets.only(left: BSize.defaultSpace),
+                      child: Column(
+                        children: [
+                          //Heading
+                          BSectionHeading(title: 'Popular Categories', showActionButton: false, textColor: Colors.white, onPressed: () => Get.to(() => BrandProducts(brand: BrandModel.empty()))),
+                          const SizedBox(height: BSize.spaceBtwItems),
+        
+                          //Categories
+                          const BHomeCategories(),
+                        ],
+                      ) 
                     ),
-                  ), 
-
-                  const SizedBox(height: BSize.spaceBtwItems),
-
-                  // isi produk
-                  Obx(() {
-                    if (controller.isLoading.value) return const BVerticalProductShimmer();
-
-                    if (controller.featuredProducts.isEmpty) {
-                      return Center(child: Text('No Data Found!', style: Theme.of(context).textTheme.bodyMedium));
-                    }
-
-                    return BGridLayout(
-                      itemCount: controller.featuredProducts.length,
-                      itemBuilder: (_, index) => BProductCardVertical(product: controller.featuredProducts[index]),
-                    );
-                  }) 
-                ]
-              )
-            ),
-          ]
+                    const SizedBox(height: BSize.spaceBtwSections),
+                  ]
+                )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(BSize.defaultSpace),
+                child: Column(
+                  children: [
+                    // slide promo 
+                    const BPromoSlider(),
+                    const SizedBox(height: BSize.spaceBtwSections),
+        
+                    BSectionHeading(
+                      title: 'Popular Products',
+                        onPressed: () => Get.to(
+                          () => AllProducts(
+                          title: 'Popular Products',
+                          futureMethod: controller.fetchAllFeaturedProducts(),
+                        ), 
+                      ),
+                    ), 
+        
+                    const SizedBox(height: BSize.spaceBtwItems),
+        
+                    // isi produk
+                    Obx(() {
+                      if (controller.isLoading.value) return const BVerticalProductShimmer();
+        
+                      if (controller.featuredProducts.isEmpty) {
+                        return Center(child: Text('No Data Found!', style: Theme.of(context).textTheme.bodyMedium));
+                      }
+        
+                      return BGridLayout(
+                        itemCount: controller.featuredProducts.length,
+                        itemBuilder: (_, index) => BProductCardVertical(product: controller.featuredProducts[index]),
+                      );
+                    }) 
+                  ]
+                )
+              ),
+            ]
+          ),
         ),
       ),
     );

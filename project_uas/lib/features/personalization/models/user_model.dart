@@ -10,6 +10,7 @@ class UserModel {
   final String email;
   String phoneNumber;
   String profilePicture;
+  String role;
 
   /// Constructor for UserModel.
   UserModel({
@@ -20,6 +21,7 @@ class UserModel {
     required this.email,
     required this.phoneNumber,
     required this.profilePicture,
+    this.role = '',
   });
 
   /// Helper function to get the full name.
@@ -53,6 +55,7 @@ class UserModel {
       'Email': email,
       'PhoneNumber': phoneNumber,
       'ProfilePicture': profilePicture,
+      'role': role,
     };
   }
 
@@ -68,6 +71,7 @@ class UserModel {
         email: data['Email'] ?? '',
         phoneNumber: data[ 'PhoneNumber'] ?? '',
         profilePicture: data['ProfilePicture'] ?? '',
+        role: data['role'] ?? '',
       );
     } else {
       throw Exception('Docoment Data is Not Available');

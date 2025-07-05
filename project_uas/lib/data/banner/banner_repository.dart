@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:project_uas/features/shop/models/banner_model.dart';
 import 'package:project_uas/utils/exceptions/format_exceptions.dart';
 import 'package:project_uas/utils/exceptions/platform_exceptions.dart';
@@ -12,6 +16,7 @@ class BannerRepository extends GetxController {
   static BannerRepository get instance => Get.find();
 
   /// Variables
+  final RxList<BannerModel> banners = <BannerModel>[].obs;
   final _db = FirebaseFirestore.instance;
 
   /// Get all order related to current User
@@ -30,6 +35,46 @@ class BannerRepository extends GetxController {
     }
   }
 
-  /// Upload Banners to the Cloud Firebase
+  /// Upload Banner to Firebase Storage & Firestore
+  Future<void> uploadBanner({required String targetScreen}) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+
+      // ✅ Gunakan nama file tanpa spasi
+      final safeFileName = image.name.replaceAll(' ', '_');
+      final storageRef = FirebaseStorage.instance.ref("Banners/$safeFileName");
+
+      // ✅ Upload image
+      await storageRef.putFile(File(image.path));
+
+      // ✅ Ambil download URL langsung dari Firebase
+      final imageUrl = await storageRef.getDownloadURL();
+
+      // ✅ Simpan data ke Firestore
+      await _db.collection("Banners").add({
+        "Active": true,
+        "ImageUrl": imageUrl,
+        "TargetScreen": targetScreen,
+      });
+
+      // ✅ Tambahkan delay agar data sinkron dulu
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // ✅ Ambil ulang semua banner ke dalam RxList
+      await fetchBanners();
+
+    } on FirebaseException catch (e) {
+      throw BFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const BFormatException();
+    } on PlatformException catch (e) {
+      throw BPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Upload gagal: $e';
+    }
+  }
 }
   

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -11,20 +12,22 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
 
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
+  void _sendMessage() async {
+    final message = _messageController.text.trim();
+    if (message.isEmpty) return;
 
     setState(() {
+      _messages.add({'message': message, 'isSeller': false});
+    });
+    _messageController.clear();
+
+    // Simulasikan balasan otomatis dari admin
+    await Future.delayed(const Duration(milliseconds: 300)); // opsional, biar realistis
+    setState(() {
       _messages.add({
-        'isSeller': false,
-        'message': _messageController.text.trim(),
-      });
-      _messages.add({
+        'message': 'Terima kasih telah menghubungi kami! Jika ingin chat via WhatsApp, klik link ini: https://wa.me/6281367226302',
         'isSeller': true,
-        'message':
-            'Terima kasih, pesan Anda sudah diterima! Mohon ditunggu sampai seller merespon.',
       });
-      _messageController.clear();
     });
   }
 
@@ -45,18 +48,22 @@ class _ChatScreenState extends State<ChatScreen> {
                 final isSeller = message['isSeller'];
                 return Align(
                   alignment:
-                      isSeller ? Alignment.centerLeft : Alignment.centerRight,
+                  isSeller ? Alignment.centerLeft : Alignment.centerRight,
                   child: Container(
                     padding: const EdgeInsets.all(10),
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     decoration: BoxDecoration(
-                      color: isSeller ? Colors.grey[300] : Colors.blue[100],
+                      color: isSeller
+                          ? Theme.of(context).colorScheme.surfaceVariant
+                          : Theme.of(context).colorScheme.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       message['message'],
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                      ),
                     ),
                   ),
                 );
