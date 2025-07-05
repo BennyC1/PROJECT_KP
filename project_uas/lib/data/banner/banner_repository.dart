@@ -76,5 +76,49 @@ class BannerRepository extends GetxController {
       throw 'Upload gagal: $e';
     }
   }
+
+  // Delete all banner  
+  Future<void> deleteAllBanners() async {
+    try {
+      final snapshot = await _db.collection('Banners').get();
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final imageUrl = data['ImageUrl'];
+
+        // 1. Hapus gambar dari storage
+        final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+        await ref.delete();
+
+        // 2. Hapus dokumen dari Firestore
+        await _db.collection("Banners").doc(doc.id).delete();
+      }
+
+      // 3. Refresh list
+      await fetchBanners();
+
+    } catch (e) {
+      throw 'Gagal menghapus semua banner: $e';
+    }
+  }
+
+  // delete 1 banner
+  Future<void> deleteBanner(String bannerId, String imageUrl) async {
+    try {
+      // 1. Hapus gambar dari Firebase Storage
+      final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+      await ref.delete();
+
+      // 2. Hapus dokumen dari Firestore
+      await _db.collection("Banners").doc(bannerId).delete();
+
+      // 3. Refresh banners di UI
+      await fetchBanners();
+    } on FirebaseException catch (e) {
+      throw BFirebaseException(e.code).message;
+    } catch (e) {
+      throw 'Gagal menghapus banner: $e';
+    }
+  }
 }
   

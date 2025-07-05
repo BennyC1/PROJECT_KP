@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/widgets/shimmer/vertical_product_shimmer.dart';
 import 'package:project_uas/features/shop/controllers/product/favourites_controller.dart';
-import 'package:project_uas/features/shop/screens/home/home.dart';
 import 'package:project_uas/navigation_menu.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/helpers/cloud_helper_functions.dart';
 import 'package:project_uas/utils/loaders/animation_loader.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
-import '../../../../common/widgets/icons/circular_icon.dart';
 import '../../../../common/widgets/layouts/grid.layout.dart';
 import '../../../../common/widgets/products/products_cards/product_card_vertical.dart';
 import '../../../../utils/constants/sized.dart';
@@ -25,9 +22,6 @@ class FavoriteScreen extends StatelessWidget {
     return Scaffold(
       appBar: BAppBar (
         title: Text('Wishlist', style: Theme.of(context).textTheme.headlineMedium),
-        actions: [
-          BCircularIcon(icon: Iconsax.add, onPressed: () => Get.to(const HomeScreen())),
-        ]
       ),
 
       // BODY

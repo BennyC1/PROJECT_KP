@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/banner/banner_repository.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
-import 'package:project_uas/features/personalization/models/user_model.dart';
 import 'package:project_uas/features/personalization/screens/profile/profile.dart';
 import 'package:project_uas/features/shop/controllers/theme_controller.dart';
+import 'package:project_uas/features/shop/screens/banner/delete_banner_sheet.dart';
 import 'package:project_uas/features/shop/screens/cart/cart.dart';
 import 'package:project_uas/features/shop/screens/chat/chat.dart';
 import 'package:project_uas/features/shop/screens/order/order.dart';
@@ -28,7 +25,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
-    final user = Get.find<UserModel>();
     final userController = Get.find<UserController>();
     final isAdmin = userController.user.value.role == 'admin';
     
@@ -85,24 +81,21 @@ class SettingsScreen extends StatelessWidget {
                     title: 'Upload Banner',
                     subTitle: 'Upload Banner to your Cloud Firebase',
                     onTap: () async {
-                    try {
-                      await BannerRepository.instance.uploadBanner(targetScreen: '/store');
-                      Get.snackbar('Success', 'Banner berhasil diupload');
-                    } catch (e) {
-                      Get.snackbar('Error', e.toString());
-                    }
-                  },
-
+                      try {
+                        await BannerRepository.instance.uploadBanner(targetScreen: '/store');
+                        Get.snackbar('Success', 'Banner berhasil diupload');
+                      } catch (e) {
+                        Get.snackbar('Error', e.toString());
+                      }
+                    },
                   ),
-                  if (isAdmin)
+                 if (isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.document_upload,
                     title: 'Delete Banner',
-                    subTitle: 'Delete Banner to your Cloud Firebase',
-                    onTap: () {
-                      // hanya bisa dipakai admin
-                    },
-                  ),
+                    subTitle: 'Delete per banner or all at once',
+                    onTap: () => showDeleteBannerSheet(context),
+                  ),                 
                   if (isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.document_upload,
