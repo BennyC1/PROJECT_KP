@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:project_uas/features/shop/models/product_model.dart';
-import 'package:project_uas/utils/constants/enums.dart';
 import 'package:project_uas/utils/exceptions/firebase_exceptions.dart';
 import 'package:project_uas/utils/exceptions/platform_exceptions.dart';
-import 'package:project_uas/utils/storage/firebase_storage_service.dart';
 
 class ProductRepository extends GetxController {
   static ProductRepository get instance => Get.find();
@@ -117,66 +116,41 @@ class ProductRepository extends GetxController {
     }
   }
 
-  // Upload dummy data to the Cloud Firebase
-  Future<void> uploadDummyData(List<ProductModel> products) async {
-    try {
-      // Upload all the products along with their images
-      final storage = Get.put(BFirebaseStorageService());
-
-      // Loop through each product
-      for (var product in products) {
-
-        // Get image data link from Local assets
-        final thumbnail = await storage.getImageDataFromAssets(product.thumbnail);
-
-        // Upload image and get its URL
-        final url = await storage.uploadImageData('Products/Images', thumbnail, product. thumbnail. toString());
-
-        // Assign URL to product.thumbnail attribute
-        product. thumbnail = url;
-        
-        // Product list of images
-        if (product.images != null && product.images!.isNotEmpty) {
-          List<String> imagesUrl = [];
-          for (var image in product.images!) {
-            // Get image data link from Local assets
-            final assetImage = await storage.getImageDataFromAssets(image);
-
-            // Upload image and get its URL
-            final url = await storage.uploadImageData('Products/Images', assetImage, image);
-            
-            // Assign URL to product.thumbnail attribute
-            imagesUrl.add(url);
-          }
-          product.images!.clear();
-          product.images!.addAll(imagesUrl);
-        }
-
-        // Upload Variation Images
-        if (product.productType == ProductType.variable.toString()) {
-          for (var variation in product.productVariations!) {
-            // Get image data link from Local assets
-            final assetImage = await storage.getImageDataFromAssets(variation.image);
-
-            // Upload image and get its URL
-            final url = await storage.uploadImageData('Products/Images', assetImage, variation. image);
-
-            // Assign URL to variation.image attribute
-            variation.image = url;
-          }
-        }
-
-        // Store product in Firestore
-        await _db.collection("Products").doc(product.id).set(product.toJson());
-      }
-    } on FirebaseException catch(e) {
-      throw e.message !;
-    } on SocketException catch (e) {
-      throw e.message;
-    } on PlatformException catch (e) {
-      throw e.message !;
-    } catch (e) {
-      throw e.toString();
-    }
+   Future<String> generateNextProductId() async {
+    final snapshot = await _db.collection('Products').orderBy(FieldPath.documentId, descending: true).limit(1).get();
+    if (snapshot.docs.isEmpty) return '001';
+    final lastId = snapshot.docs.first.id;
+    final nextId = int.parse(lastId) + 1;
+    return nextId.toString().padLeft(3, '0');
   }
+
+  Future<String> uploadImage(File imageFile, String imageName) async {
+    final ref = FirebaseStorage.instance.ref('Products/Images/$imageName');
+    await ref.putFile(imageFile);
+    return await ref.getDownloadURL();
+  }
+
+  Future<void> uploadProduct(ProductModel product) async {
+    final productId = await generateNextProductId();
+    product.id = productId;
+
+    final thumbnailFile = File(product.thumbnail);
+    final thumbnailUrl = await uploadImage(thumbnailFile, 'thumb_$productId.jpg');
+    product.thumbnail = thumbnailUrl;
+
+    List<String> uploadedImages = [];
+    for (var i = 0; i < product.images!.length; i++) {
+      final imageUrl = await uploadImage(File(product.images![i]), 'product_${productId}_$i.jpg');
+      uploadedImages.add(imageUrl);
+    }
+    product.images = uploadedImages;
+
+    for (var variation in product.productVariations ?? []) {
+      final varImage = await uploadImage(File(variation.image), 'variation_${productId}_${variation.id}.jpg');
+      variation.image = varImage;
+    }
+
+    await _db.collection('Products').doc(productId).set(product.toJson());
+  }
+
 }

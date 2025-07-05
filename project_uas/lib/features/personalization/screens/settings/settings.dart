@@ -6,6 +6,7 @@ import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/banner/banner_repository.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
+import 'package:project_uas/features/personalization/screens/product/product_upload_screen.dart';
 import 'package:project_uas/features/personalization/screens/profile/profile.dart';
 import 'package:project_uas/features/shop/controllers/theme_controller.dart';
 import 'package:project_uas/features/shop/screens/banner/delete_banner_sheet.dart';
@@ -101,9 +102,7 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.document_upload,
                     title: 'Upload Product',
                     subTitle: 'Upload Product to your Cloud Firebase',
-                    onTap: () {
-                      // hanya bisa dipakai admin
-                    },
+                    onTap: () => Get.to(() => const ProductUploadScreen()),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
