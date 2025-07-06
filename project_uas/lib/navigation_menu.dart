@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:project_uas/features/shop/screens/home/home.dart';
 import 'package:project_uas/features/personalization/screens/settings/settings.dart';
-import 'package:project_uas/features/shop/screens/reservation/reservation.dart';
+import 'package:project_uas/features/shop/screens/reservation/reservation_screen.dart';
 import 'package:project_uas/features/shop/screens/store/store.dart';
 import 'package:project_uas/features/shop/screens/wishlist/wishlist.dart';
 import 'package:project_uas/utils/constants/colors.dart';
