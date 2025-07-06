@@ -10,9 +10,9 @@ class ProductEditListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Product to Edit')),
+      appBar: AppBar(title: Text('Select Product to Edit', style: Theme.of(context).textTheme.headlineMedium)),
       body: FutureBuilder<List<ProductModel>>(
-        future: ProductRepository.instance.getAllProducts(),
+        future: ProductRepository.instance.getFeaturedProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
           if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('No products found'));

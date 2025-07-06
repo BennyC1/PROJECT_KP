@@ -8,6 +8,11 @@ import 'package:project_uas/data/banner/banner_repository.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
 import 'package:project_uas/features/shop/function/brand/delete_brand.dart';
 import 'package:project_uas/features/shop/function/brand/upload_brand.dart';
+import 'package:project_uas/features/shop/function/capster/delete_capster_sheet.dart';
+import 'package:project_uas/features/shop/function/capster/upload_capster_dialog.dart';
+import 'package:project_uas/features/shop/function/package/delete_package_sheet.dart';
+import 'package:project_uas/features/shop/function/package/upload_package_dialog.dart';
+import 'package:project_uas/features/shop/function/product/check_add_stock_screen.dart';
 import 'package:project_uas/features/shop/function/product/product_delete.dart';
 import 'package:project_uas/features/shop/function/product/product_edit.dart';
 import 'package:project_uas/features/shop/function/product/product_upload_screen.dart';
@@ -60,6 +65,7 @@ class SettingsScreen extends StatelessWidget {
                   const BSectionHeading(title: 'Account Settings', showActionButton: false),
                   const SizedBox(height: BSize.spaceBtwSections),
 
+                  // Customer
                   if (!isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.message,
@@ -81,6 +87,22 @@ class SettingsScreen extends StatelessWidget {
                     title: "My Orders", 
                     subTitle: 'In progress and Completed Orders',
                     onTap: () => Get.to(() => const OrderScreen())),
+
+                  // Admin Featured
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.check,
+                    title: 'Confirm Product',
+                    subTitle: 'Confirmed Purchase Product',
+                    onTap: () {},
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.check,
+                    title: 'Confirm Reservation',
+                    subTitle: 'Confirmed Reservation Product',
+                    onTap: () {},
+                  ),
                   if (isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.document_upload,
@@ -132,29 +154,74 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
+                    icon: Iconsax.check,
+                    title: 'Check And Add Stock Product',
+                    subTitle: 'Edit Product from your Cloud Firebase',
+                    onTap: () => Get.to(() => const CheckAddStockScreen()),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
                     icon: Iconsax.edit,
                     title: 'Edit Product',
                     subTitle: 'Edit Product from your Cloud Firebase',
                     onTap: () => Get.to(() => const ProductEditListScreen()), 
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.document_upload,
+                    title: 'Upload Capster',
+                    subTitle: 'Upload New Capster to your Cloud Firebase',
+                    onTap: () => UploadCapsterDialog.show(),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.trash,
+                    title: 'Delete Capster',
+                    subTitle: 'Delete Capster to your Cloud Firebase',
+                    onTap: () => showDeleteCapsterSheet(context),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.document_upload,
+                    title: 'Upload Package',
+                    subTitle: 'Upload New Package to your Cloud Firebase',
+                    onTap: () =>  UploadPackageDialog.show(),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.trash,
+                    title: 'Delete Package',
+                    subTitle: 'Delete Package to your Cloud Firebase',
+                    onTap: ()  => showDeletePackageSheet(context),
+                  ),
+
+                  // Owner Featured
+                  if (isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Report Product',
+                    subTitle: 'Product Report Data Dataset',
+                    onTap: () {}, 
                   ),
                   if (isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.edit,
-                    title: 'Edit Product',
-                    subTitle: 'Edit Product from your Cloud Firebase',
-                    onTap: () => Get.to(() => const ProductEditListScreen()), 
+                    title: 'Report Reservation',
+                    subTitle: 'Reservation Report Data Dataset',
+                    onTap: () {}, 
                   ),
+                  if (isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Register Account Admin',
+                    subTitle: 'Create Admin Account',
+                    onTap: () {}, 
+                  ),
+
                   /// App Settings
                   const SizedBox(height: BSize.spaceBtwSections),
                   const BSectionHeading(title: 'App Settings', showActionButton: false),
                   const SizedBox(height: BSize.spaceBtwItems),
-                  if (!isAdmin)
-                  BSettingsMenuTile(
-                    icon: Iconsax.notification, 
-                    title: "Notifications", 
-                    subTitle: 'Set any kind of notification message',
-                    trailing: Switch(value: false, onChanged: (value) {}),
-                  ),
                   Obx(() => BSettingsMenuTile(
                     icon: Iconsax.notification,
                     title: "Dark Mode",

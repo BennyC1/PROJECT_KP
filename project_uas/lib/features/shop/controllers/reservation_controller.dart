@@ -1,15 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
-import 'package:project_uas/features/shop/models/reservation_model.dart';
-import 'package:project_uas/data/reservation/reservation_repository.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
-import 'package:project_uas/utils/popups/loaders.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_uas/data/reservation/pending_reservation_repository.dart';
+import 'package:project_uas/data/reservation/reservation_repository.dart';
 import 'package:project_uas/features/shop/models/pending_reservation_model.dart';
+import 'package:project_uas/features/shop/models/reservation_model.dart';
+import 'package:project_uas/utils/popups/loaders.dart';
+
+class PackageModel {
+  final String name;
+  final int price;
+
+  PackageModel({required this.name, required this.price});
+
+  factory PackageModel.fromFirestore(Map<String, dynamic> data) {
+    return PackageModel(
+      name: data['Name'],
+      price: data['Price'],
+    );
+  }
+}
 
 class ReservationController extends GetxController {
   static ReservationController get instance => Get.find();
@@ -22,16 +35,15 @@ class ReservationController extends GetxController {
   final selectedTime = RxnString();
 
   final disabledSlots = <String>[].obs;
-
   final timeSlots = [
     "13:00", "13:45", "14:30", "15:15",
     "16:00", "16:45", "17:30", "18:15",
     "19:00", "19:45", "20:30"
   ];
 
-  final packageOptions = ['Dewasa', 'Anak-anak', 'Shaving'];
+  final capsters = <String>[].obs;
+  final packages = <PackageModel>[].obs;
 
-  /// 🔁 Reset semua nilai saat buka halaman
   void resetForm() {
     selectedCapster.value = null;
     selectedPackage.value = null;
@@ -40,7 +52,26 @@ class ReservationController extends GetxController {
     disabledSlots.clear();
   }
 
-  /// ✅ Kunci waktu yang sudah dipesan
+  Future<void> loadCapsters() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('kapster').get();
+      capsters.value = snapshot.docs.map((doc) => doc['Name'] as String).toList();
+    } catch (e) {
+      BLoaders.errorSnackBar(title: 'Gagal Ambil Capster', message: e.toString());
+    }
+  }
+
+  Future<void> loadPackages() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('Package').get();
+      packages.value = snapshot.docs
+          .map((doc) => PackageModel.fromFirestore(doc.data()))
+          .toList();
+    } catch (e) {
+      BLoaders.errorSnackBar(title: 'Gagal Ambil Paket', message: e.toString());
+    }
+  }
+
   Future<void> loadDisabledSlots() async {
     if (selectedCapster.value == null || selectedDate.value == null) return;
 
@@ -51,7 +82,7 @@ class ReservationController extends GetxController {
       );
 
       final reservedTimes = reservations.map((res) {
-        return DateFormat('HH:mm').format(res.datetime); // Format konsisten
+        return DateFormat('HH:mm').format(res.datetime);
       }).toList();
 
       disabledSlots.assignAll(reservedTimes);
@@ -60,21 +91,11 @@ class ReservationController extends GetxController {
     }
   }
 
-  /// ✅ Ambil harga berdasarkan paket
   int getPriceForPackage(String packageType) {
-    switch (packageType) {
-      case 'Dewasa':
-        return 25000;
-      case 'Anak-anak':
-        return 20000;
-      case 'Shaving':
-        return 15000;
-      default:
-        return 0;
-    }
+    final found = packages.firstWhereOrNull((p) => p.name == packageType);
+    return found?.price ?? 0;
   }
 
-  /// ✅ Simpan reservasi ke Firestore
   Future<void> submitReservation() async {
     if (selectedCapster.value == null ||
         selectedPackage.value == null ||
@@ -111,7 +132,6 @@ class ReservationController extends GetxController {
       await reservationRepository.saveReservation(newReservation);
 
       BLoaders.successSnackBar(title: 'Sukses', message: 'Reservasi berhasil disimpan.');
-
       resetForm();
     } catch (e) {
       BLoaders.errorSnackBar(title: 'Error', message: e.toString());
@@ -136,44 +156,40 @@ class ReservationController extends GetxController {
         .toList();
   }
 
-
-
   Future<void> submitPendingReservation(String proofUrl) async {
-  print('🔥 Memulai submitPendingReservation');
-  final userId = FirebaseAuth.instance.currentUser?.uid;
-  if (userId == null) {
-    BLoaders.errorSnackBar(title: 'Gagal', message: 'User tidak ditemukan.');
-    return;
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      BLoaders.errorSnackBar(title: 'Gagal', message: 'User tidak ditemukan.');
+      return;
+    }
+
+    final capster = selectedCapster.value;
+    final package = selectedPackage.value;
+    final date = selectedDate.value;
+    final time = selectedTime.value;
+
+    if (capster == null || package == null || date == null || time == null) {
+      BLoaders.warningSnackBar(title: 'Oops', message: 'Lengkapi semua data reservasi terlebih dahulu.');
+      return;
+    }
+
+    final timeParts = time.split(':');
+    final datetime = DateTime(date.year, date.month, date.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
+
+    final pendingModel = PendingReservationModel(
+      id: UniqueKey().toString(),
+      userId: userId,
+      capster: capster,
+      packageType: package,
+      price: getPriceForPackage(package),
+      datetime: datetime,
+      proofUrl: proofUrl,
+      createdAt: DateTime.now(),
+    );
+
+    await PendingReservationRepository.instance.saveReservation(pendingModel);
+
+    BLoaders.successSnackBar(title: 'Berhasil', message: 'Reservasi menunggu verifikasi admin.');
+    resetForm();
   }
-
-  final capster = selectedCapster.value;
-  final package = selectedPackage.value;
-  final date = selectedDate.value;
-  final time = selectedTime.value;
-
-  if (capster == null || package == null || date == null || time == null) {
-    BLoaders.warningSnackBar(title: 'Oops', message: 'Lengkapi semua data reservasi terlebih dahulu.');
-    return;
-  }
-
-  final timeParts = time.split(':');
-  final datetime = DateTime(date.year, date.month, date.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
-
-  final pendingModel = PendingReservationModel(
-    id: UniqueKey().toString(),
-    userId: userId,
-    capster: capster,
-    packageType: package,
-    price: getPriceForPackage(package),
-    datetime: datetime,
-    proofUrl: proofUrl,
-    createdAt: DateTime.now(),
-  );
-
-  await PendingReservationRepository.instance.saveReservation(pendingModel);
-
-  BLoaders.successSnackBar(title: 'Berhasil', message: 'Reservasi menunggu verifikasi admin.');
-
-  resetForm(); // bersihkan form setelah submit
-}
 }

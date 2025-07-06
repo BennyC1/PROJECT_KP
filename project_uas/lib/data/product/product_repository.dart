@@ -201,17 +201,4 @@ class ProductRepository extends GetxController {
         .doc(product.id)
         .update(product.toJson());
   }
-
-  Future<List<ProductModel>> getAllProducts() async {
-    try {
-      final snapshot = await _db.collection('Products').get();
-      return snapshot.docs.map((doc) => ProductModel.fromQuerySnapshot(doc)).toList();
-    } on FirebaseException catch (e) {
-      throw BFirebaseException(e.code).message;
-    } on PlatformException catch (e) {
-      throw BPlatformException(e.code).message;
-    } catch (e) {
-      throw 'Something went wrong. Please try again';
-    }
-  }
 }

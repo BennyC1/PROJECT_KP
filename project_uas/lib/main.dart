@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intl/date_symbol_data_file.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/firebase_options.dart';
 import 'app.dart';
@@ -22,6 +23,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then(
     (FirebaseApp value) => Get.put(AuthenticationRepository()),
   );
-
+  
+  await initializeDateFormatting('id',null);
+  
   runApp(const App());
 } 

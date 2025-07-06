@@ -13,7 +13,7 @@ class CheckoutController extends GetxController{
 
   @override
   void onInit() {
-    selectedPaymentMethod.value = PaymentMethodModel(image: BImages.home, name: 'Pay In Place');
+    selectedPaymentMethod.value = PaymentMethodModel(image: BImages.qris, name: 'Qris');
     super.onInit();
   }
 
@@ -28,7 +28,7 @@ class CheckoutController extends GetxController{
             children: [
               const BSectionHeading(title: 'Select Payment Method', showActionButton: false),
               const SizedBox(height: BSize.spaceBtwSections),
-              BPaymentTile(paymentMethod: PaymentMethodModel(name: 'Pay In Place', image: BImages.home))
+              BPaymentTile(paymentMethod: PaymentMethodModel(name: 'Qris', image: BImages.qris))
             ]
           )
         )
