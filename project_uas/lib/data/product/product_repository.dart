@@ -153,4 +153,65 @@ class ProductRepository extends GetxController {
     await _db.collection('Products').doc(productId).set(product.toJson());
   }
 
+  Future<void> deleteProductById(String productId) async {
+    final batch = FirebaseFirestore.instance.batch();
+
+    try {
+      // 1. Hapus data utama produk
+      final productRef = _db.collection('Products').doc(productId);
+      batch.delete(productRef);
+
+      // 2. Hapus relasi dari ProductCategory
+      final productCategorySnapshot = await _db
+          .collection('ProductCategory')
+          .where('productId', isEqualTo: productId)
+          .get();
+
+      for (var doc in productCategorySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // 3. Hapus relasi dari BrandCategory
+      final brandCategorySnapshot = await _db
+          .collection('BrandCategory')
+          .where('productId', isEqualTo: productId)
+          .get();
+
+      for (var doc in brandCategorySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // 4. Commit semua penghapusan
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Gagal menghapus produk: $e');
+    }
+  }
+
+  Future<void> deleteAllProducts() async {
+    final snapshot = await _db.collection('Products').get();
+    for (final doc in snapshot.docs) {
+      await deleteProductById(doc.id);
+    }
+  }
+
+  Future<void> updateProduct(ProductModel product) async {
+    await FirebaseFirestore.instance
+        .collection('Products')
+        .doc(product.id)
+        .update(product.toJson());
+  }
+
+  Future<List<ProductModel>> getAllProducts() async {
+    try {
+      final snapshot = await _db.collection('Products').get();
+      return snapshot.docs.map((doc) => ProductModel.fromQuerySnapshot(doc)).toList();
+    } on FirebaseException catch (e) {
+      throw BFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      throw BPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
 }

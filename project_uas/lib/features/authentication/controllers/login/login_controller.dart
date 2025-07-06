@@ -1,7 +1,9 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
@@ -12,7 +14,7 @@ import 'package:project_uas/utils/popups/loaders.dart';
 class LoginController extends GetxController { 
   
   /// Variables 
-  final rememberMe = false.obs; 
+  final rememberMe = true.obs; 
   final hidePassword = true.obs; 
   final localStorage = GetStorage(); 
   final email = TextEditingController(); 
@@ -20,6 +22,22 @@ class LoginController extends GetxController {
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final userController =  Get.put(UserController()); 
 
+  @override
+  void onInit() {
+    super.onInit();
+    forceGoogleLogout(); // ⬅️ panggil di awal controller hidup
+  }
+
+  void forceGoogleLogout() async {
+    final googleSignIn = GoogleSignIn();
+    if (await googleSignIn.isSignedIn()) {
+      await googleSignIn.disconnect();
+      await googleSignIn.signOut();
+      await FirebaseAuth.instance.signOut();
+      debugPrint("✅ Google & Firebase SignOut berhasil di halaman login");
+    }
+  }
+  
   /// Email and Password SignIn 
   Future<void> emailAndPasswordSignIn() async { 
     try {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 
 class BLocalStorage {
@@ -10,6 +11,21 @@ class BLocalStorage {
 
   factory BLocalStorage.instance() {
     _instance ??= BLocalStorage._internal();
+    return _instance!;
+  }
+
+  /// Safe Instance untuk menghindari late init error
+  static BLocalStorage safeInstance({bool silent = false}) {
+    if (_instance == null) {
+      if (!silent) {
+        if (kDebugMode) {
+          print('[WARNING] BLocalStorage has not been initialized. Returning dummy instance.');
+        }
+      }
+      final fallback = BLocalStorage._internal();
+      fallback._storage = GetStorage(); // default bucket (kosong)
+      return fallback;
+    }
     return _instance!;
   }
 

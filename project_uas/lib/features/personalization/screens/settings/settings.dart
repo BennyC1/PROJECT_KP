@@ -6,10 +6,14 @@ import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/banner/banner_repository.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
-import 'package:project_uas/features/personalization/screens/product/product_upload_screen.dart';
+import 'package:project_uas/features/shop/function/brand/delete_brand.dart';
+import 'package:project_uas/features/shop/function/brand/upload_brand.dart';
+import 'package:project_uas/features/shop/function/product/product_delete.dart';
+import 'package:project_uas/features/shop/function/product/product_edit.dart';
+import 'package:project_uas/features/shop/function/product/product_upload_screen.dart';
 import 'package:project_uas/features/personalization/screens/profile/profile.dart';
 import 'package:project_uas/features/shop/controllers/theme_controller.dart';
-import 'package:project_uas/features/shop/screens/banner/delete_banner_sheet.dart';
+import 'package:project_uas/features/shop/function/banner/delete_banner_sheet.dart';
 import 'package:project_uas/features/shop/screens/cart/cart.dart';
 import 'package:project_uas/features/shop/screens/chat/chat.dart';
 import 'package:project_uas/features/shop/screens/order/order.dart';
@@ -28,6 +32,7 @@ class SettingsScreen extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
     final userController = Get.find<UserController>();
     final isAdmin = userController.user.value.role == 'admin';
+    final isOwner = userController.user.value.role == 'owner';
     
     return Scaffold (
       body: SingleChildScrollView(
@@ -90,9 +95,9 @@ class SettingsScreen extends StatelessWidget {
                       }
                     },
                   ),
-                 if (isAdmin)
+                  if (isAdmin)
                   BSettingsMenuTile(
-                    icon: Iconsax.document_upload,
+                    icon: Iconsax.trash,
                     title: 'Delete Banner',
                     subTitle: 'Delete per banner or all at once',
                     onTap: () => showDeleteBannerSheet(context),
@@ -106,32 +111,39 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
-                    icon: Iconsax.document_upload,
+                    icon: Iconsax.trash,
                     title: 'Delete Product',
-                    subTitle: 'Delete Product to your Cloud Firebase',
-                    onTap: () {
-                      // hanya bisa dipakai admin
-                    },
+                    subTitle: 'Delete individual or all products',
+                    onTap: () => showDeleteProductSheet(context),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.document_upload,
                     title: 'Upload Brand',
                     subTitle: 'Upload Brand to your Cloud Firebase',
-                    onTap: () {
-                      // hanya bisa dipakai admin
-                    },
+                    onTap: () => UploadBrandDialog.show(),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
-                    icon: Iconsax.document_upload,
+                    icon: Iconsax.trash,
                     title: 'Delete Brand',
-                    subTitle: 'Delete Brand to your Cloud Firebase',
-                    onTap: () {
-                      // hanya bisa dipakai admin
-                    },
+                    subTitle: 'Delete Brand from your Cloud Firebase',
+                    onTap: () => showDeleteBrandSheet(context),
                   ),
-
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Edit Product',
+                    subTitle: 'Edit Product from your Cloud Firebase',
+                    onTap: () => Get.to(() => const ProductEditListScreen()), 
+                  ),
+                  if (isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Edit Product',
+                    subTitle: 'Edit Product from your Cloud Firebase',
+                    onTap: () => Get.to(() => const ProductEditListScreen()), 
+                  ),
                   /// App Settings
                   const SizedBox(height: BSize.spaceBtwSections),
                   const BSectionHeading(title: 'App Settings', showActionButton: false),
@@ -171,5 +183,3 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
-
-

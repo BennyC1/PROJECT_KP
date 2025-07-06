@@ -46,10 +46,10 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
   final _brandIdController = TextEditingController();
   final _brandNameController = TextEditingController();
   final _brandImageUrlController = TextEditingController();
-  bool isBrandFeatured = false;
+  bool isBrandFeatured = true;
 
 
-  bool isFeatured = false;
+  bool isFeatured = true;
   String selectedBrandName = 'Cultusia';
   String selectedCategoryId = '101';
 
@@ -84,13 +84,19 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
     }
 
     try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+
       final productRepo = Get.put(ProductRepository());
+
       final brandMap = {
         'Id': _brandIdController.text.trim(),
         'Name': _brandNameController.text.trim(),
         'Image': _brandImageUrlController.text.trim(),
         'IsFeatured': isBrandFeatured,
-        'ProductsCount': 0, // atau sesuaikan jika kamu ingin menghitungnya nanti
+        'ProductsCount': 0, 
       };
 
       final imageListPath = productImages.map((img) => img.path).toList();
@@ -104,7 +110,7 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
       }).toList();
 
       final newProduct = ProductModel(
-        id: 'temp', // akan digantikan oleh `uploadProduct`
+        id: 'temp',
         title: _titleController.text,
         stock: int.parse(_stockController.text),
         price: double.parse(_priceController.text),
@@ -137,7 +143,7 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
           'brandId': brandId,
         });
       }
-
+      Get.back();
       BLoaders.successSnackBar(title: 'Sukses', message: 'Produk berhasil diunggah.');
     } catch (e) {
       BLoaders.errorSnackBar(title: 'Gagal', message: e.toString());

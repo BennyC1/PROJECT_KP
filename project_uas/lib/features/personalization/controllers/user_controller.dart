@@ -35,8 +35,8 @@ class UserController extends GetxController {
     super.onInit();
     fetchUserRecord();
 
-    gender.value = BLocalStorage.instance().readData<String>('Gender') ?? '';
-    dateOfBirth.value = BLocalStorage.instance().readData<String>('DateOfBirth') ?? '';
+    gender.value = BLocalStorage.safeInstance().readData<String>('Gender') ?? '';
+    dateOfBirth.value = BLocalStorage.safeInstance().readData<String>('DateOfBirth') ?? '';
   }
 
   // Fetch USER Record 
@@ -114,7 +114,7 @@ class UserController extends GetxController {
 
       /// First re-authenticate user
       final auth = AuthenticationRepository.instance;
-      final provider = auth.authUser.providerData.map((e) => e.providerId).first;
+      final provider = auth.authUser!.providerData.map((e) => e.providerId).first;
       if (provider. isNotEmpty) {
         // Re Verify Auth Email
         if (provider == 'google.com') {
@@ -187,13 +187,13 @@ class UserController extends GetxController {
 
   void updateGender(String value) {
     gender.value = value;
-    BLocalStorage.instance().writeData('Gender', value);
+    BLocalStorage.safeInstance().writeData('Gender', value);
   }
 
   void updateDateOfBirth(DateTime date) {
     final formatted = '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
     dateOfBirth.value = formatted;
-    BLocalStorage.instance().writeData('DateOfBirth', formatted);
+    BLocalStorage.safeInstance().writeData('DateOfBirth', formatted);
   }
 
   void selectGenderDialog() {
@@ -370,7 +370,7 @@ class UserController extends GetxController {
                   user.refresh();
 
                   await userRepository.updateSingleField({'PhoneNumber': phone});
-                  await BLocalStorage.instance().writeData('PhoneNumber', phone);
+                  await BLocalStorage.safeInstance().writeData('PhoneNumber', phone);
 
                   Get.back();
                   BLoaders.successSnackBar(title: 'Success', message: 'Phone number updated!');

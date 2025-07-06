@@ -106,4 +106,42 @@ class ProductModel {
       productVariations:(data['ProductVariations'] as List<dynamic>).map((e) => ProductVariationModel.fromJson(e)).toList(),
     );
   }
+
+  ProductModel copyWith({
+    String? id,
+    String? sku,
+    String? title,
+    int? stock,
+    double? price,
+    double? salePrice,
+    String? thumbnail,
+    bool? isFeatured,
+    BrandModel? brand,
+    String? description,
+    String? descriptiontitle,
+    String? categoryId,
+    List<String>? images,
+    String? productType,
+    DateTime? date,
+    List<ProductVariationModel>? productVariations,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      sku: sku ?? this.sku,
+      title: title ?? this.title,
+      stock: stock ?? this.stock,
+      price: price ?? this.price,
+      salePrice: salePrice ?? this.salePrice,
+      thumbnail: thumbnail ?? this.thumbnail,
+      isFeatured: isFeatured ?? this.isFeatured,
+      brand: brand ?? this.brand,
+      description: description ?? this.description,
+      descriptiontitle: descriptiontitle ?? this.descriptiontitle,
+      categoryId: categoryId ?? this.categoryId,
+      images: images ?? this.images,
+      productType: productType ?? this.productType,
+      date: date ?? this.date,
+      productVariations: productVariations ?? this.productVariations,
+    );
+  }
 }

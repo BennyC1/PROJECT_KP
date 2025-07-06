@@ -66,7 +66,7 @@ class OrderController extends GetxController {
       BFullScreenLoader.openLoadingDialog('Processing your order', BImages.pencilAnimation);
 
       // Get user authentication Id
-      final userId = AuthenticationRepository.instance.authUser.uid;
+      final userId = AuthenticationRepository.instance.authUser!.uid;
       if (userId.isEmpty) return;
       
       // Add Details

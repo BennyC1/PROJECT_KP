@@ -28,8 +28,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          await controller.fetchAllFeaturedProducts();  // Produk
-          // Tambahkan refresh lainnya jika perlu, misalnya:
+          await controller.fetchAllFeaturedProducts();  
           await BannerRepository.instance.fetchBanners();
           await Get.find<BannerController>().fetchBanner();
           await CategoryController.instance.fetchCategories();

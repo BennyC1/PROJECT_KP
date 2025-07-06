@@ -54,4 +54,16 @@ class BrandRepository extends GetxController {
       throw 'Something went wrong while fetching Banners.';
     }
   }
+
+  Future<int> getProductCountByBrand(String brandName) async {
+    final snapshot = await _db
+        .collection("Products")
+        .where("Brand", isEqualTo: brandName)
+        .get();
+    return snapshot.docs.length;
+  }
+
+  Future<void> uploadBrand(BrandModel brand) async {
+    await _db.collection("Brands").doc(brand.id).set(brand.toJson());
+  }
 }

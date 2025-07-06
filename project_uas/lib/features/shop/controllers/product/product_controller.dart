@@ -29,6 +29,7 @@ class ProductController extends GetxController {
 
       // Assign Products
       featuredProducts.assignAll(products);
+      featuredProducts.refresh();
     } catch (e) {
       BLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
     } finally {
@@ -38,13 +39,17 @@ class ProductController extends GetxController {
 
   Future<List<ProductModel>> fetchAllFeaturedProducts() async {
     try {
-      // Fetch Products
+      isLoading.value = true;
       final products = await productRepository.getFeaturedProducts();
+      featuredProducts.assignAll(products);
+      featuredProducts.refresh();
       return products;
     } catch (e) {
       BLoaders.errorSnackBar(title: 'Oh Snap!', message: e.toString());
       return [];
-    } 
+    }  finally {
+      isLoading.value = false;
+    }
   }
 
   // Get Product Price or price for variation

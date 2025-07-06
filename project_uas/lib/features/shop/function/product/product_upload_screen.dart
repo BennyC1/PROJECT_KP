@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_uas/features/personalization/screens/product/product_upload_form.dart';
+import 'package:project_uas/features/shop/function/product/product_upload_form.dart';
 
 class ProductUploadScreen extends StatelessWidget {
   const ProductUploadScreen({super.key});

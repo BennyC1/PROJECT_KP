@@ -201,11 +201,11 @@ CartItemModel convertToCartItem(ProductModel product, int quantity) {
 
   void saveCartItems() {
     final cartItemStrings = cartItems.map((item) => item.toJson()).toList();
-    BLocalStorage.instance().writeData('cartItems', cartItemStrings);
+    BLocalStorage.safeInstance().writeData('cartItems', cartItemStrings);
   }
 
   void loadCartItems() {
-    final cartItemStrings = BLocalStorage.instance().readData<List<dynamic>>('cartItems');
+    final cartItemStrings = BLocalStorage.safeInstance().readData<List<dynamic>>('cartItems');
     if (cartItemStrings != null) {
       cartItems.assignAll(cartItemStrings.map((item) => CartItemModel.fromJson(item as Map<String, dynamic>)));
       updateCartTotals();

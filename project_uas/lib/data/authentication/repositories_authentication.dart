@@ -25,7 +25,7 @@ class AuthenticationRepository extends GetxController {
   final _auth = FirebaseAuth.instance;
 
   // Get Authenticated User Data
-  User get authUser => _auth.currentUser!;
+  User? get authUser => _auth.currentUser;
 
   /// Called from main.dort on opp Launch
   @override
@@ -61,7 +61,26 @@ class AuthenticationRepository extends GetxController {
   // login
   Future<UserCredential> loginWithEmailAndPassword(String email, String password) async {
     try {
-      return await _auth.signInWithEmailAndPassword(email: email, password: password);
+      // 🔁 Force sign out Google session (hindari user Google "tersangkut")
+      final googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.disconnect();
+        await googleSignIn.signOut();
+      }
+
+      // 🔁 Sign out Firebase to clear session before login baru
+      await FirebaseAuth.instance.signOut();
+
+      // ✅ Login email-password
+      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      // ⬇️ Paksa Firebase refresh user session setelah login
+      await FirebaseAuth.instance.currentUser?.reload();
+
+      // (Optional) Debug siapa yang sedang login
+      debugPrint("✅ Login Manual: ${FirebaseAuth.instance.currentUser?.email}");
+
+      return credential;
     } on FirebaseAuthException catch (e) {
       throw BFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {
@@ -150,18 +169,26 @@ class AuthenticationRepository extends GetxController {
   // google auth
   Future<UserCredential?> signInWithGoogle() async { 
     try { 
-      // Trigger the authentication flow 
-      final GoogleSignInAccount? userAccount = await GoogleSignIn().signIn(); 
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+        // Optional: force code refresh if you're using advanced flows
+        // forceCodeForRefreshToken: true,
+      );
 
-      // Obtain the auth details from the request 
-      final GoogleSignInAuthentication? googleAuth = await userAccount?.authentication; 
+      // ⬅️ Wajib signOut dulu untuk memaksa user pilih akun ulang
+      await googleSignIn.signOut();
 
-      // Create a new credential 
-      final credentials = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
-      
-      // Once signed in, return the UserCredential 
-      return await _auth.signInWithCredential(credentials);
+      final GoogleSignInAccount? userAccount = await googleSignIn.signIn();
+      if (userAccount == null) return null;
 
+      final GoogleSignInAuthentication googleAuth = await userAccount.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      return await _auth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) { 
       throw BFirebaseAuthException(e.code).message; 
     } on FirebaseException catch (e) { 
@@ -179,6 +206,11 @@ class AuthenticationRepository extends GetxController {
   // logout user
   Future<void> logout() async {
     try {
+      final googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.disconnect();
+        await googleSignIn.signOut();
+      }
       await FirebaseAuth.instance.signOut();
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
