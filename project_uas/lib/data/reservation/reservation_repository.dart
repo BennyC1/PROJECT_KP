@@ -37,7 +37,9 @@ class ReservationRepository extends GetxController {
 
   Future<void> saveReservation(ReservationModel reservation) async {
     try {
-      await _db.collection('reservations').add(reservation.toJson());
+      await _db.collection('reservations')
+          .doc(reservation.id)
+          .set(reservation.toJson());
     } catch (e) {
       throw 'Gagal menyimpan data reservasi: $e';
     }

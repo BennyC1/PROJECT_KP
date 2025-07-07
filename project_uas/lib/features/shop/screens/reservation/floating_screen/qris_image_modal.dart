@@ -25,7 +25,7 @@ class QrisImageModal extends StatelessWidget {
           const SizedBox(height: 16),
           Center(
             child: Image.asset(
-              'assets/qris.jpeg', // Pastikan kamu punya gambar ini di assets
+              'assets/payment/barcode1.jpg', 
               width: 200,
             ),
           ),
@@ -33,7 +33,7 @@ class QrisImageModal extends StatelessWidget {
           Center(
             child: ElevatedButton.icon(
               onPressed: () {
-                Navigator.pop(context); // Tutup QR modal
+                Navigator.pop(context); 
 
                 // Lanjut ke modal upload bukti
                 showModalBottomSheet(

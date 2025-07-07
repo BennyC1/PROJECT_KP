@@ -21,7 +21,7 @@ Future<void> main() async {
 
   // firebase & authentication
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then(
-    (FirebaseApp value) => Get.put(AuthenticationRepository()),
+    (FirebaseApp value) => Get.put(AuthenticationRepository()), 
   );
   
   await initializeDateFormatting('id',null);

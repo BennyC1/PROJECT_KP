@@ -5,6 +5,7 @@ import 'package:project_uas/common/widgets/custom_shape/containers/rounded_conta
 import 'package:project_uas/features/shop/controllers/product/order_controller.dart';
 import 'package:project_uas/navigation_menu.dart';
 import 'package:project_uas/utils/constants/colors.dart';
+import 'package:project_uas/utils/constants/enums.dart';
 import 'package:project_uas/utils/constants/image_string.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/cloud_helper_functions.dart';
@@ -19,7 +20,7 @@ class BOrderListItems extends StatelessWidget {
   @override
   Widget build (BuildContext context) {
     final dark = BHelperFunctions.isDarkMode(context);
-    final controller = Get.put(OrderController());
+    final controller = Get.find<OrderController>();
 
     return FutureBuilder(
       future: controller.fetchUserOrders(),
@@ -142,7 +143,29 @@ class BOrderListItems extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
+                  ),
+                  if (order.status == OrderStatus.pending) ...[
+                    const SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      onPressed: () async {
+                        final confirm = await Get.dialog(AlertDialog(
+                          title: const Text("Konfirmasi"),
+                          content: const Text("Yakin ingin membatalkan pesanan ini? (Bukti Pembatalan Kirim Ke Whatsapp 0822-8600-0946), Biaya Pajak Tidak Dikembalikan"),
+                          actions: [
+                            TextButton(onPressed: () => Get.back(result: false), child: const Text("Batal")),
+                            ElevatedButton(onPressed: () => Get.back(result: true), child: const Text("Ya, Batalkan")),
+                          ],
+                        ));
+
+                        if (confirm == true) {
+                          await controller.cancelOrder(order);
+                        }
+                      },
+                      icon: const Icon(Icons.cancel),
+                      label: const Text("Batalkan Pesanan"),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                    ),
+                  ],
                 ]
               )          
             );

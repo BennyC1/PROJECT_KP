@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
-import 'package:project_uas/data/reservation/pending_reservation_repository.dart';
 import 'package:project_uas/data/reservation/reservation_repository.dart';
-import 'package:project_uas/features/shop/models/pending_reservation_model.dart';
 import 'package:project_uas/features/shop/models/reservation_model.dart';
 import 'package:project_uas/utils/popups/loaders.dart';
 
@@ -23,6 +19,8 @@ class PackageModel {
     );
   }
 }
+
+final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 class ReservationController extends GetxController {
   static ReservationController get instance => Get.find();
@@ -54,7 +52,7 @@ class ReservationController extends GetxController {
 
   Future<void> loadCapsters() async {
     try {
-      final snapshot = await FirebaseFirestore.instance.collection('kapster').get();
+      final snapshot = await _db.collection('kapster').get();
       capsters.value = snapshot.docs.map((doc) => doc['Name'] as String).toList();
     } catch (e) {
       BLoaders.errorSnackBar(title: 'Gagal Ambil Capster', message: e.toString());
@@ -63,7 +61,7 @@ class ReservationController extends GetxController {
 
   Future<void> loadPackages() async {
     try {
-      final snapshot = await FirebaseFirestore.instance.collection('Package').get();
+      final snapshot = await _db.collection('Package').get();
       packages.value = snapshot.docs
           .map((doc) => PackageModel.fromFirestore(doc.data()))
           .toList();
@@ -96,7 +94,7 @@ class ReservationController extends GetxController {
     return found?.price ?? 0;
   }
 
-  Future<void> submitReservation() async {
+  Future<void> submitReservation({String? proofUrl}) async {
     if (selectedCapster.value == null ||
         selectedPackage.value == null ||
         selectedDate.value == null ||
@@ -119,17 +117,22 @@ class ReservationController extends GetxController {
       final userId = AuthenticationRepository.instance.authUser!.uid;
       final price = getPriceForPackage(selectedPackage.value!);
 
+      final docRef = FirebaseFirestore.instance.collection('reservations').doc(); // auto ID
+
       final newReservation = ReservationModel(
-        id: UniqueKey().toString(),
+        docId: docRef.id, // <--- Simpan docId dari Firestore
+        id: docRef.id, // bisa juga gunakan UUID/format lain kalau ingin
         capster: selectedCapster.value!,
         packageType: selectedPackage.value!,
         price: price,
         datetime: datetime,
         createdAt: DateTime.now(),
         userId: userId,
+        status: 'pending',
+        proofUrl: proofUrl,
       );
 
-      await reservationRepository.saveReservation(newReservation);
+      await docRef.set(newReservation.toJson());
 
       BLoaders.successSnackBar(title: 'Sukses', message: 'Reservasi berhasil disimpan.');
       resetForm();
@@ -139,57 +142,58 @@ class ReservationController extends GetxController {
   }
 
   Future<List<ReservationModel>> fetchUserReservations() async {
-    final userId = AuthenticationRepository.instance.authUser!.uid;
+    final userId = AuthenticationRepository.instance.authUser?.uid;
+
+    print('Current user ID: $userId'); // ✅ Tambahkan log ini di sini
+
+    if (userId == null || userId.isEmpty) {
+      print('User ID is null or empty. Tidak bisa mengambil data.');
+      return [];
+    }
+
     return await reservationRepository.fetchReservationsByUserId(userId);
   }
 
-  Future<List<PendingReservationModel>> fetchPendingReservations() async {
-    final userId = AuthenticationRepository.instance.authUser!.uid;
-    final snapshot = await FirebaseFirestore.instance
-        .collection('pending_reservations')
-        .where('userId', isEqualTo: userId)
-        .orderBy('datetime')
-        .get();
+  Future<List<ReservationModel>> fetchAllReservationsForAdmin() async {
+  try {
+    final snapshot = await _db.collection('reservations')
+      .where('status', whereIn: ['pending', 'cancelled', 'approved'])
+      .orderBy('datetime')
+      .get();
 
-    return snapshot.docs
-        .map((doc) => PendingReservationModel.fromJson(doc.data()))
-        .toList();
-  }
+    final data = snapshot.docs.map((doc) => ReservationModel.fromSnapshot(doc)).toList();
 
-  Future<void> submitPendingReservation(String proofUrl) async {
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      BLoaders.errorSnackBar(title: 'Gagal', message: 'User tidak ditemukan.');
-      return;
+    print('Jumlah reservasi ditemukan: ${data.length}');
+    for (var r in data) {
+      print('🔥 ${r.capster} | ${r.status} | ${r.datetime}');
     }
 
-    final capster = selectedCapster.value;
-    final package = selectedPackage.value;
-    final date = selectedDate.value;
-    final time = selectedTime.value;
-
-    if (capster == null || package == null || date == null || time == null) {
-      BLoaders.warningSnackBar(title: 'Oops', message: 'Lengkapi semua data reservasi terlebih dahulu.');
-      return;
-    }
-
-    final timeParts = time.split(':');
-    final datetime = DateTime(date.year, date.month, date.day, int.parse(timeParts[0]), int.parse(timeParts[1]));
-
-    final pendingModel = PendingReservationModel(
-      id: UniqueKey().toString(),
-      userId: userId,
-      capster: capster,
-      packageType: package,
-      price: getPriceForPackage(package),
-      datetime: datetime,
-      proofUrl: proofUrl,
-      createdAt: DateTime.now(),
-    );
-
-    await PendingReservationRepository.instance.saveReservation(pendingModel);
-
-    BLoaders.successSnackBar(title: 'Berhasil', message: 'Reservasi menunggu verifikasi admin.');
-    resetForm();
+    return data;
+  } catch (e) {
+    print('❌ Error fetchAllReservationsForAdmin: $e');
+    rethrow;
   }
+}
+
+
+  Future<void> updateReservationStatus(String id, String newStatus) async {
+    try {
+      await _db.collection('reservations').doc(id).update({'status': newStatus});
+      Get.snackbar('Berhasil', 'Status reservasi diperbarui ke $newStatus');
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal memperbarui status');
+    }
+  }
+
+  Future<void> cancelUserReservation(String docId) async {
+    try {
+      await _db.collection('reservations').doc(docId).update({
+        'status': 'cancelled',
+      });
+      Get.snackbar('Berhasil', 'Reservasi berhasil dibatalkan');
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal membatalkan reservasi: $e');
+    }
+  }
+
 }

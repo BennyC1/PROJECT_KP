@@ -21,8 +21,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
   void initState() {
     super.initState();
     controller.resetForm();
-    controller.loadCapsters(); // 🔁 ambil capster dari Firestore
-    controller.loadPackages(); // 🔁 ambil paket dari Firestore
+    controller.loadCapsters(); //  ambil capster dari Firestore
+    controller.loadPackages(); //  ambil paket dari Firestore
   }
 
   @override
@@ -30,7 +30,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
     final dark = BHelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reservasi Potong Rambut", style: Theme.of(context).textTheme.headlineMedium),
+        title: Text("Reservasi", style: Theme.of(context).textTheme.headlineMedium),
         actions: [
           IconButton(
             icon: Icon(Icons.history, color: dark ? Colors.white : Colors.black),

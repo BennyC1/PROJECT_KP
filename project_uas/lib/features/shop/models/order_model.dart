@@ -4,33 +4,42 @@ import 'package:project_uas/utils/constants/enums.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
 
 class OrderModel {
+  final String docId;
   final String id;
   final String userId;
   final OrderStatus status;
   final double totalAmount;
   final DateTime orderDate;
   final String paymentMethod;
-  // final AddressModel? address;
   final List<CartItemModel> items;
+  final String? paymentProofUrl;
 
   OrderModel ({
+    required this.docId,
     required this.id,
     this.userId = '',
     required this.status,
     required this.items,
     required this.totalAmount,
     required this.orderDate,
-    this.paymentMethod = 'Pay In Place',
-    // this.address,
+    this.paymentMethod = 'Qris',
+    this.paymentProofUrl,
   });
 
   String get formattedOrderDate => BHelperFunctions.getFormattedDate(orderDate);
 
-  String get orderStatusText => status == OrderStatus.pending
-    ? 'Pending'
-    : status == OrderStatus.processing
-      ? 'Waiting For Payment'
-      : 'Processing';
+  String get orderStatusText {
+    switch (status) {
+      case OrderStatus.pending:
+        return 'Pending';
+      case OrderStatus.processing:
+        return 'Processing';
+      case OrderStatus.completed:
+        return 'Selesai';
+      case OrderStatus.cancelled:
+        return 'Dibatalkan';
+    }
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -40,10 +49,10 @@ class OrderModel {
       'totalAmount': totalAmount,
       'orderDate': orderDate,
       'paymentMethod' : paymentMethod,
-      // 'address': address ?. toJson(), // Convert AddressModel to map
+      'paymentProofUrl': paymentProofUrl,
       'items': items.map((item) {
         final data = item.toJson();
-        data.remove('Stock'); // 🔥 Hapus stock hanya saat menyimpan
+        data.remove('Stock'); 
         return data;
     }).toList(),
     };
@@ -52,13 +61,14 @@ class OrderModel {
   factory OrderModel.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     return OrderModel(
+      docId: snapshot.id, 
       id: data['id'] as String,
       userId: data['userId'] as String,
       status: OrderStatus.values.firstWhere((e) => e.toString() == data['status']),
       totalAmount: data['totalAmount'] as double,
       orderDate: (data['orderDate'] as Timestamp).toDate(),
       paymentMethod: data['paymentMethod'] as String,
-      // address: AddressModel. fromMap(data[ 'address' ] as Map<String, dynamic>),
+      paymentProofUrl: data['paymentProofUrl'],
       items: (data['items'] as List<dynamic>).map((itemData) => CartItemModel.fromJson(itemData as Map<String, dynamic>)).toList(),
     );
   }

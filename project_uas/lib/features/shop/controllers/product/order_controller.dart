@@ -60,7 +60,7 @@ class OrderController extends GetxController {
 
 
   /// Add methods for order processing
-  void processOrder(double totalAmount) async {
+  Future<void> processOrder(double totalAmount, {String? paymentProofUrl}) async {
     try {
       // Start Loader
       BFullScreenLoader.openLoadingDialog('Processing your order', BImages.pencilAnimation);
@@ -71,14 +71,14 @@ class OrderController extends GetxController {
       
       // Add Details
       final order = OrderModel(
-        // Generate a unique ID for the order
+        docId: '',
         id: UniqueKey().toString(),
         userId: userId,
         status: OrderStatus.pending,
         totalAmount: totalAmount,
         orderDate: DateTime.now(),
         paymentMethod: checkoutController.selectedPaymentMethod.value.name,
-        // address: addressController.selectedAddress.value,
+        paymentProofUrl: paymentProofUrl,
         items: cartController.cartItems.toList(),
       );
 
@@ -102,4 +102,78 @@ class OrderController extends GetxController {
       BLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
   } 
+
+  Future<void> cancelOrder(OrderModel order) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(order.userId)
+        .collection('Orders')
+        .doc(order.docId);
+
+      await docRef.update({'status': OrderStatus.cancelled.toString()});
+
+      for (var item in order.items) {
+        final productRef = FirebaseFirestore.instance.collection('Products').doc(item.productId);
+        final productDoc = await productRef.get();
+
+        if (productDoc.exists) {
+          final currentStock = productDoc['Stock'] ?? 0;
+          final restoredStock = currentStock + item.quantity;
+          await productRef.update({'Stock': restoredStock});
+        }
+      }
+      BLoaders.successSnackBar(title: 'Berhasil', message: 'Pesanan berhasil dibatalkan');
+    } catch (e) {
+      BLoaders.errorSnackBar(title: 'Gagal Membatalkan', message: e.toString());
+    }
+  }
+ 
+
+  Future<List<OrderModel>> fetchAllOrdersForAdmin() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collectionGroup('Orders') 
+          .orderBy('orderDate', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) => OrderModel.fromSnapshot(doc)).toList();
+    } catch (e) {
+      BLoaders.errorSnackBar(title: 'Gagal ambil data', message: e.toString());
+      return [];
+    }
+  }
+
+  Future<void> confirmOrder(OrderModel order) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(order.userId)
+        .collection('Orders')
+        .doc(order.docId);
+
+      await docRef.update({
+        'status': OrderStatus.processing.toString(),
+      });
+
+      BLoaders.successSnackBar(title: 'Sukses', message: 'Pesanan dikonfirmasi');
+    } catch (e) {
+      BLoaders.errorSnackBar(title: 'Gagal', message: e.toString());
+    }
+  }
+
+  Future<void> updateOrderStatus(OrderModel order, OrderStatus newStatus) async {
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(order.userId)
+          .collection('Orders')
+          .doc(order.docId);
+
+      await docRef.update({'status': newStatus.toString()});
+      BLoaders.successSnackBar(title: 'Sukses', message: 'Status pesanan diperbarui');
+    } catch (e) {
+      BLoaders.errorSnackBar(title: 'Gagal update status', message: e.toString());
+    }
+  }
 }

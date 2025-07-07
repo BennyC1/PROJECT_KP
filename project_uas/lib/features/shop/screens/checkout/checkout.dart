@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/common/widgets/custom_shape/containers/rounded_container.dart';
 import 'package:project_uas/features/shop/controllers/product/cart_controller.dart';
-import 'package:project_uas/features/shop/controllers/product/order_controller.dart';
 import 'package:project_uas/features/shop/screens/cart/widgets/cart_items.dart';
 import 'package:project_uas/features/shop/screens/checkout/widgets/billing_address_section.dart';
 import 'package:project_uas/features/shop/screens/checkout/widgets/billing_amount_section.dart';
 import 'package:project_uas/features/shop/screens/checkout/widgets/billing_payment_section.dart';
+import 'package:project_uas/features/shop/screens/payment/payment_proof_screen.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/utils/constants/sized.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
@@ -26,7 +26,6 @@ class CheckoutScreen extends StatelessWidget {
     final subTotal = cartController.getOriginalTotalPrice();
     final tax = BPricingCalculator.calculateTax(subTotal, "Indonesia");
     final total = subTotal + tax - discount;
-    final orderController = Get.put(OrderController());
 
     final dark = BHelperFunctions.isDarkMode(context);
     return Scaffold(
@@ -77,7 +76,7 @@ class CheckoutScreen extends StatelessWidget {
         padding: const EdgeInsets.all(BSize.defaultSpace),
         child: ElevatedButton( 
           onPressed: subTotal > 0 
-            ? () => orderController.processOrder(total)
+            ? () => Get.to(() => PaymentProofScreen(totalAmount: total))
             : () => BLoaders.warningSnackBar(title: 'Empty Cart', message: 'Add item in the cart in order to proceed'),
           child: Text('Checkout ${currencyFormatter.format(total)}'),
         ),

@@ -24,7 +24,7 @@ class OrderRepository extends GetxController {
   // Store new user order
   Future<void> saveOrder(OrderModel order, String userId) async {
     try {
-      await _db.collection('Users') .doc(userId).collection('Orders').add(order.toJson());
+      await _db.collection('Users').doc(userId).collection('Orders').add(order.toJson());
     } catch (e) {
       throw 'Something went wrong while saving Order Information. Try again later';
     }

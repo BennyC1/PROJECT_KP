@@ -28,21 +28,18 @@ class _UploadProofModalState extends State<UploadProofModal> {
 
   Future<void> _uploadAndSubmit() async {
     if (_imageFile == null) return;
-
     setState(() => _isUploading = true);
 
     try {
-      final id = UniqueKey().toString();
-      final storageRef = FirebaseStorage.instance.ref().child('payment_proofs/$id.jpg');
+      final fileName = 'payment_proofs/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final storageRef = FirebaseStorage.instance.ref().child(fileName);
       await storageRef.putFile(_imageFile!);
       final url = await storageRef.getDownloadURL();
 
-      await ReservationController.instance.submitPendingReservation(url);
+      await ReservationController.instance.submitReservation(proofUrl: url);
 
-      if (context.mounted) {
-        Navigator.pop(context); // tutup modal
-        Get.snackbar('Berhasil', 'Reservasi menunggu verifikasi admin');
-      }
+      if (mounted) Navigator.pop(context);
+      Get.snackbar('Berhasil', 'Reservasi berhasil dikirim dan menunggu verifikasi.');
     } catch (e) {
       Get.snackbar('Error', 'Gagal mengunggah bukti: $e');
     } finally {
@@ -52,50 +49,44 @@ class _UploadProofModalState extends State<UploadProofModal> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey[900]
-            : Colors.white,
+        color: isDark ? Colors.grey[900] : Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Wrap(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const Center(
-            child: Text(
-              "Upload Bukti Pembayaran",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+          const Text(
+            "Upload Bukti Pembayaran",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          Center(
-            child: _imageFile != null
-                ? Image.file(_imageFile!, width: 200)
-                : const Text("Belum ada bukti yang dipilih."),
-          ),
+          if (_imageFile != null)
+            Image.file(_imageFile!, width: 200)
+          else
+            const Text("Belum ada bukti yang dipilih."),
           const SizedBox(height: 12),
-          Center(
-            child: ElevatedButton.icon(
-              onPressed: _pickImage,
-              icon: const Icon(Icons.upload),
-              label: const Text("Pilih Bukti Pembayaran"),
-            ),
+          ElevatedButton.icon(
+            onPressed: _pickImage,
+            icon: const Icon(Icons.upload),
+            label: const Text("Pilih Bukti Pembayaran"),
           ),
           const SizedBox(height: 20),
-          if (_isUploading)
-            const Center(child: CircularProgressIndicator())
-          else
-            Center(
-              child: ElevatedButton(
-                onPressed: _imageFile == null ? null : _uploadAndSubmit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
+          _isUploading
+              ? const CircularProgressIndicator()
+              : ElevatedButton(
+                  onPressed: _imageFile == null ? null : _uploadAndSubmit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text("Kirim & Ajukan"),
                 ),
-                child: const Text("Kirim & Ajukan"),
-              ),
-            ),
         ],
       ),
     );

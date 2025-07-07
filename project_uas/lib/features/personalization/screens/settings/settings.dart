@@ -6,10 +6,14 @@ import 'package:project_uas/common/widgets/texts/section_heading.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/banner/banner_repository.dart';
 import 'package:project_uas/features/personalization/controllers/user_controller.dart';
+import 'package:project_uas/features/shop/function/admin/admin_confirm_reservation_screen.dart';
 import 'package:project_uas/features/shop/function/brand/delete_brand.dart';
 import 'package:project_uas/features/shop/function/brand/upload_brand.dart';
 import 'package:project_uas/features/shop/function/capster/delete_capster_sheet.dart';
 import 'package:project_uas/features/shop/function/capster/upload_capster_dialog.dart';
+import 'package:project_uas/features/shop/function/admin/admin_order_screen.dart';
+import 'package:project_uas/features/shop/function/owner/admin_deletion_screen.dart';
+import 'package:project_uas/features/shop/function/owner/register_admin_screen.dart';
 import 'package:project_uas/features/shop/function/package/delete_package_sheet.dart';
 import 'package:project_uas/features/shop/function/package/upload_package_dialog.dart';
 import 'package:project_uas/features/shop/function/product/check_add_stock_screen.dart';
@@ -66,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(height: BSize.spaceBtwSections),
 
                   // Customer
-                  if (!isAdmin)
+                  if (!isAdmin && !isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.message,
                     title: 'Chat',
@@ -75,13 +79,13 @@ class SettingsScreen extends StatelessWidget {
                       Get.to(() => const ChatScreen());
                     },               
                   ),
-                  if (!isAdmin)
+                  if (!isAdmin && !isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.shopping_cart, 
                     title: 'My cart', 
                     subTitle: "Add, remove products and have to checkout",
                     onTap: () => Get.to(() => const CartScreen())),
-                  if (!isAdmin)
+                  if (!isAdmin && !isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.bag_tick, 
                     title: "My Orders", 
@@ -94,14 +98,14 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.check,
                     title: 'Confirm Product',
                     subTitle: 'Confirmed Purchase Product',
-                    onTap: () {},
+                    onTap: () => Get.to(() => const AdminOrderScreen()),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.check,
                     title: 'Confirm Reservation',
                     subTitle: 'Confirmed Reservation Product',
-                    onTap: () {},
+                    onTap: () => Get.to(() => const AdminConfirmReservationScreen()),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
@@ -213,9 +217,16 @@ class SettingsScreen extends StatelessWidget {
                   if (isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.edit,
-                    title: 'Register Account Admin',
+                    title: 'Register Admin Account',
                     subTitle: 'Create Admin Account',
-                    onTap: () {}, 
+                    onTap: () => Get.to(() => const RegisterAdminScreen()), 
+                  ),
+                  if (isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Delete Admin Account',
+                    subTitle: 'Delete Admin Account',
+                    onTap: () => Get.to(() => const AdminDeletionScreen()), 
                   ),
 
                   /// App Settings

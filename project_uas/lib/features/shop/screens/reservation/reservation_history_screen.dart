@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project_uas/features/shop/controllers/reservation_controller.dart';
 import 'package:project_uas/utils/helpers/helper_function.dart';
-import 'package:project_uas/features/shop/models/pending_reservation_model.dart';
 import 'package:project_uas/features/shop/models/reservation_model.dart';
-
 
 class ReservationHistoryScreen extends StatelessWidget {
   const ReservationHistoryScreen({super.key});
@@ -24,18 +22,18 @@ class ReservationHistoryScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          controller.fetchUserReservations(),
-          controller.fetchPendingReservations(),
-        ]),
+      body: FutureBuilder<List<ReservationModel>>(
+        future: controller.fetchUserReservations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final confirmed = List<ReservationModel>.from(snapshot.data?[0] ?? []);
-          final pending = List<PendingReservationModel>.from(snapshot.data?[1] ?? []);
+          final data = snapshot.data ?? [];
+
+          final pending = data.where((r) => r.status == 'pending').toList();
+          final approved = data.where((r) => r.status == 'approved').toList();
+          final cancelled = data.where((r) => r.status == 'cancelled').toList();
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -50,15 +48,12 @@ class ReservationHistoryScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     ...pending.map((item) {
-                      final isApproved = item.status == 'approved';
                       final now = DateTime.now();
                       final timeLeft = item.datetime.difference(now);
                       final isUpcoming = timeLeft.inSeconds > 0;
 
                       return Card(
-                        color: isApproved
-                            ? Colors.green.withOpacity(0.1)
-                            : Colors.grey.shade900,
+                        color: Colors.orange.shade50,
                         child: ListTile(
                           title: Text("${item.capster} - ${item.packageType}"),
                           subtitle: Column(
@@ -66,15 +61,12 @@ class ReservationHistoryScreen extends StatelessWidget {
                             children: [
                               Text(DateFormat('EEEE, dd MMM yyyy – HH:mm', 'id').format(item.datetime)),
                               const SizedBox(height: 4),
-                              if (isApproved && isUpcoming)
-                                Text(
-                                  "✅ Disetujui • Tersisa ${timeLeft.inHours} jam ${timeLeft.inMinutes % 60} menit",
-                                  style: const TextStyle(color: Colors.green),
-                                )
-                              else if (isApproved && !isUpcoming)
-                                const Text("✅ Disetujui • Sudah Lewat", style: TextStyle(color: Colors.grey))
-                              else
-                                const Text("⏳ Menunggu Konfirmasi Admin", style: TextStyle(color: Colors.orange)),
+                              const Text("⏳ Menunggu Konfirmasi Admin", style: TextStyle(color: Colors.orange)),
+                              if (isUpcoming)
+                                TextButton(
+                                  onPressed: () => controller.cancelUserReservation(item.id),
+                                  child: const Text("Batalkan"),
+                                ),
                             ],
                           ),
                           trailing: Text("Rp ${item.price}"),
@@ -85,13 +77,42 @@ class ReservationHistoryScreen extends StatelessWidget {
                   ],
                 ),
 
+              if (approved.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Reservasi Disetujui",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    ...approved.map((item) {
+                      final now = DateTime.now();
+                      final timeLeft = item.datetime.difference(now);
+                      final isUpcoming = timeLeft.inSeconds > 0;
+
+                      return Card(
+                        color: Colors.green.withOpacity(0.1),
+                        child: ListTile(
+                          title: Text("${item.capster} - ${item.packageType}"),
+                          subtitle: Text(isUpcoming
+                              ? "✅ Disetujui • Tersisa ${timeLeft.inHours} jam ${timeLeft.inMinutes % 60} menit"
+                              : "✅ Disetujui • Sudah Lewat"),
+                          trailing: Text("Rp ${item.price}"),
+                        ),
+                      );
+                    }).toList(),
+                    const Divider(height: 32),
+                  ],
+                ),
+
               const Text(
-                "Riwayat Reservasi",
+                "Riwayat Reservasi Dibatalkan",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              ...confirmed.map((item) => ListTile(
-                    leading: const Icon(Icons.check_circle, color: Colors.green),
+              ...cancelled.map((item) => ListTile(
+                    leading: const Icon(Icons.cancel, color: Colors.red),
                     title: Text("${item.capster} - ${item.packageType}"),
                     subtitle: Text(DateFormat('EEEE, dd MMM yyyy – HH:mm', 'id').format(item.datetime)),
                     trailing: Text("Rp ${item.price}"),
