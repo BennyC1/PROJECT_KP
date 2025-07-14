@@ -24,9 +24,37 @@ class BUserProfileTile extends StatelessWidget {
       leading: Obx(() {
         final networkImage = controller.user.value.profilePicture;
         final image = networkImage.isNotEmpty ? networkImage : BImages.user;
-        return controller.imageUploading.value
-          ? const BShimmerEffect(width: 80, height: 80, radius: 80)
-          : BCircularImage(image: image, width: 55, height: 55, isNetworkImage: networkImage.isNotEmpty);
+
+        if (controller.imageUploading.value) {
+          return const BShimmerEffect(width: 80, height: 80, radius: 80);
+        }
+
+        return GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (_) => Dialog(
+                backgroundColor: Colors.transparent,
+                child: InteractiveViewer(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image(
+                      image: networkImage.isNotEmpty
+                          ? NetworkImage(networkImage)
+                          : AssetImage(image) as ImageProvider,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          child: BCircularImage(
+            image: image,
+            width: 55,
+            height: 55,
+            isNetworkImage: networkImage.isNotEmpty,
+          ),
+        );
       }),
       title: Obx(()=> Text(controller.user.value.fullName, style: Theme.of(context).textTheme.headlineSmall!.apply(color: BColors.white))),
       subtitle: Text(controller.user.value.email, style: Theme.of(context).textTheme.bodyMedium !. apply(color: BColors.white)),

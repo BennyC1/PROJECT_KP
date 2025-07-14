@@ -72,6 +72,7 @@ class BProductMetaData extends StatelessWidget {
           children: [
             BCircularImage (
               image: product.brand != null ? product.brand!.image : '',
+              isNetworkImage: true,
               width: 32,
               height: 32,
               overlayColor: darkMode ? BColors.white : BColors.black,

@@ -149,21 +149,74 @@ class BOrderListItems extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () async {
                         final confirm = await Get.dialog(AlertDialog(
-                          title: const Text("Konfirmasi"),
-                          content: const Text("Yakin ingin membatalkan pesanan ini? (Bukti Pembatalan Kirim Ke Whatsapp 0822-8600-0946), Biaya Pajak Tidak Dikembalikan"),
-                          actions: [
-                            TextButton(onPressed: () => Get.back(result: false), child: const Text("Batal")),
-                            ElevatedButton(onPressed: () => Get.back(result: true), child: const Text("Ya, Batalkan")),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        title: const Row(
+                          children: [
+                            Icon(Icons.warning_amber_rounded, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text("Konfirmasi Pembatalan"),
                           ],
-                        ));
+                        ),
+                        content: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Apakah Anda yakin ingin membatalkan pesanan ini?",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            SizedBox(height: 12),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(text: "• Bukti pembatalan dikirim via WhatsApp ke "),
+                                  TextSpan(
+                                    text: "0822-8600-0946",
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  TextSpan(text: ".\n• "),
+                                  TextSpan(
+                                    text: "Biaya pajak tidak dapat dikembalikan.",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          OutlinedButton(
+                            onPressed: () => Get.back(result: false),
+                            child: const Text("Tidak Jadi"),
+                          ),
+                          FilledButton(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                            onPressed: () => Get.back(result: true),
+                            child: const Text("Ya, Batalkan"),
+                          ),
+                        ],
+                      ));
 
                         if (confirm == true) {
                           await controller.cancelOrder(order);
                         }
                       },
-                      icon: const Icon(Icons.cancel),
-                      label: const Text("Batalkan Pesanan"),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                      icon: const Icon(Icons.cancel_outlined, size: 20),
+                      label: const Text(
+                        "Batalkan Pesanan",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 3,
+                      ),
                     ),
                   ],
                 ]

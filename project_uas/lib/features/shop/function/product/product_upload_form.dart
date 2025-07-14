@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,8 +80,8 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
 
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
-    if (thumbnailImage == null || productImages.isEmpty || variationImages.isEmpty) {
-      BLoaders.errorSnackBar(title: 'Gagal', message: 'Semua gambar wajib diisi!');
+    if (thumbnailImage == null ) {
+      BLoaders.errorSnackBar(title: 'Gagal', message: 'Thumbnail wajib diisi!');
       return;
     }
 
@@ -202,7 +204,11 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
                   isBrandFeatured = brand['IsFeatured'] ?? false;
                 });
               },
-              decoration: InputDecoration(labelText: 'Brand ID (Pilih dari daftar)', labelStyle: Theme.of(context).textTheme.bodyMedium,),
+              decoration: InputDecoration(
+                labelText: 'Brand ID (Pilih dari daftar)', 
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                )),
               validator: (v) => v == null || v.isEmpty ? 'Wajib pilih Brand' : null,
             ),
             const SizedBox(height: 10),
@@ -210,14 +216,22 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
             TextFormField(
               controller: _brandNameController,
               readOnly: true,
-              decoration: InputDecoration(labelText: 'Brand Name', labelStyle: Theme.of(context).textTheme.bodyMedium),
+              decoration: InputDecoration(
+                labelText: 'Brand Name', 
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                )),
             ),
             const SizedBox(height: 10),
 
             TextFormField(
               controller: _brandImageUrlController,
               readOnly: true,
-              decoration: InputDecoration(labelText: 'Brand Image URL', labelStyle: Theme.of(context).textTheme.bodyMedium),
+              decoration: InputDecoration(
+                labelText: 'Brand Image URL', 
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                )),
             ),
             const SizedBox(height: 10),
 
@@ -241,7 +255,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
               controller: _titleController,
               decoration: InputDecoration(
                 labelText: 'Judul Produk',
-                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
               ),
               validator: (v) => v!.isEmpty ? 'Wajib diisi' : null,
             ),
@@ -251,7 +267,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
               controller: _shortDescController,
               decoration: InputDecoration(
                 labelText: 'Deskripsi Singkat',
-                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -261,7 +279,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
               maxLines: 3,
               decoration: InputDecoration(
                 labelText: 'Deskripsi Lengkap',
-                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -270,7 +290,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
               controller: _skuController,
               decoration: InputDecoration(
                 labelText: 'SKU',
-                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -283,7 +305,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Harga',
-                      labelStyle: Theme.of(context).textTheme.bodyMedium,
+                      floatingLabelStyle: TextStyle(
+                        color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -294,7 +318,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Harga Diskon',
-                      labelStyle: Theme.of(context).textTheme.bodyMedium,
+                      floatingLabelStyle: TextStyle(
+                        color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -307,7 +333,9 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Stok',
-                labelStyle: Theme.of(context).textTheme.bodyMedium,
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -323,23 +351,58 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
 
             const SizedBox(height: 16),
             const Text('Kategori Produk', style: TextStyle(fontWeight: FontWeight.bold)),
-            FutureBuilder(
+            const SizedBox(height: 12),
+            FutureBuilder<QuerySnapshot>(
               future: FirebaseFirestore.instance.collection('Categories').get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const CircularProgressIndicator();
+
                 final docs = snapshot.data!.docs;
+
+                // Pisahkan parent dan child
+                final parentCategories = docs.where((doc) {
+                  final parentId = doc['ParentId'];
+                  return parentId == null || parentId.toString().isEmpty;
+                }).toList();
+
+                final childCategories = docs.where((doc) {
+                  final parentId = doc['ParentId'];
+                  return parentId != null && parentId.toString().isNotEmpty;
+                }).toList();
+
+                // Kelompokkan anak-anak berdasarkan ParentId
+                Map<String, List<QueryDocumentSnapshot>> groupedChildren = {};
+                for (var child in childCategories) {
+                  final parentId = child['ParentId'];
+                  groupedChildren.putIfAbsent(parentId, () => []).add(child);
+                }
+
                 return Column(
-                  children: docs.map((doc) {
-                    final id = doc.id;
-                    final name = doc['Name'] ?? 'Tanpa Nama';
-                    return CheckboxListTile(
-                      title: Text(name),
-                      value: selectedCategoryIds.contains(id),
-                      onChanged: (val) {
-                        setState(() {
-                          val == true ? selectedCategoryIds.add(id) : selectedCategoryIds.remove(id);
-                        });
-                      },
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: parentCategories.map((parent) {
+                    final parentId = parent.id;
+                    final parentName = parent['Name'] ?? 'Kategori Utama';
+
+                    final children = groupedChildren[parentId] ?? [];
+
+                    return ExpansionTile(
+                      title: Text('🗂️ $parentName', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      children: children.map((child) {
+                        final childId = child.id;
+                        final childName = child['Name'] ?? 'Tanpa Nama';
+
+                        return CheckboxListTile(
+                          title: Text(childName),
+                          value: selectedCategoryIds.contains(childId),
+                          onChanged: (val) {
+                            setState(() {
+                              val == true
+                                  ? selectedCategoryIds.add(childId)
+                                  : selectedCategoryIds.remove(childId);
+                            });
+                          },
+                        );
+                      }).toList(),
                     );
                   }).toList(),
                 );
@@ -348,6 +411,7 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
 
             const SizedBox(height: 16),
             const Text('Brand Produk', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
             FutureBuilder(
               future: FirebaseFirestore.instance.collection('Brands').get(),
               builder: (context, snapshot) {
@@ -376,35 +440,69 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
             const Text('🖼️ Gambar Produk', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
 
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-
-                // Tombol Pilih Thumbnail
-                _buildImageCard(
-                  icon: Icons.image,
-                  label: 'Pilih Thumbnail',
-                  onTap: _pickThumbnail,
-                  subtitle: thumbnailImage != null ? '1 file dipilih' : null,
+            // Thumbnail
+            GestureDetector(
+              onTap: _pickThumbnail,
+              child: Container(
+                height: 130,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                alignment: Alignment.center,
+                child: thumbnailImage != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(File(thumbnailImage!.path), height: 120, fit: BoxFit.cover),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.image_outlined, size: 40, color: Colors.grey),
+                          SizedBox(height: 8),
+                          Text('Tap to upload thumbnail image', style: TextStyle(color: Colors.grey)),
+                        ],
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
 
-                // Tombol Gambar Produk
-                _buildImageCard(
-                  icon: Icons.collections,
-                  label: 'Gambar Produk',
-                  onTap: () => _pickMultipleImages(productImages),
-                  subtitle: productImages.isNotEmpty ? '${productImages.length} file' : null,
+            // Gambar Variasi
+            GestureDetector(
+              onTap: () => _pickMultipleImages(variationImages),
+              child: Container(
+                height: 130,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-
-                // Tombol Gambar Variasi
-                _buildImageCard(
-                  icon: Icons.layers,
-                  label: 'Gambar Variasi',
-                  onTap: () => _pickMultipleImages(variationImages),
-                  subtitle: variationImages.isNotEmpty ? '${variationImages.length} file' : null,
-                ),
-              ],
+                alignment: Alignment.center,
+                child: variationImages.isNotEmpty
+                    ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: variationImages.map((img) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(File(img.path), height: 120),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.layers_outlined, size: 40, color: Colors.grey),
+                          SizedBox(height: 8),
+                          Text('Tap to upload variation images', style: TextStyle(color: Colors.grey)),
+                        ],
+                      ),
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -426,57 +524,6 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
       ),
     );
   }
-}
-
-
-Widget _buildImageCard({
-  required IconData icon,
-  required String label,
-  required VoidCallback onTap,
-  String? subtitle,
-}) {
-  final isDark = Get.isDarkMode;
-  final theme = Get.theme;
-
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: 110,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: isDark ? Colors.grey[850] : Colors.grey[100], // latar belakang
-        border: Border.all(color: isDark ? Colors.grey[700]! : Colors.grey.shade300),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 36,
-            color: isDark ? Colors.lightBlue[300] : theme.colorScheme.primary,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13,
-              color: isDark ? Colors.white : Colors.black,
-            ),
-          ),
-          if (subtitle != null)
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: isDark ? Colors.grey[400] : Colors.grey[700],
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
 }
 
 

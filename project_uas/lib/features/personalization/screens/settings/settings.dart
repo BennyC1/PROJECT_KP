@@ -25,6 +25,7 @@ import 'package:project_uas/features/shop/function/banner/delete_banner_sheet.da
 import 'package:project_uas/features/shop/screens/cart/cart.dart';
 import 'package:project_uas/features/shop/screens/chat/chat.dart';
 import 'package:project_uas/features/shop/screens/order/order.dart';
+import 'package:project_uas/features/shop/screens/reservation/reservation_history_user.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/custom_shape/containers/primary_header_container.dart';
@@ -90,6 +91,14 @@ class SettingsScreen extends StatelessWidget {
                     title: "My Orders", 
                     subTitle: 'In progress and Completed Orders',
                     onTap: () => Get.to(() => const OrderScreen())),
+                  if (!isAdmin && !isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.calendar, 
+                    title: "My Reservations", 
+                    subTitle: 'In progress and Past Reservations',
+                    onTap: () => Get.to(() => const ReservationHistoryUser()),
+                  ),
+
 
                   // Admin Featured
                   if (isAdmin)
@@ -204,6 +213,20 @@ class SettingsScreen extends StatelessWidget {
                   ),
 
                   // Owner Featured
+                  if (isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Orders Result',
+                    subTitle: 'Check Orders Result',
+                    onTap: () {}, 
+                  ),
+                  if (isOwner)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Reservations Result',
+                    subTitle: 'Check Reservations Result',
+                    onTap: () {}, 
+                  ),
                   if (isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.edit,

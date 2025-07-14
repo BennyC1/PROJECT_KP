@@ -212,29 +212,50 @@ class _ReservationScreenState extends State<ReservationScreen> {
             const SizedBox(height: 32),
 
             /// Tombol Lanjut ke Pembayaran
-            ElevatedButton(
-              onPressed: () async {
-                final result = await showModalBottomSheet<bool>(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (_) => const PaymentSheet(),
-                );
+            Obx(() {
+              final isReady = controller.selectedCapster.value != null &&
+                              controller.selectedPackage.value != null &&
+                              controller.selectedDate.value != null &&
+                              controller.selectedTime.value != null;
 
-                if (result == true) {
-                  controller.submitReservation();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              child: const Text(
-                "Lanjut ke Pembayaran",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
+              if (!isReady) return const SizedBox();
+              
+              return ElevatedButton(
+                onPressed: isReady
+                    ? () async {
+                        final result = await showModalBottomSheet<bool>(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => const PaymentSheet(),
+                        );
+
+                        if (result == true) {
+                          controller.submitReservation();
+                        }
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isReady ? Colors.blueAccent : Colors.grey,
+                  foregroundColor: Colors.white,
+                  elevation: 4,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.qr_code_2_rounded, size: 24),
+                    SizedBox(width: 10),
+                    Text(
+                      "Lanjut ke Pembayaran",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              );
+            }),
           ],
         )),
       ),

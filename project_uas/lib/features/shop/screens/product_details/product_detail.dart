@@ -54,7 +54,6 @@ class ProductDetailScreen extends StatelessWidget {
                     lessStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
                   ),
 
-                  // review 
                   const Divider(),
                 ]
               ),

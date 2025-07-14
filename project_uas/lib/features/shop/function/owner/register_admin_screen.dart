@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_uas/common/widgets/appbar/appbar.dart';
 
 class RegisterAdminScreen extends StatefulWidget {
   const RegisterAdminScreen({super.key});
@@ -54,7 +55,7 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register Admin Baru')),
+      appBar: BAppBar(showBackArrow: true, title: Text('Register Account Admin', style: Theme.of(context).textTheme.headlineSmall)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

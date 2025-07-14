@@ -38,88 +38,110 @@ class ReservationHistoryScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              if (pending.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Reservasi Menunggu Konfirmasi",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    ...pending.map((item) {
-                      final now = DateTime.now();
-                      final timeLeft = item.datetime.difference(now);
-                      final isUpcoming = timeLeft.inSeconds > 0;
-
-                      return Card(
-                        color: Colors.orange.shade50,
-                        child: ListTile(
-                          title: Text("${item.capster} - ${item.packageType}"),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(DateFormat('EEEE, dd MMM yyyy – HH:mm', 'id').format(item.datetime)),
-                              const SizedBox(height: 4),
-                              const Text("⏳ Menunggu Konfirmasi Admin", style: TextStyle(color: Colors.orange)),
-                              if (isUpcoming)
-                                TextButton(
-                                  onPressed: () => controller.cancelUserReservation(item.id),
-                                  child: const Text("Batalkan"),
-                                ),
-                            ],
-                          ),
-                          trailing: Text("Rp ${item.price}"),
-                        ),
-                      );
-                    }).toList(),
-                    const Divider(height: 32),
-                  ],
-                ),
-
-              if (approved.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Reservasi Disetujui",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    ...approved.map((item) {
-                      final now = DateTime.now();
-                      final timeLeft = item.datetime.difference(now);
-                      final isUpcoming = timeLeft.inSeconds > 0;
-
-                      return Card(
-                        color: Colors.green.withOpacity(0.1),
-                        child: ListTile(
-                          title: Text("${item.capster} - ${item.packageType}"),
-                          subtitle: Text(isUpcoming
-                              ? "✅ Disetujui • Tersisa ${timeLeft.inHours} jam ${timeLeft.inMinutes % 60} menit"
-                              : "✅ Disetujui • Sudah Lewat"),
-                          trailing: Text("Rp ${item.price}"),
-                        ),
-                      );
-                    }).toList(),
-                    const Divider(height: 32),
-                  ],
-                ),
-
-              const Text(
-                "Riwayat Reservasi Dibatalkan",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              if (pending.isNotEmpty) ...[
+                _buildSectionTitle("Reservasi Menunggu Konfirmasi", dark),
+                const SizedBox(height: 8),
+                ...pending.map((item) => _buildReservationCard(
+                      item,
+                      statusText: "⏳ Menunggu Konfirmasi Admin",
+                      statusColor: Colors.orange,
+                      showCancel: true,
+                      dark: dark,
+                      onCancel: () => controller.cancelUserReservation(item.id),
+                    )),
+                const SizedBox(height: 24),
+              ],
+              if (approved.isNotEmpty) ...[
+                _buildSectionTitle("Reservasi Disetujui", dark),
+                const SizedBox(height: 8),
+                ...approved.map((item) => _buildReservationCard(
+                      item,
+                      statusText: "✅ Disetujui",
+                      statusColor: Colors.green,
+                      dark: dark,
+                    )),
+                const SizedBox(height: 24),
+              ],
+              _buildSectionTitle("Riwayat Reservasi Dibatalkan", dark),
               const SizedBox(height: 8),
-              ...cancelled.map((item) => ListTile(
-                    leading: const Icon(Icons.cancel, color: Colors.red),
-                    title: Text("${item.capster} - ${item.packageType}"),
-                    subtitle: Text(DateFormat('EEEE, dd MMM yyyy – HH:mm', 'id').format(item.datetime)),
-                    trailing: Text("Rp ${item.price}"),
+              ...cancelled.map((item) => Card(
+                    elevation: 0,
+                    color: dark ? Colors.red.shade900.withOpacity(0.1) : Colors.red.shade50,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    child: ListTile(
+                      leading: const Icon(Icons.cancel, color: Colors.red),
+                      title: Text("${item.capster} - ${item.packageType}"),
+                      subtitle: Text(DateFormat('EEEE, dd MMM yyyy – HH:mm', 'id').format(item.datetime)),
+                      trailing: Text("Rp ${item.price}"),
+                    ),
                   )),
             ],
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title, bool dark) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: dark ? Colors.white : Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildReservationCard(
+    ReservationModel item, {
+    required String statusText,
+    required Color statusColor,
+    bool showCancel = false,
+    bool dark = false,
+    VoidCallback? onCancel,
+  }) {
+    final now = DateTime.now();
+    final timeLeft = item.datetime.difference(now);
+    final isUpcoming = timeLeft.inSeconds > 0;
+
+    return Card(
+      color: dark ? Colors.grey.shade900 : Colors.grey.shade100,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${item.capster} - ${item.packageType}",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(DateFormat('EEEE, dd MMM yyyy – HH:mm', 'id').format(item.datetime)),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  statusText,
+                  style: TextStyle(color: statusColor, fontWeight: FontWeight.w500),
+                ),
+                Text("Rp ${item.price}", style: const TextStyle(fontWeight: FontWeight.w600)),
+              ],
+            ),
+            if (showCancel && isUpcoming)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: onCancel,
+                  icon: const Icon(Icons.cancel, size: 18, color: Colors.red),
+                  label: const Text("Batalkan", style: TextStyle(color: Colors.red)),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

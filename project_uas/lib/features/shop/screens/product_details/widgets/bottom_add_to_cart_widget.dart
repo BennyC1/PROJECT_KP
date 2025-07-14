@@ -36,7 +36,7 @@ class BBottomAddToCart extends StatelessWidget {
         () => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row (
+            Row(
               children: [
                 BCircularIcon(
                   icon: Iconsax.minus,
@@ -44,10 +44,15 @@ class BBottomAddToCart extends StatelessWidget {
                   width: 40,
                   height: 40,
                   color: BColors.white,
-                  onPressed: controller.productQuantityInCart.value < 1  ? null  : () => controller.productQuantityInCart.value -= 1,
+                  onPressed: controller.productQuantityInCart.value < 1
+                      ? null
+                      : () => controller.productQuantityInCart.value -= 1,
                 ),
                 const SizedBox(width: BSize.spaceBtwItems),
-                Text(controller.productQuantityInCart.value.toString(), style: Theme.of(context).textTheme.titleSmall),
+                Text(
+                  controller.productQuantityInCart.value.toString(),
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
                 const SizedBox(width: BSize.spaceBtwItems),
                 BCircularIcon(
                   icon: Iconsax.add,
@@ -57,19 +62,21 @@ class BBottomAddToCart extends StatelessWidget {
                   color: BColors.white,
                   onPressed: () => controller.productQuantityInCart.value += 1,
                 ),
-              ]
-            ),  
-            ElevatedButton (
-              onPressed: controller.productQuantityInCart.value < 1  ? null  : () => controller.addToCart(product),
-              style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(BSize.md),
-              backgroundColor: BColors.black,
-              side: const BorderSide(color: BColors.black),
+              ],
             ),
-              child: const Text('Add to Cart'),
-            )
-          ]
-        )
+            // Kondisional untuk tombol
+            if (controller.productQuantityInCart.value > 0)
+              ElevatedButton(
+                onPressed: () => controller.addToCart(product),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(BSize.md),
+                  backgroundColor: BColors.black,
+                  side: const BorderSide(color: BColors.black),
+                ),
+                child: const Text('Add to Cart'),
+              ),
+          ],
+        ),
       )
     );
   }

@@ -154,27 +154,28 @@ class ReservationController extends GetxController {
     return await reservationRepository.fetchReservationsByUserId(userId);
   }
 
-  Future<List<ReservationModel>> fetchAllReservationsForAdmin() async {
-  try {
-    final snapshot = await _db.collection('reservations')
-      .where('status', whereIn: ['pending', 'cancelled', 'approved'])
-      .orderBy('datetime')
-      .get();
+  Stream<List<ReservationModel>> fetchAllReservationsForAdminStream() {
+    try {
+      return _db
+          .collection('reservations')
+          .where('status', whereIn: ['pending', 'cancelled', 'approved'])
+          .orderBy('datetime')
+          .snapshots()
+          .map((snapshot) {
+            final data = snapshot.docs.map((doc) => ReservationModel.fromSnapshot(doc)).toList();
 
-    final data = snapshot.docs.map((doc) => ReservationModel.fromSnapshot(doc)).toList();
+            print('📡 Real-time reservasi ditemukan: ${data.length}');
+            for (var r in data) {
+              print('🔥 ${r.capster} | ${r.status} | ${r.datetime}');
+            }
 
-    print('Jumlah reservasi ditemukan: ${data.length}');
-    for (var r in data) {
-      print('🔥 ${r.capster} | ${r.status} | ${r.datetime}');
+            return data;
+          });
+    } catch (e) {
+      print('❌ Error fetchAllReservationsForAdminStream: $e');
+      rethrow;
     }
-
-    return data;
-  } catch (e) {
-    print('❌ Error fetchAllReservationsForAdmin: $e');
-    rethrow;
   }
-}
-
 
   Future<void> updateReservationStatus(String id, String newStatus) async {
     try {

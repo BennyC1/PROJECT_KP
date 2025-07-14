@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/features/shop/controllers/product/order_controller.dart';
 import 'package:project_uas/features/shop/models/order_model.dart';
 import 'package:project_uas/utils/constants/enums.dart';
@@ -59,7 +60,7 @@ class _AdminOrderScreenState extends State<AdminOrderScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Kelola Pesanan')),
+      appBar: BAppBar(showBackArrow: true, title: Text('Kelola Pesanan', style: Theme.of(context).textTheme.headlineSmall)),
       body: Column(
         children: [
           Padding(

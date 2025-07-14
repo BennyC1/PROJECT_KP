@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_uas/common/widgets/appbar/appbar.dart';
 import 'package:project_uas/data/product/product_repository.dart';
 import 'package:project_uas/features/shop/function/product/product_edit_form.dart';
 import 'package:project_uas/features/shop/models/product_model.dart';
@@ -45,7 +46,7 @@ class _ProductEditListScreenState extends State<ProductEditListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Select Product to Edit', style: Theme.of(context).textTheme.headlineMedium)),
+      appBar: BAppBar(showBackArrow: true, title: Text('Select Product To Edit', style: Theme.of(context).textTheme.headlineMedium)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -16,6 +16,7 @@ class ReservationRepository extends GetxController {
           .where('capster', isEqualTo: capster)
           .where('datetime', isGreaterThanOrEqualTo: startOfDay)
           .where('datetime', isLessThan: endOfDay)
+          .where('status', isNotEqualTo: 'cancelled')
           .get();
 
       return querySnapshot.docs.map((doc) => ReservationModel.fromSnapshot(doc)).toList();

@@ -28,24 +28,37 @@ class _UploadProofModalState extends State<UploadProofModal> {
 
   Future<void> _uploadAndSubmit() async {
     if (_imageFile == null) return;
+
     setState(() => _isUploading = true);
 
     try {
       final fileName = 'payment_proofs/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final storageRef = FirebaseStorage.instance.ref().child(fileName);
-      await storageRef.putFile(_imageFile!);
-      final url = await storageRef.getDownloadURL();
+      final ref = FirebaseStorage.instance.ref().child(fileName);
 
-      await ReservationController.instance.submitReservation(proofUrl: url);
+      // Upload with timeout
+      await ref.putFile(_imageFile!).timeout(const Duration(seconds: 30));
+      final url = await ref.getDownloadURL().timeout(const Duration(seconds: 15));
 
-      if (mounted) Navigator.pop(context);
+      debugPrint('Proof URL: $url');
+
+      // Submit reservasi with timeout
+      await ReservationController.instance.submitReservation(proofUrl: url).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw Exception('Proses pengajuan terlalu lama. Silakan coba lagi.');
+        },
+      );
+
+      if (mounted) Navigator.of(context).pop(true);
       Get.snackbar('Berhasil', 'Reservasi berhasil dikirim dan menunggu verifikasi.');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrintStack(label: 'Upload/Submit Error', stackTrace: stackTrace);
       Get.snackbar('Error', 'Gagal mengunggah bukti: $e');
     } finally {
-      setState(() => _isUploading = false);
+      if (mounted) setState(() => _isUploading = false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,37 +69,80 @@ class _UploadProofModalState extends State<UploadProofModal> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? Colors.grey[900] : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
             "Upload Bukti Pembayaran",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
-          if (_imageFile != null)
-            Image.file(_imageFile!, width: 200)
-          else
-            const Text("Belum ada bukti yang dipilih."),
-          const SizedBox(height: 12),
-          ElevatedButton.icon(
+          const SizedBox(height: 20),
+
+          // Preview gambar atau fallback
+          Container(
+            width: double.infinity,
+            height: 220,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.grey.shade300),
+              color: isDark ? Colors.grey[850] : Colors.grey[100],
+            ),
+            child: _imageFile != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      _imageFile!,
+                      width: double.infinity,
+                      height: 220,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.image_outlined, size: 60, color: Colors.grey),
+                      SizedBox(height: 8),
+                      Text("Belum ada gambar yang dipilih."),
+                    ],
+                  ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Tombol pilih gambar
+          OutlinedButton.icon(
             onPressed: _pickImage,
             icon: const Icon(Icons.upload),
             label: const Text("Pilih Bukti Pembayaran"),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
           ),
-          const SizedBox(height: 20),
-          _isUploading
-              ? const CircularProgressIndicator()
-              : ElevatedButton(
-                  onPressed: _imageFile == null ? null : _uploadAndSubmit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text("Kirim & Ajukan"),
-                ),
+
+          const SizedBox(height: 24),
+
+          // Tombol submit
+          if (_imageFile != null)
+            SizedBox(
+              width: double.infinity,
+              child: _isUploading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ElevatedButton.icon(
+                      onPressed: _uploadAndSubmit,
+                      icon: const Icon(Icons.send),
+                      label: const Text("Kirim & Ajukan"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+            ),
         ],
       ),
     );
