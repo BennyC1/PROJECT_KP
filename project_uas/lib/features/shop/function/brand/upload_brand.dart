@@ -9,7 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class UploadBrandDialog {
   static void show() {
     final nameController = TextEditingController();
-    final isFeatured = false.obs;
+    final isFeatured = true.obs;
     final Rx<File?> imageFile = Rx<File?>(null);
 
     Get.defaultDialog(
@@ -23,6 +23,9 @@ class UploadBrandDialog {
               controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Brand Name',
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
                 prefixIcon: const Icon(Icons.badge_outlined),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
@@ -50,7 +53,7 @@ class UploadBrandDialog {
                       )
                     : const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(Icons.image_outlined, size: 40, color: Colors.grey),
                           SizedBox(height: 8),
                           Text('Tap to upload brand image', style: TextStyle(color: Colors.grey)),

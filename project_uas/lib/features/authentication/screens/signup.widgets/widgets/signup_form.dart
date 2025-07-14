@@ -26,8 +26,11 @@ class BFormSignup extends StatelessWidget {
                   controller: controller.firstName,
                   validator: (value) => BValidator.validateEmptyText('First name', value),
                   expands: false,
-                  decoration: const InputDecoration(
-                    labelText: BText.firstName, prefixIcon: Icon(Iconsax.user)
+                  decoration: InputDecoration(
+                    floatingLabelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                    ),
+                    labelText: BText.firstName, prefixIcon: const Icon(Iconsax.user)
                   ),
                 ),
               ),
@@ -37,7 +40,11 @@ class BFormSignup extends StatelessWidget {
                   controller: controller.lastName,
                   validator: (value) => BValidator.validateEmptyText('Last name', value),
                   expands: false,
-                  decoration: const InputDecoration(labelText: BText.lastName, prefixIcon: Icon(Iconsax.user)
+                  decoration: InputDecoration(
+                    floatingLabelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                    ),
+                    labelText: BText.lastName, prefixIcon: const Icon(Iconsax.user)
                   ),
                 ),
               ),
@@ -50,7 +57,11 @@ class BFormSignup extends StatelessWidget {
             controller: controller.username,
             validator: (value) => BValidator.validateEmptyText('Username', value),
             expands: false,
-            decoration: const InputDecoration(labelText: BText.username, prefixIcon: Icon(Iconsax.user_edit)
+            decoration: InputDecoration(
+              floatingLabelStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              labelText: BText.username, prefixIcon: const Icon(Iconsax.user_edit)
             ),
           ),
           const SizedBox(height: BSize.spaceBtwInputFields),
@@ -59,7 +70,11 @@ class BFormSignup extends StatelessWidget {
           TextFormField(
             controller: controller.email,
             validator: (value) => BValidator.validateEmail(value),
-            decoration: const InputDecoration(labelText: BText.email, prefixIcon: Icon(Iconsax.direct)
+            decoration: InputDecoration(
+              floatingLabelStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              labelText: BText.email, prefixIcon: const Icon(Iconsax.direct)
             ),
           ),
           const SizedBox(height: BSize.spaceBtwInputFields),
@@ -68,7 +83,11 @@ class BFormSignup extends StatelessWidget {
           TextFormField(
             controller: controller.phoneNumber,
             validator: (value) => BValidator.validatePhoneNumber(value),
-            decoration: const InputDecoration(labelText: BText.phoneNo, prefixIcon: Icon(Iconsax.call),
+            decoration: InputDecoration(
+              floatingLabelStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              labelText: BText.phoneNo, prefixIcon: const Icon(Iconsax.call),
             ),
           ),
           const SizedBox(height: BSize.spaceBtwInputFields),
@@ -82,6 +101,9 @@ class BFormSignup extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: BText.password, 
                 prefixIcon: const Icon(Iconsax.password_check),
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ),
                 suffixIcon: IconButton(
                   onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 
                   icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye)

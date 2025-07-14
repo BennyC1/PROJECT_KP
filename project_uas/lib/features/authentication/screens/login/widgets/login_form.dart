@@ -27,7 +27,11 @@ class BLoginForm extends StatelessWidget {
             TextFormField(
               controller: controller.email,
               validator: (value) => BValidator.validateEmail(value),
-              decoration: const InputDecoration(prefixIcon: Icon(Iconsax.direct_right), labelText: BText.email),
+              decoration: InputDecoration(prefixIcon: const Icon(Iconsax.direct_right), 
+              floatingLabelStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              labelText: BText.email),
             ),
             const SizedBox(height: BSize.spaceBtwInputFields),
         
@@ -37,7 +41,10 @@ class BLoginForm extends StatelessWidget {
               validator: (value) => BValidator.validateEmptyText('Password', value),
               obscureText: controller.hidePassword.value,
               decoration: InputDecoration(
-                labelText: BText.password, 
+                labelText: BText.password,
+                floatingLabelStyle: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                ), 
                 prefixIcon: const Icon(Iconsax.password_check),
                 suffixIcon: IconButton(
                   onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 

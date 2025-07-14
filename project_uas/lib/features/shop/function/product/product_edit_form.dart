@@ -63,8 +63,11 @@ class _ProductEditFormScreenState extends State<ProductEditFormScreen> {
       return InputDecoration(
         labelText: label,
         labelStyle: Theme.of(context).textTheme.bodyMedium,
+        floatingLabelStyle: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+        ),
         prefixText: prefixText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: isDark ? Colors.white54 : Colors.black54),
         ),

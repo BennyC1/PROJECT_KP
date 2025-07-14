@@ -12,7 +12,6 @@ import 'package:project_uas/features/shop/function/brand/upload_brand.dart';
 import 'package:project_uas/features/shop/function/capster/delete_capster_sheet.dart';
 import 'package:project_uas/features/shop/function/capster/upload_capster_dialog.dart';
 import 'package:project_uas/features/shop/function/admin/admin_order_screen.dart';
-import 'package:project_uas/features/shop/function/owner/admin_deletion_screen.dart';
 import 'package:project_uas/features/shop/function/owner/register_admin_screen.dart';
 import 'package:project_uas/features/shop/function/package/delete_package_sheet.dart';
 import 'package:project_uas/features/shop/function/package/upload_package_dialog.dart';
@@ -114,8 +113,13 @@ class SettingsScreen extends StatelessWidget {
                     subTitle: 'Upload Banner to your Cloud Firebase',
                     onTap: () async {
                       try {
-                        await BannerRepository.instance.uploadBanner(targetScreen: '/store');
-                        Get.snackbar('Success', 'Banner berhasil diupload');
+                        final result = await BannerRepository.instance.uploadBanner(targetScreen: '/store');
+                        if (result) {
+                          Get.snackbar('Success', 'Banner berhasil diupload');
+                        } else {
+                          // User batalkan pemilihan gambar
+                          Get.snackbar('Dibatalkan', 'Upload banner dibatalkan');
+                        }
                       } catch (e) {
                         Get.snackbar('Error', e.toString());
                       }
@@ -175,7 +179,7 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.document_upload,
                     title: 'Upload Capster',
                     subTitle: 'Upload New Capster to your Cloud Firebase',
-                    onTap: () => UploadCapsterDialog.show(),
+                    onTap: () => UploadCapsterDialog.show(context),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
@@ -189,44 +193,23 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.document_upload,
                     title: 'Upload Package',
                     subTitle: 'Upload New Package to your Cloud Firebase',
-                    onTap: () =>  UploadPackageDialog.show(),
+                    onTap: () =>  UploadPackageDialog.show(context),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
                     icon: Iconsax.trash,
                     title: 'Delete Package',
                     subTitle: 'Delete Package to your Cloud Firebase',
-                    onTap: ()  => showDeletePackageSheet(context),
+                    onTap: ()  => fetchAndShowDeletePackageSheet(context),
                   ),
 
                   // Owner Featured
                   if (isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.edit,
-                    title: 'Report Product',
-                    subTitle: 'Product Report Data Dataset',
-                    onTap: () {}, 
-                  ),
-                  if (isOwner)
-                  BSettingsMenuTile(
-                    icon: Iconsax.edit,
-                    title: 'Report Reservation',
-                    subTitle: 'Reservation Report Data Dataset',
-                    onTap: () {}, 
-                  ),
-                  if (isOwner)
-                  BSettingsMenuTile(
-                    icon: Iconsax.edit,
                     title: 'Register Admin Account',
                     subTitle: 'Create Admin Account',
                     onTap: () => Get.to(() => const RegisterAdminScreen()), 
-                  ),
-                  if (isOwner)
-                  BSettingsMenuTile(
-                    icon: Iconsax.edit,
-                    title: 'Delete Admin Account',
-                    subTitle: 'Delete Admin Account',
-                    onTap: () => Get.to(() => const AdminDeletionScreen()), 
                   ),
 
                   /// App Settings

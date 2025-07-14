@@ -36,36 +36,29 @@ class BannerRepository extends GetxController {
   }
 
   /// Upload Banner to Firebase Storage & Firestore
-  Future<void> uploadBanner({required String targetScreen}) async {
+  Future<bool> uploadBanner({required String targetScreen}) async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-      if (image == null) return;
+      if (image == null) return false; // <- Kunci penting: dibatalkan
 
-      // ✅ Gunakan nama file tanpa spasi
       final safeFileName = image.name.replaceAll(' ', '_');
       final storageRef = FirebaseStorage.instance.ref("Banners/$safeFileName");
 
-      // ✅ Upload image
       await storageRef.putFile(File(image.path));
-
-      // ✅ Ambil download URL langsung dari Firebase
       final imageUrl = await storageRef.getDownloadURL();
 
-      // ✅ Simpan data ke Firestore
       await _db.collection("Banners").add({
         "Active": true,
         "ImageUrl": imageUrl,
         "TargetScreen": targetScreen,
       });
 
-      // ✅ Tambahkan delay agar data sinkron dulu
       await Future.delayed(const Duration(milliseconds: 500));
-
-      // ✅ Ambil ulang semua banner ke dalam RxList
       await fetchBanners();
 
+      return true; // <- Upload berhasil
     } on FirebaseException catch (e) {
       throw BFirebaseException(e.code).message;
     } on FormatException catch (_) {

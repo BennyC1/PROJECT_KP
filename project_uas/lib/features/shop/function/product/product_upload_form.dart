@@ -210,14 +210,14 @@ class _ProductUploadFormState extends State<ProductUploadForm> {
             TextFormField(
               controller: _brandNameController,
               readOnly: true,
-              decoration: InputDecoration(labelText: 'Brand Name', labelStyle: Theme.of(context).textTheme.bodyMedium,),
+              decoration: InputDecoration(labelText: 'Brand Name', labelStyle: Theme.of(context).textTheme.bodyMedium),
             ),
             const SizedBox(height: 10),
 
             TextFormField(
               controller: _brandImageUrlController,
               readOnly: true,
-              decoration: InputDecoration(labelText: 'Brand Image URL', labelStyle: Theme.of(context).textTheme.bodyMedium,),
+              decoration: InputDecoration(labelText: 'Brand Image URL', labelStyle: Theme.of(context).textTheme.bodyMedium),
             ),
             const SizedBox(height: 10),
 

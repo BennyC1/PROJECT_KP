@@ -18,7 +18,7 @@ Future<void> main() async {
 
   // wait splash until other item  load
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
+ 
   // firebase & authentication
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then(
     (FirebaseApp value) => Get.put(AuthenticationRepository()), 
