@@ -26,6 +26,8 @@ import 'package:project_uas/features/shop/screens/cart/cart.dart';
 import 'package:project_uas/features/shop/screens/chat/chat.dart';
 import 'package:project_uas/features/shop/screens/order/order.dart';
 import 'package:project_uas/features/shop/screens/reservation/reservation_history_user.dart';
+import 'package:project_uas/features/shop/screens/results/order_result_screen.dart';
+import 'package:project_uas/features/shop/screens/results/reservation_result_screen.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/custom_shape/containers/primary_header_container.dart';
@@ -218,14 +220,14 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.edit,
                     title: 'Orders Result',
                     subTitle: 'Check Orders Result',
-                    onTap: () {}, 
+                    onTap: () => Get.to(() => const OrdersResultScreen()),
                   ),
                   if (isOwner)
                   BSettingsMenuTile(
                     icon: Iconsax.edit,
                     title: 'Reservations Result',
                     subTitle: 'Check Reservations Result',
-                    onTap: () {}, 
+                    onTap: () => Get.to(() => const ReservationsResultScreen()), 
                   ),
                   if (isOwner)
                   BSettingsMenuTile(
