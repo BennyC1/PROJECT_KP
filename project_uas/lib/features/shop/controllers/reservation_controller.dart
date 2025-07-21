@@ -3,22 +3,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/reservation/reservation_repository.dart';
+import 'package:project_uas/features/shop/models/layanan_model.dart';
 import 'package:project_uas/features/shop/models/reservation_model.dart';
 import 'package:project_uas/utils/popups/loaders.dart';
-
-class PackageModel {
-  final String name;
-  final int price;
-
-  PackageModel({required this.name, required this.price});
-
-  factory PackageModel.fromFirestore(Map<String, dynamic> data) {
-    return PackageModel(
-      name: data['Name'],
-      price: data['Price'],
-    );
-  }
-}
 
 final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -27,7 +14,8 @@ class ReservationController extends GetxController {
 
   final reservationRepository = Get.put(ReservationRepository());
 
-  final selectedCapster = RxnString();
+  final layananList = <LayananModel>[].obs;
+  final selectedCapsterLayanan = Rxn<LayananModel>();
   final selectedPackage = RxnString();
   final selectedDate = Rxn<DateTime>();
   final selectedTime = RxnString();
@@ -39,43 +27,20 @@ class ReservationController extends GetxController {
     "19:00", "19:45", "20:30"
   ];
 
-  final capsters = <String>[].obs;
-  final packages = <PackageModel>[].obs;
-
   void resetForm() {
-    selectedCapster.value = null;
+    selectedCapsterLayanan.value = null;
     selectedPackage.value = null;
     selectedDate.value = null;
     selectedTime.value = null;
     disabledSlots.clear();
   }
 
-  Future<void> loadCapsters() async {
-    try {
-      final snapshot = await _db.collection('kapster').get();
-      capsters.value = snapshot.docs.map((doc) => doc['Name'] as String).toList();
-    } catch (e) {
-      BLoaders.errorSnackBar(title: 'Gagal Ambil Capster', message: e.toString());
-    }
-  }
-
-  Future<void> loadPackages() async {
-    try {
-      final snapshot = await _db.collection('Package').get();
-      packages.value = snapshot.docs
-          .map((doc) => PackageModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      BLoaders.errorSnackBar(title: 'Gagal Ambil Paket', message: e.toString());
-    }
-  }
-
   Future<void> loadDisabledSlots() async {
-    if (selectedCapster.value == null || selectedDate.value == null) return;
+    if (selectedCapsterLayanan.value == null || selectedDate.value == null) return;
 
     try {
       final reservations = await reservationRepository.fetchReservationsForCapsterOnDate(
-        selectedCapster.value!,
+        selectedCapsterLayanan.value!.name,
         selectedDate.value!,
       );
 
@@ -89,13 +54,8 @@ class ReservationController extends GetxController {
     }
   }
 
-  int getPriceForPackage(String packageType) {
-    final found = packages.firstWhereOrNull((p) => p.name == packageType);
-    return found?.price ?? 0;
-  }
-
   Future<void> submitReservation({String? proofUrl}) async {
-    if (selectedCapster.value == null ||
+    if (selectedCapsterLayanan.value == null ||
         selectedPackage.value == null ||
         selectedDate.value == null ||
         selectedTime.value == null) {
@@ -115,14 +75,16 @@ class ReservationController extends GetxController {
       );
 
       final userId = AuthenticationRepository.instance.authUser!.uid;
-      final price = getPriceForPackage(selectedPackage.value!);
+      final selectedCapster = selectedCapsterLayanan.value!;
+      final price = selectedCapster.packages
+          .firstWhere((pkg) => pkg['name'] == selectedPackage.value)['price'];
 
-      final docRef = FirebaseFirestore.instance.collection('reservations').doc(); // auto ID
+      final docRef = FirebaseFirestore.instance.collection('reservations').doc();
 
       final newReservation = ReservationModel(
-        docId: docRef.id, // <--- Simpan docId dari Firestore
-        id: docRef.id, // bisa juga gunakan UUID/format lain kalau ingin
-        capster: selectedCapster.value!,
+        docId: docRef.id,
+        id: docRef.id,
+        capster: selectedCapster.name,
         packageType: selectedPackage.value!,
         price: price,
         datetime: datetime,
@@ -143,11 +105,7 @@ class ReservationController extends GetxController {
 
   Future<List<ReservationModel>> fetchUserReservations() async {
     final userId = AuthenticationRepository.instance.authUser?.uid;
-
-    print('Current user ID: $userId'); // ✅ Tambahkan log ini di sini
-
     if (userId == null || userId.isEmpty) {
-      print('User ID is null or empty. Tidak bisa mengambil data.');
       return [];
     }
 
@@ -197,4 +155,9 @@ class ReservationController extends GetxController {
     }
   }
 
-}
+  Future<void> loadLayanan() async {
+    final snapshot = await FirebaseFirestore.instance.collection('Layanan').get();
+    final data = snapshot.docs.map((doc) => LayananModel.fromSnapshot(doc)).toList();
+    layananList.assignAll(data);
+  }
+} 

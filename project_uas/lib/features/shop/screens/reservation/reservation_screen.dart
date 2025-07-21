@@ -1,3 +1,5 @@
+// Final Version - ReservationScreen using Layanan collection (Capster + Packages)
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,7 @@ import 'package:project_uas/utils/helpers/helper_function.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/features/shop/screens/reservation/floating_screen/payment_sheet.dart';
 import 'package:project_uas/features/shop/screens/reservation/reservation_history_screen.dart';
+import 'package:project_uas/features/shop/models/layanan_model.dart';
 
 class ReservationScreen extends StatefulWidget {
   const ReservationScreen({super.key});
@@ -21,8 +24,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
   void initState() {
     super.initState();
     controller.resetForm();
-    controller.loadCapsters(); //  ambil capster dari Firestore
-    controller.loadPackages(); //  ambil paket dari Firestore
+    controller.loadLayanan();
   }
 
   @override
@@ -43,10 +45,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Obx(() => ListView(
           children: [
-
             /// Dropdown Capster
-            DropdownButtonFormField<String>(
-              value: controller.selectedCapster.value,
+            DropdownButtonFormField<LayananModel>(
+              value: controller.selectedCapsterLayanan.value,
               decoration: InputDecoration(
                 labelText: 'Pilih Capster',
                 labelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
@@ -62,60 +63,62 @@ class _ReservationScreenState extends State<ReservationScreen> {
               ),
               dropdownColor: dark ? Colors.grey[900] : Colors.white,
               iconEnabledColor: dark ? Colors.white : Colors.black,
-              items: controller.capsters.map((capster) {
+              items: controller.layananList.map((layanan) {
                 return DropdownMenuItem(
-                  value: capster,
+                  value: layanan,
                   child: Text(
-                    capster,
+                    layanan.name,
                     style: TextStyle(color: dark ? Colors.white : Colors.black),
                   ),
                 );
               }).toList(),
               onChanged: (value) {
-                controller.selectedCapster.value = value;
-                controller.loadDisabledSlots();
+                controller.selectedCapsterLayanan.value = value;
+                controller.selectedPackage.value = null;
+
+                if (controller.selectedDate.value != null) {
+                  controller.loadDisabledSlots();
+                }
               },
             ),
 
             const SizedBox(height: 16),
 
-            /// Dropdown Paket Potong
-            DropdownButtonFormField<String>(
-              value: controller.selectedPackage.value,
-              decoration: InputDecoration(
-                labelText: 'Paket Potong',
-                labelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
-                floatingLabelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 1.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 2),
-                ),
-              ),
-              dropdownColor: dark ? Colors.grey[900] : Colors.white,
-              items: controller.packages.map((paket) {
-                return DropdownMenuItem(
-                  value: paket.name,
-                  child: Text(
-                    paket.name,
-                    style: TextStyle(color: dark ? Colors.white : Colors.black),
+            /// Dropdown Paket
+            if (controller.selectedCapsterLayanan.value != null)
+              DropdownButtonFormField<String>(
+                value: controller.selectedPackage.value,
+                decoration: InputDecoration(
+                  labelText: 'Paket Potong',
+                  labelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
+                  floatingLabelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 1.5),
                   ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                controller.selectedPackage.value = value;
-              },
-            ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 2),
+                  ),
+                ),
+                dropdownColor: dark ? Colors.grey[900] : Colors.white,
+                items: controller.selectedCapsterLayanan.value!.packages.map<DropdownMenuItem<String>>((pkg) {
+                  return DropdownMenuItem(
+                    value: pkg['name'],
+                    child: Text(pkg['name'], style: TextStyle(color: dark ? Colors.white : Colors.black)),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  controller.selectedPackage.value = value;
+                },
+              ),
 
             /// Harga Paket
             if (controller.selectedPackage.value != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 16),
                 child: Text(
-                  "Harga: Rp ${controller.getPriceForPackage(controller.selectedPackage.value!).toString()}",
+                  "Harga: Rp ${controller.selectedCapsterLayanan.value!.packages.firstWhere((p) => p['name'] == controller.selectedPackage.value)['price']}",
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -133,7 +136,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   context: context,
                   firstDate: DateTime.now(),
                   lastDate: DateTime.now().add(const Duration(days: 30)),
-                  initialDate: DateTime.now(),
+                  initialDate: controller.selectedDate.value ?? DateTime.now(),
                 );
                 if (date != null) {
                   controller.selectedDate.value = date;
@@ -145,7 +148,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
             const SizedBox(height: 16),
 
             /// Grid Jam
-            if (controller.selectedCapster.value != null &&
+            if (controller.selectedCapsterLayanan.value != null &&
                 controller.selectedDate.value != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,13 +216,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
             /// Tombol Lanjut ke Pembayaran
             Obx(() {
-              final isReady = controller.selectedCapster.value != null &&
+              final isReady = controller.selectedCapsterLayanan.value != null &&
                               controller.selectedPackage.value != null &&
                               controller.selectedDate.value != null &&
                               controller.selectedTime.value != null;
 
               if (!isReady) return const SizedBox();
-              
+
               return ElevatedButton(
                 onPressed: isReady
                     ? () async {

@@ -10,10 +10,12 @@ import 'package:project_uas/features/shop/function/admin/admin_confirm_reservati
 import 'package:project_uas/features/shop/function/brand/delete_brand.dart';
 import 'package:project_uas/features/shop/function/brand/upload_brand.dart';
 import 'package:project_uas/features/shop/function/capster/delete_capster_sheet.dart';
+import 'package:project_uas/features/shop/function/capster/edit_capster.dart';
 import 'package:project_uas/features/shop/function/capster/upload_capster_dialog.dart';
 import 'package:project_uas/features/shop/function/admin/admin_order_screen.dart';
 import 'package:project_uas/features/shop/function/owner/register_admin_screen.dart';
 import 'package:project_uas/features/shop/function/package/delete_package_sheet.dart';
+import 'package:project_uas/features/shop/function/package/package_edit_screen.dart';
 import 'package:project_uas/features/shop/function/package/upload_package_dialog.dart';
 import 'package:project_uas/features/shop/function/product/check_add_stock_screen.dart';
 import 'package:project_uas/features/shop/function/product/product_delete.dart';
@@ -201,6 +203,13 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Edit Capster',
+                    subTitle: 'Edit Capster to your Cloud Firebase',
+                    onTap: () => showEditCapsterSheet(context),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
                     icon: Iconsax.document_upload,
                     title: 'Upload Package',
                     subTitle: 'Upload New Package to your Cloud Firebase',
@@ -212,6 +221,15 @@ class SettingsScreen extends StatelessWidget {
                     title: 'Delete Package',
                     subTitle: 'Delete Package to your Cloud Firebase',
                     onTap: ()  => fetchAndShowDeletePackageSheet(context),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Edit Package',
+                    subTitle: 'Edit Package to your Cloud Firebase',
+                    onTap: () {
+                      Get.to(() => const PackageListScreen());
+                    },
                   ),
 
                   // Owner Featured
