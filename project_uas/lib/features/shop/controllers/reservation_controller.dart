@@ -14,8 +14,8 @@ class ReservationController extends GetxController {
 
   final reservationRepository = Get.put(ReservationRepository());
 
-  final layananList = <LayananModel>[].obs;
-  final selectedCapsterLayanan = Rxn<LayananModel>();
+  final capsterList = <CapsterModel>[].obs;
+  final selectedCapsterLayanan = Rxn<CapsterModel>();
   final selectedPackage = RxnString();
   final selectedDate = Rxn<DateTime>();
   final selectedTime = RxnString();
@@ -156,8 +156,8 @@ class ReservationController extends GetxController {
   }
 
   Future<void> loadLayanan() async {
-    final snapshot = await FirebaseFirestore.instance.collection('Layanan').get();
-    final data = snapshot.docs.map((doc) => LayananModel.fromSnapshot(doc)).toList();
-    layananList.assignAll(data);
+    final snapshot = await FirebaseFirestore.instance.collection('Capster').get();
+    final data = snapshot.docs.map((doc) => CapsterModel.fromSnapshot(doc)).toList();
+    capsterList.assignAll(data);
   }
 } 

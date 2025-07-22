@@ -170,7 +170,7 @@ class UploadCapsterDialog {
                               final imageUrl = await ref.getDownloadURL();
 
                               // Save to Firestore
-                              await FirebaseFirestore.instance.collection('Layanan').add({
+                              await FirebaseFirestore.instance.collection('Capster').add({
                                 "Name": name,
                                 "Phone": phone,
                                 "ImageUrl": imageUrl,

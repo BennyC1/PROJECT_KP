@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class LayananModel {
+class CapsterModel {
   final String id;
   final String name;
   final String phone;
   final String imageUrl;
   final List<dynamic> packages;
 
-  LayananModel({
+  CapsterModel({
     required this.id,
     required this.name,
     required this.phone,
@@ -15,9 +15,9 @@ class LayananModel {
     required this.packages,
   });
 
-  factory LayananModel.fromSnapshot(DocumentSnapshot doc) {
+  factory CapsterModel.fromSnapshot(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return LayananModel(
+    return CapsterModel(
       id: doc.id,
       name: data['Name'],
       phone: data['Phone'],

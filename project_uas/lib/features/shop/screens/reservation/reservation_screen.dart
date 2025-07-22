@@ -46,7 +46,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
         child: Obx(() => ListView(
           children: [
             /// Dropdown Capster
-            DropdownButtonFormField<LayananModel>(
+            DropdownButtonFormField<CapsterModel>(
               value: controller.selectedCapsterLayanan.value,
               decoration: InputDecoration(
                 labelText: 'Pilih Capster',
@@ -63,7 +63,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
               ),
               dropdownColor: dark ? Colors.grey[900] : Colors.white,
               iconEnabledColor: dark ? Colors.white : Colors.black,
-              items: controller.layananList.map((layanan) {
+              items: controller.capsterList.map((layanan) {
                 return DropdownMenuItem(
                   value: layanan,
                   child: Text(
@@ -81,6 +81,81 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 }
               },
             ),
+
+            const SizedBox(height: 16),
+
+          /// Tampilkan foto profil capster
+          if (controller.selectedCapsterLayanan.value != null)
+            Column(
+              children: [
+                const SizedBox(height: 20),
+
+                /// Gambar dengan zoom saat ditekan
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => Dialog(
+                        backgroundColor: Colors.transparent,
+                        insetPadding: const EdgeInsets.all(16),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: InteractiveViewer(
+                                child: Image.network(
+                                  controller.selectedCapsterLayanan.value!.imageUrl,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(Icons.person, size: 100),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(60),
+                    child: Image.network(
+                      controller.selectedCapsterLayanan.value!.imageUrl,
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.person, size: 100),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                /// Nama Capster
+                Text(
+                  controller.selectedCapsterLayanan.value!.name,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+
+                /// Nomor HP Capster
+                const SizedBox(height: 6),
+                Text(
+                  controller.selectedCapsterLayanan.value!.phone,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+
 
             const SizedBox(height: 16),
 
@@ -163,7 +238,24 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     crossAxisSpacing: 12,
                     childAspectRatio: 2.0,
                     children: controller.timeSlots.map((time) {
-                      final isDisabled = controller.disabledSlots.contains(time);
+                      final now = DateTime.now();
+                      final selectedDate = controller.selectedDate.value!;
+                      final slotTime = DateFormat.Hm().parse(time);
+
+                      final slotDateTime = DateTime(
+                        selectedDate.year,
+                        selectedDate.month,
+                        selectedDate.day,
+                        slotTime.hour,
+                        slotTime.minute,
+                      );
+
+                      final isPast = selectedDate.year == now.year &&
+                          selectedDate.month == now.month &&
+                          selectedDate.day == now.day &&
+                          slotDateTime.isBefore(now);
+
+                      final isDisabled = controller.disabledSlots.contains(time) || isPast;
                       final isSelected = controller.selectedTime.value == time;
 
                       return OutlinedButton(

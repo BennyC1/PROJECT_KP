@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReservationModel {
-  final String docId;         // Tambahkan ini
+  final String docId;         
   final String id;
   final String capster;
   final String packageType;
