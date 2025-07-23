@@ -13,6 +13,8 @@ import 'package:project_uas/features/shop/function/capster/delete_capster_sheet.
 import 'package:project_uas/features/shop/function/capster/edit_capster.dart';
 import 'package:project_uas/features/shop/function/capster/upload_capster_dialog.dart';
 import 'package:project_uas/features/shop/function/admin/admin_order_screen.dart';
+import 'package:project_uas/features/shop/function/capsterpackage/edit_delete_capsterpackage.dart';
+import 'package:project_uas/features/shop/function/capsterpackage/upload_capsterpackage.dart';
 import 'package:project_uas/features/shop/function/owner/register_admin_screen.dart';
 import 'package:project_uas/features/shop/function/package/delete_package_sheet.dart';
 import 'package:project_uas/features/shop/function/package/package_edit_screen.dart';
@@ -186,6 +188,27 @@ class SettingsScreen extends StatelessWidget {
                     title: 'Edit Product',
                     subTitle: 'Edit Product from your Cloud Firebase',
                     onTap: () => Get.to(() => const ProductEditListScreen()), 
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.document_upload,
+                    title: 'Upload CapsterPackage',
+                    subTitle: 'Upload New CapsterPackage to your Cloud Firebase',
+                    onTap: () => UploadCapsterPackageDialog.show(context),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.trash,
+                    title: 'Delete CapsterPackage',
+                    subTitle: 'Delete New CapsterPackage to your Cloud Firebase',
+                    onTap: () => showDeleteCapsterPackageSheet(),
+                  ),
+                  if (isAdmin)
+                  BSettingsMenuTile(
+                    icon: Iconsax.edit,
+                    title: 'Edit CapsterPackage',
+                    subTitle: 'Edit New CapsterPackage to your Cloud Firebase',
+                    onTap: () => showEditCapsterPackageSheet(),
                   ),
                   if (isAdmin)
                   BSettingsMenuTile(

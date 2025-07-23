@@ -1,5 +1,3 @@
-// Final Version - ReservationScreen using Layanan collection (Capster + Packages)
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +6,7 @@ import 'package:project_uas/utils/helpers/helper_function.dart';
 import 'package:project_uas/utils/constants/colors.dart';
 import 'package:project_uas/features/shop/screens/reservation/floating_screen/payment_sheet.dart';
 import 'package:project_uas/features/shop/screens/reservation/reservation_history_screen.dart';
-import 'package:project_uas/features/shop/models/layanan_model.dart';
+import 'package:project_uas/features/shop/models/capsterpackage_model.dart';
 
 class ReservationScreen extends StatefulWidget {
   const ReservationScreen({super.key});
@@ -45,29 +43,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Obx(() => ListView(
           children: [
-            /// Dropdown Capster
-            DropdownButtonFormField<CapsterModel>(
+            DropdownButtonFormField<CapsterPackageModel>(
               value: controller.selectedCapsterLayanan.value,
-              decoration: InputDecoration(
-                labelText: 'Pilih Capster',
-                labelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
-                floatingLabelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 1.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 2),
-                ),
-              ),
+              decoration: _dropdownDecoration(context, dark, 'Pilih Capster'),
               dropdownColor: dark ? Colors.grey[900] : Colors.white,
               iconEnabledColor: dark ? Colors.white : Colors.black,
               items: controller.capsterList.map((layanan) {
                 return DropdownMenuItem(
                   value: layanan,
                   child: Text(
-                    layanan.name,
+                    layanan.capsterName,
                     style: TextStyle(color: dark ? Colors.white : Colors.black),
                   ),
                 );
@@ -75,7 +60,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
               onChanged: (value) {
                 controller.selectedCapsterLayanan.value = value;
                 controller.selectedPackage.value = null;
-
+                if (value != null) {
+                  controller.loadCapsterDetail(value.capsterId);
+                }
                 if (controller.selectedDate.value != null) {
                   controller.loadDisabledSlots();
                 }
@@ -84,98 +71,37 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
             const SizedBox(height: 16),
 
-          /// Tampilkan foto profil capster
-          if (controller.selectedCapsterLayanan.value != null)
-            Column(
-              children: [
-                const SizedBox(height: 20),
-
-                /// Gambar dengan zoom saat ditekan
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => Dialog(
-                        backgroundColor: Colors.transparent,
-                        insetPadding: const EdgeInsets.all(16),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: InteractiveViewer(
-                                child: Image.network(
-                                  controller.selectedCapsterLayanan.value!.imageUrl,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.person, size: 100),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 10,
-                              right: 10,
-                              child: IconButton(
-                                icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                                onPressed: () => Navigator.of(context).pop(),
-                              ),
-                            )
-                          ],
-                        ),
+            if (controller.selectedCapsterLayanan.value != null)
+              Column(
+                children: [
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () => _showImageZoom(context, controller.selectedCapsterImageUrl.value ?? ''),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: Image.network(
+                        controller.selectedCapsterImageUrl.value ?? '',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, size: 100),
                       ),
-                    );
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(60),
-                    child: Image.network(
-                      controller.selectedCapsterLayanan.value!.imageUrl,
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.person, size: 100),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 10),
-
-                /// Nama Capster
-                Text(
-                  controller.selectedCapsterLayanan.value!.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-
-                /// Nomor HP Capster
-                const SizedBox(height: 6),
-                Text(
-                  controller.selectedCapsterLayanan.value!.phone,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-
+                  const SizedBox(height: 10),
+                  Text(controller.selectedCapsterLayanan.value!.capsterName, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 6),
+                  Text(controller.selectedCapsterPhone.value ?? '-', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey)),
+                  const SizedBox(height: 20),
+                ],
+              ),
 
             const SizedBox(height: 16),
 
-            /// Dropdown Paket
             if (controller.selectedCapsterLayanan.value != null)
               DropdownButtonFormField<String>(
                 value: controller.selectedPackage.value,
-                decoration: InputDecoration(
-                  labelText: 'Paket Potong',
-                  labelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
-                  floatingLabelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 2),
-                  ),
-                ),
+                decoration: _dropdownDecoration(context, dark, 'Paket Potong'),
                 dropdownColor: dark ? Colors.grey[900] : Colors.white,
                 items: controller.selectedCapsterLayanan.value!.packages.map<DropdownMenuItem<String>>((pkg) {
                   return DropdownMenuItem(
@@ -183,12 +109,9 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     child: Text(pkg['name'], style: TextStyle(color: dark ? Colors.white : Colors.black)),
                   );
                 }).toList(),
-                onChanged: (value) {
-                  controller.selectedPackage.value = value;
-                },
+                onChanged: (value) => controller.selectedPackage.value = value,
               ),
 
-            /// Harga Paket
             if (controller.selectedPackage.value != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 16),
@@ -198,7 +121,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
                 ),
               ),
 
-            /// Pilih Tanggal
             ListTile(
               title: Text(
                 controller.selectedDate.value == null
@@ -222,9 +144,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
             const SizedBox(height: 16),
 
-            /// Grid Jam
-            if (controller.selectedCapsterLayanan.value != null &&
-                controller.selectedDate.value != null)
+            if (controller.selectedCapsterLayanan.value != null && controller.selectedDate.value != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -237,101 +157,31 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
                     childAspectRatio: 2.0,
-                    children: controller.timeSlots.map((time) {
-                      final now = DateTime.now();
-                      final selectedDate = controller.selectedDate.value!;
-                      final slotTime = DateFormat.Hm().parse(time);
-
-                      final slotDateTime = DateTime(
-                        selectedDate.year,
-                        selectedDate.month,
-                        selectedDate.day,
-                        slotTime.hour,
-                        slotTime.minute,
-                      );
-
-                      final isPast = selectedDate.year == now.year &&
-                          selectedDate.month == now.month &&
-                          selectedDate.day == now.day &&
-                          slotDateTime.isBefore(now);
-
-                      final isDisabled = controller.disabledSlots.contains(time) || isPast;
-                      final isSelected = controller.selectedTime.value == time;
-
-                      return OutlinedButton(
-                        onPressed: isDisabled
-                            ? null
-                            : () => controller.selectedTime.value = time,
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: isSelected
-                              ? Colors.blueAccent
-                              : isDisabled
-                                  ? Colors.grey.shade900
-                                  : Colors.transparent,
-                          side: BorderSide(
-                            color: isSelected ? Colors.blueAccent : Colors.blue,
-                            width: 1.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Center(
-                          child: Text(
-                            time,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: dark
-                                  ? isDisabled
-                                      ? Colors.white38
-                                      : isSelected
-                                          ? Colors.white
-                                          : Colors.blue
-                                  : isDisabled
-                                      ? Colors.white38
-                                      : isSelected
-                                          ? Colors.white
-                                          : Colors.blueAccent,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                    children: controller.timeSlots.map((time) => _buildTimeSlot(context, time, dark)).toList(),
                   ),
                 ],
               ),
 
             const SizedBox(height: 32),
 
-            /// Tombol Lanjut ke Pembayaran
             Obx(() {
               final isReady = controller.selectedCapsterLayanan.value != null &&
                               controller.selectedPackage.value != null &&
                               controller.selectedDate.value != null &&
                               controller.selectedTime.value != null;
-
               if (!isReady) return const SizedBox();
-
               return ElevatedButton(
-                onPressed: isReady
-                    ? () async {
-                        final result = await showModalBottomSheet<bool>(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) => const PaymentSheet(),
-                        );
-
-                        if (result == true) {
-                          controller.submitReservation();
-                        }
-                      }
-                    : null,
+                onPressed: () async {
+                  final result = await showModalBottomSheet<bool>(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const PaymentSheet(),
+                  );
+                  if (result == true) controller.submitReservation();
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isReady ? Colors.blueAccent : Colors.grey,
+                  backgroundColor: Colors.blueAccent,
                   foregroundColor: Colors.white,
                   elevation: 4,
                   minimumSize: const Size(double.infinity, 56),
@@ -343,16 +193,113 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   children: [
                     Icon(Icons.qr_code_2_rounded, size: 24),
                     SizedBox(width: 10),
-                    Text(
-                      "Lanjut ke Pembayaran",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
+                    Text("Lanjut ke Pembayaran", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ],
                 ),
               );
             }),
           ],
         )),
+      ),
+    );
+  }
+
+  InputDecoration _dropdownDecoration(BuildContext context, bool dark, String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
+      floatingLabelStyle: TextStyle(color: dark ? Colors.white : Colors.black),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 1.5),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: dark ? Colors.white : Colors.black, width: 2),
+      ),
+    );
+  }
+
+  void _showImageZoom(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(16),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: InteractiveViewer(
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, size: 100),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeSlot(BuildContext context, String time, bool dark) {
+    final now = DateTime.now();
+    final selectedDate = controller.selectedDate.value!;
+    final slotTime = DateFormat.Hm().parse(time);
+    final slotDateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, slotTime.hour, slotTime.minute);
+    final isPast = selectedDate.year == now.year &&
+        selectedDate.month == now.month &&
+        selectedDate.day == now.day &&
+        slotDateTime.isBefore(now);
+    final isDisabled = controller.disabledSlots.contains(time) || isPast;
+    final isSelected = controller.selectedTime.value == time;
+
+    return OutlinedButton(
+      onPressed: isDisabled ? null : () => controller.selectedTime.value = time,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: isSelected
+            ? Colors.blueAccent
+            : isDisabled
+                ? Colors.grey.shade900
+                : Colors.transparent,
+        side: BorderSide(
+          color: isSelected ? Colors.blueAccent : Colors.blue,
+          width: 1.5,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+      ),
+      child: Center(
+        child: Text(
+          time,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: dark
+                ? isDisabled
+                    ? Colors.white38
+                    : isSelected
+                        ? Colors.white
+                        : Colors.blue
+                : isDisabled
+                    ? Colors.white38
+                    : isSelected
+                        ? Colors.white
+                        : Colors.blueAccent,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

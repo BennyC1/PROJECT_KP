@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:project_uas/data/authentication/repositories_authentication.dart';
 import 'package:project_uas/data/reservation/reservation_repository.dart';
-import 'package:project_uas/features/shop/models/layanan_model.dart';
+import 'package:project_uas/features/shop/models/capsterpackage_model.dart';
 import 'package:project_uas/features/shop/models/reservation_model.dart';
 import 'package:project_uas/utils/popups/loaders.dart';
 
@@ -14,8 +14,10 @@ class ReservationController extends GetxController {
 
   final reservationRepository = Get.put(ReservationRepository());
 
-  final capsterList = <CapsterModel>[].obs;
-  final selectedCapsterLayanan = Rxn<CapsterModel>();
+  final capsterList = <CapsterPackageModel>[].obs;
+  final selectedCapsterLayanan = Rxn<CapsterPackageModel>();
+  final selectedCapsterImageUrl = RxnString();
+  final selectedCapsterPhone = RxnString();
   final selectedPackage = RxnString();
   final selectedDate = Rxn<DateTime>();
   final selectedTime = RxnString();
@@ -27,20 +29,46 @@ class ReservationController extends GetxController {
     "19:00", "19:45", "20:30"
   ];
 
+  /// Reset form
   void resetForm() {
     selectedCapsterLayanan.value = null;
     selectedPackage.value = null;
     selectedDate.value = null;
     selectedTime.value = null;
+    selectedCapsterImageUrl.value = null;
+    selectedCapsterPhone.value = null;
     disabledSlots.clear();
   }
 
+  /// Ambil detail capster (image & phone) berdasarkan capsterId
+  Future<void> loadCapsterDetail(String capsterId) async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('Capster').doc(capsterId).get();
+      final data = doc.data();
+
+      selectedCapsterImageUrl.value = data?['ImageUrl'];
+      selectedCapsterPhone.value = data?['Phone'];
+    } catch (e) {
+      selectedCapsterImageUrl.value = null;
+      selectedCapsterPhone.value = null;
+      print("Gagal ambil detail capster: $e");
+    }
+  }
+
+  /// Ambil layanan (capster + package dari CapsterPackage)
+  Future<void> loadLayanan() async {
+    final snapshot = await FirebaseFirestore.instance.collection('CapsterPackage').get();
+    final data = snapshot.docs.map((doc) => CapsterPackageModel.fromSnapshot(doc)).toList();
+    capsterList.assignAll(data);
+  }
+
+  /// Cek waktu yang sudah direservasi
   Future<void> loadDisabledSlots() async {
     if (selectedCapsterLayanan.value == null || selectedDate.value == null) return;
 
     try {
       final reservations = await reservationRepository.fetchReservationsForCapsterOnDate(
-        selectedCapsterLayanan.value!.name,
+        selectedCapsterLayanan.value!.capsterName,
         selectedDate.value!,
       );
 
@@ -54,6 +82,7 @@ class ReservationController extends GetxController {
     }
   }
 
+  /// Simpan reservasi
   Future<void> submitReservation({String? proofUrl}) async {
     if (selectedCapsterLayanan.value == null ||
         selectedPackage.value == null ||
@@ -84,7 +113,7 @@ class ReservationController extends GetxController {
       final newReservation = ReservationModel(
         docId: docRef.id,
         id: docRef.id,
-        capster: selectedCapster.name,
+        capster: selectedCapster.capsterName,
         packageType: selectedPackage.value!,
         price: price,
         datetime: datetime,
@@ -103,15 +132,14 @@ class ReservationController extends GetxController {
     }
   }
 
+  /// Ambil reservasi user
   Future<List<ReservationModel>> fetchUserReservations() async {
     final userId = AuthenticationRepository.instance.authUser?.uid;
-    if (userId == null || userId.isEmpty) {
-      return [];
-    }
-
+    if (userId == null || userId.isEmpty) return [];
     return await reservationRepository.fetchReservationsByUserId(userId);
   }
 
+  /// Ambil semua reservasi untuk admin
   Stream<List<ReservationModel>> fetchAllReservationsForAdminStream() {
     try {
       return _db
@@ -120,14 +148,7 @@ class ReservationController extends GetxController {
           .orderBy('datetime')
           .snapshots()
           .map((snapshot) {
-            final data = snapshot.docs.map((doc) => ReservationModel.fromSnapshot(doc)).toList();
-
-            print('📡 Real-time reservasi ditemukan: ${data.length}');
-            for (var r in data) {
-              print('🔥 ${r.capster} | ${r.status} | ${r.datetime}');
-            }
-
-            return data;
+            return snapshot.docs.map((doc) => ReservationModel.fromSnapshot(doc)).toList();
           });
     } catch (e) {
       print('❌ Error fetchAllReservationsForAdminStream: $e');
@@ -135,6 +156,7 @@ class ReservationController extends GetxController {
     }
   }
 
+  /// Update status reservasi (admin)
   Future<void> updateReservationStatus(String id, String newStatus) async {
     try {
       await _db.collection('reservations').doc(id).update({'status': newStatus});
@@ -144,20 +166,13 @@ class ReservationController extends GetxController {
     }
   }
 
+  /// Cancel reservasi oleh user
   Future<void> cancelUserReservation(String docId) async {
     try {
-      await _db.collection('reservations').doc(docId).update({
-        'status': 'cancelled',
-      });
+      await _db.collection('reservations').doc(docId).update({'status': 'cancelled'});
       Get.snackbar('Berhasil', 'Reservasi berhasil dibatalkan');
     } catch (e) {
       Get.snackbar('Error', 'Gagal membatalkan reservasi: $e');
     }
   }
-
-  Future<void> loadLayanan() async {
-    final snapshot = await FirebaseFirestore.instance.collection('Capster').get();
-    final data = snapshot.docs.map((doc) => CapsterModel.fromSnapshot(doc)).toList();
-    capsterList.assignAll(data);
-  }
-} 
+}

@@ -13,7 +13,6 @@ class UploadCapsterDialog {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final borderColor = isDark ? Colors.grey[600] : Colors.grey[300];
 
-    List<Map<String, dynamic>> selectedPackages = [];
     File? selectedImage;
     final picker = ImagePicker();
     bool isLoading = false;
@@ -45,7 +44,7 @@ class UploadCapsterDialog {
                         decoration: InputDecoration(
                           labelText: "Capster Name",
                           floatingLabelStyle: TextStyle(
-                            color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: borderColor!),
@@ -60,50 +59,13 @@ class UploadCapsterDialog {
                         decoration: InputDecoration(
                           labelText: "Capster Phone",
                           floatingLabelStyle: TextStyle(
-                            color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: borderColor),
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      FutureBuilder<QuerySnapshot>(
-                        future: FirebaseFirestore.instance.collection('Package').get(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) return const CircularProgressIndicator();
-                          final docs = snapshot.data!.docs;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text("Select Packages"),
-                              const SizedBox(height: 6),
-                              ...docs.map((doc) {
-                                final data = doc.data() as Map<String, dynamic>;
-                                final isSelected = selectedPackages.any((pkg) => pkg['id'] == doc.id);
-
-                                return CheckboxListTile(
-                                  value: isSelected,
-                                  title: Text("${data['Name']} - Rp ${data['Price']}"),
-                                  onChanged: (val) {
-                                    setState(() {
-                                      if (val == true) {
-                                        selectedPackages.add({
-                                          'id': doc.id,
-                                          'name': data['Name'],
-                                          'price': data['Price'],
-                                        });
-                                      } else {
-                                        selectedPackages.removeWhere((pkg) => pkg['id'] == doc.id);
-                                      }
-                                    });
-                                  },
-                                );
-                              }).toList(),
-                            ],
-                          );
-                        },
                       ),
                       const SizedBox(height: 12),
 
@@ -154,7 +116,7 @@ class UploadCapsterDialog {
                             final name = capsterNameController.text.trim();
                             final phone = capsterPhoneController.text.trim();
 
-                            if (name.isEmpty || phone.isEmpty || selectedPackages.isEmpty || selectedImage == null) {
+                            if (name.isEmpty || phone.isEmpty || selectedImage == null) {
                               Get.snackbar("Failed", "Please fill all fields and pick image!",
                                   backgroundColor: Colors.red, colorText: Colors.white);
                               return;
@@ -174,8 +136,6 @@ class UploadCapsterDialog {
                                 "Name": name,
                                 "Phone": phone,
                                 "ImageUrl": imageUrl,
-                                "Packages": selectedPackages,
-                                "CreatedAt": FieldValue.serverTimestamp(),
                               });
 
                               Get.back(); // Close dialog
