@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 void showEditCapsterSheet(BuildContext context) async {
-  final snapshot = await FirebaseFirestore.instance.collection('Layanan').get();
+  final snapshot = await FirebaseFirestore.instance.collection('Capster').get();
 
   if (snapshot.docs.isEmpty) {
     Get.snackbar("No Capster", "Belum ada data capster untuk diedit.");
@@ -59,9 +59,7 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
   final nameController = TextEditingController(text: data['Name']);
   final phoneController = TextEditingController(text: data['Phone']);
   final imageUrl = data['ImageUrl'];
-  final List<dynamic> existingPackages = data['Packages'] ?? [];
 
-  List<Map<String, dynamic>> selectedPackages = List<Map<String, dynamic>>.from(existingPackages);
   File? newImage;
   final picker = ImagePicker();
   bool isLoading = false;
@@ -81,61 +79,13 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
                   children: [
                     TextField(
                       controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: "Capster Name",
-                        floatingLabelStyle: TextStyle(
-                          color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
-                        ),
-                      ),
+                      decoration: const InputDecoration(labelText: "Capster Name"),
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        labelText: "Phone Number",
-                        floatingLabelStyle: TextStyle(
-                          color: Theme.of(Get.context!).brightness == Brightness.dark ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    FutureBuilder<QuerySnapshot>(
-                      future: FirebaseFirestore.instance.collection('Package').get(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) return const CircularProgressIndicator();
-                        final docs = snapshot.data!.docs;
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("Select Packages"),
-                            const SizedBox(height: 6),
-                            ...docs.map((pkg) {
-                              final pkgData = pkg.data() as Map<String, dynamic>;
-                              final isSelected = selectedPackages.any((p) => p['id'] == pkg.id);
-
-                              return CheckboxListTile(
-                                value: isSelected,
-                                title: Text("${pkgData['Name']} - Rp ${pkgData['Price']}"),
-                                onChanged: (val) {
-                                  setState(() {
-                                    if (val == true) {
-                                      selectedPackages.add({
-                                        'id': pkg.id,
-                                        'name': pkgData['Name'],
-                                        'price': pkgData['Price'],
-                                      });
-                                    } else {
-                                      selectedPackages.removeWhere((p) => p['id'] == pkg.id);
-                                    }
-                                  });
-                                },
-                              );
-                            }).toList(),
-                          ],
-                        );
-                      },
+                      decoration: const InputDecoration(labelText: "Phone Number"),
                     ),
                     const SizedBox(height: 12),
 
@@ -158,7 +108,10 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
                         children: [
                           Image.network(imageUrl, height: 100),
                           TextButton.icon(
-                            onPressed: () => setState(() => newImage = null),
+                            onPressed: () async {
+                              final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+                              if (picked != null) setState(() => newImage = File(picked.path));
+                            },
                             icon: const Icon(Icons.image),
                             label: const Text("Change Image"),
                           ),
@@ -170,9 +123,7 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
                         label: const Text("Select Profile Image"),
                         onPressed: () async {
                           final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
-                          if (picked != null) {
-                            setState(() => newImage = File(picked.path));
-                          }
+                          if (picked != null) setState(() => newImage = File(picked.path));
                         },
                       ),
                   ],
@@ -185,7 +136,7 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
                     final name = nameController.text.trim();
                     final phone = phoneController.text.trim();
 
-                    if (name.isEmpty || phone.isEmpty || selectedPackages.isEmpty) {
+                    if (name.isEmpty || phone.isEmpty) {
                       Get.snackbar("Error", "Please complete all fields",
                           backgroundColor: Colors.red, colorText: Colors.white);
                       return;
@@ -202,11 +153,10 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
                         newImageUrl = await ref.getDownloadURL();
                       }
 
-                      await FirebaseFirestore.instance.collection('Layanan').doc(doc.id).update({
+                      await FirebaseFirestore.instance.collection('Capster').doc(doc.id).update({
                         'Name': name,
                         'Phone': phone,
                         'ImageUrl': newImageUrl,
-                        'Packages': selectedPackages,
                       });
 
                       Get.back();
@@ -224,7 +174,7 @@ void showCapsterEditDialog(BuildContext context, DocumentSnapshot doc) async {
               ],
             ),
 
-            /// Overlay loading
+            /// Loading overlay
             if (isLoading)
               Container(
                 color: Colors.black.withOpacity(0.5),

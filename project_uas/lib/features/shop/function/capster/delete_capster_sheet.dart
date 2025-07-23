@@ -12,7 +12,7 @@ void showDeleteCapsterSheet(BuildContext context) {
     ),
     builder: (_) {
       return FutureBuilder(
-        future: FirebaseFirestore.instance.collection('Layanan').get(),
+        future: FirebaseFirestore.instance.collection('Capster').get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
           final docs = snapshot.data!.docs;
@@ -78,7 +78,7 @@ void showDeleteCapsterSheet(BuildContext context) {
                                 }
 
                                 // Hapus dokumen dari Firestore
-                                await FirebaseFirestore.instance.collection('Layanan').doc(doc.id).delete();
+                                await FirebaseFirestore.instance.collection('Capster').doc(doc.id).delete();
 
                                 Get.snackbar("Berhasil", "$name berhasil dihapus.",
                                     backgroundColor: Colors.green, colorText: Colors.white);

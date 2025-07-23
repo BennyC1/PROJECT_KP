@@ -6,6 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iconsax/iconsax.dart';
 
 void showDeleteCapsterPackageSheet() {
+  final context = Get.context!;
+  final theme = Theme.of(context);
+
   Get.bottomSheet(
     FutureBuilder<QuerySnapshot>(
       future: FirebaseFirestore.instance.collection('CapsterPackage').get(),
@@ -13,24 +16,27 @@ void showDeleteCapsterPackageSheet() {
         if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
         final docs = snapshot.data!.docs;
 
-        return Padding(
+        return Container(
+          color: theme.scaffoldBackgroundColor,
           padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Hapus CapsterPackage", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text("Hapus CapsterPackage", style: theme.textTheme.titleLarge),
               const SizedBox(height: 16),
               ...docs.map((doc) {
                 final data = doc.data() as Map<String, dynamic>;
                 return ListTile(
-                  title: Text(data['capsterName'] ?? '-'),
-                  subtitle: Text("Total Paket: ${data['packages']?.length ?? 0}"),
+                  title: Text(data['capsterName'] ?? '-', style: theme.textTheme.bodyLarge),
+                  subtitle: Text("Total Paket: ${data['packages']?.length ?? 0}",
+                      style: theme.textTheme.bodySmall),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () async {
                       await FirebaseFirestore.instance.collection('CapsterPackage').doc(doc.id).delete();
                       Get.back();
-                      Get.snackbar("Success", "CapsterPackage dihapus", backgroundColor: Colors.green, colorText: Colors.white);
+                      Get.snackbar("Success", "CapsterPackage dihapus",
+                          backgroundColor: Colors.green, colorText: Colors.white);
                     },
                   ),
                 );
@@ -40,7 +46,6 @@ void showDeleteCapsterPackageSheet() {
         );
       },
     ),
-    backgroundColor: Colors.white,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -49,6 +54,9 @@ void showDeleteCapsterPackageSheet() {
 }
 
 void showEditCapsterPackageSheet() {
+  final context = Get.context!;
+  final theme = Theme.of(context);
+
   Get.bottomSheet(
     FutureBuilder<QuerySnapshot>(
       future: FirebaseFirestore.instance.collection('CapsterPackage').get(),
@@ -56,18 +64,20 @@ void showEditCapsterPackageSheet() {
         if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
         final docs = snapshot.data!.docs;
 
-        return Padding(
+        return Container(
+          color: theme.scaffoldBackgroundColor,
           padding: const EdgeInsets.all(16),
           child: ListView(
             shrinkWrap: true,
             children: [
-              const Text("Edit CapsterPackage", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text("Edit CapsterPackage", style: theme.textTheme.titleLarge),
               const SizedBox(height: 16),
               ...docs.map((doc) {
                 final data = doc.data() as Map<String, dynamic>;
                 return ListTile(
-                  title: Text(data['capsterName'] ?? '-'),
-                  subtitle: Text("Total Paket: ${data['packages']?.length ?? 0}"),
+                  title: Text(data['capsterName'] ?? '-', style: theme.textTheme.bodyLarge),
+                  subtitle: Text("Total Paket: ${data['packages']?.length ?? 0}",
+                      style: theme.textTheme.bodySmall),
                   trailing: const Icon(Iconsax.edit),
                   onTap: () {
                     Get.back();
@@ -80,7 +90,6 @@ void showEditCapsterPackageSheet() {
         );
       },
     ),
-    backgroundColor: Colors.white,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -89,6 +98,8 @@ void showEditCapsterPackageSheet() {
 }
 
 void showEditCapsterPackageDialog(String docId, Map<String, dynamic> oldData) {
+  final context = Get.context!;
+  final theme = Theme.of(context);
   final selectedPackages = List<Map<String, dynamic>>.from(oldData['packages'] ?? []);
   final capsterName = oldData['capsterName'] ?? '-';
 
@@ -96,12 +107,14 @@ void showEditCapsterPackageDialog(String docId, Map<String, dynamic> oldData) {
     StatefulBuilder(
       builder: (context, setState) {
         return AlertDialog(
-          title: const Text('Edit CapsterPackage'),
+          backgroundColor: theme.scaffoldBackgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text('Edit CapsterPackage', style: theme.textTheme.titleLarge),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Capster: $capsterName"),
+                Text("Capster: $capsterName", style: theme.textTheme.bodyMedium),
                 const SizedBox(height: 12),
                 FutureBuilder<QuerySnapshot>(
                   future: FirebaseFirestore.instance.collection('Package').get(),
@@ -114,7 +127,9 @@ void showEditCapsterPackageDialog(String docId, Map<String, dynamic> oldData) {
                         final isSelected = selectedPackages.any((p) => p['id'] == doc.id);
                         return CheckboxListTile(
                           value: isSelected,
-                          title: Text("${data['Name']} - Rp ${data['Price']}"),
+                          title: Text("${data['Name']} - Rp ${data['Price']}",
+                              style: theme.textTheme.bodyMedium),
+                          controlAffinity: ListTileControlAffinity.leading,
                           onChanged: (val) {
                             setState(() {
                               if (val == true) {
@@ -144,7 +159,8 @@ void showEditCapsterPackageDialog(String docId, Map<String, dynamic> oldData) {
                   'packages': selectedPackages,
                 });
                 Get.back();
-                Get.snackbar('Success', 'Data berhasil diperbarui', backgroundColor: Colors.green, colorText: Colors.white);
+                Get.snackbar('Success', 'Data berhasil diperbarui',
+                    backgroundColor: Colors.green, colorText: Colors.white);
               },
               child: const Text('Simpan'),
             ),
